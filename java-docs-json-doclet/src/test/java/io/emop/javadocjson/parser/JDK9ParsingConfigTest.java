@@ -3,6 +3,8 @@ package io.emop.javadocjson.parser;
 import io.emop.javadocjson.config.JDK9Dialet;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,11 +50,11 @@ public class JDK9ParsingConfigTest {
         assertNotNull(methodConfig.getMethodSelector());
         
         // 测试元素选择
-        var elements = doc.select(methodConfig.getMethodSelector());
+        Elements elements = doc.select(methodConfig.getMethodSelector());
         assertFalse(elements.isEmpty());
         
         if (!elements.isEmpty()) {
-            var element = elements.first();
+            Element element = elements.first();
             
             // 测试名称提取
             String name = methodConfig.extractMethodName(element);
@@ -96,11 +98,11 @@ public class JDK9ParsingConfigTest {
         assertNotNull(fieldConfig.getFieldSelector());
         
         // 测试元素选择
-        var elements = doc.select(fieldConfig.getFieldSelector());
+        Elements elements = doc.select(fieldConfig.getFieldSelector());
         assertFalse(elements.isEmpty());
         
         if (!elements.isEmpty()) {
-            var element = elements.first();
+            Element element = elements.first();
             
             // 测试名称提取
             String name = fieldConfig.extractFieldName(element);

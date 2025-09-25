@@ -32,6 +32,21 @@ public class JDK9Dialet implements JavadocParsingConfig {
     }
 
     @Override
+    public JavadocParsingConfig.ClassInfoParsingConfig getClassInfoParsingConfig() {
+        return new ClassInfoParsingConfig();
+    }
+
+    @Override
+    public JavadocParsingConfig.InheritanceParsingConfig getInheritanceParsingConfig() {
+        return new InheritanceParsingConfig();
+    }
+
+    @Override
+    public JavadocParsingConfig.ConstructorParsingConfig getConstructorParsingConfig() {
+        return new ConstructorParsingConfig();
+    }
+
+    @Override
     public String getAllClassesEntryPoint() {
         return "allclasses.html";
     }
@@ -141,6 +156,135 @@ public class JDK9Dialet implements JavadocParsingConfig {
         @Override
         public boolean isValidFieldElement(Element element) {
             // 验证是否为有效的字段元素
+            Elements firstCol = element.select(".colFirst");
+            Elements secondCol = element.select(".colSecond");
+            Elements lastCol = element.select(".colLast");
+            return !firstCol.isEmpty() && !secondCol.isEmpty() && !lastCol.isEmpty();
+        }
+    }
+
+    /**
+     * JDK9 类信息解析配置
+     */
+    private static class ClassInfoParsingConfig implements JavadocParsingConfig.ClassInfoParsingConfig {
+
+        @Override
+        public String extractClassDescription(Document doc) {
+            // 描述通常在类声明后的第一个 div.block 中
+            Element descElement = doc.select(".contentContainer .description .block").first();
+            return descElement != null ? descElement.text().trim() : "";
+        }
+
+        @Override
+        public String extractClassType(Document doc) {
+            // 从标题中提取类型
+            Element titleElement = doc.select("h1.title").first();
+            if (titleElement != null) {
+                String title = titleElement.text().trim();
+                if (title.startsWith("Class ")) {
+                    return "class";
+                } else if (title.startsWith("Interface ")) {
+                    return "interface";
+                } else if (title.startsWith("Enum ")) {
+                    return "enum";
+                }
+            }
+            return "class";
+        }
+
+        @Override
+        public java.util.List<String> extractModifiers(Document doc) {
+            // 修饰符通常在 pre 标签中的类声明里
+            java.util.List<String> modifiers = new java.util.ArrayList<>();
+            Element preElement = doc.select("pre").first();
+            if (preElement != null) {
+                String declaration = preElement.text().trim();
+                // 提取 public, abstract, final 等修饰符
+                String[] parts = declaration.split("\\s+");
+                for (String part : parts) {
+                    if (part.equals("public") || part.equals("private") || part.equals("protected") ||
+                        part.equals("abstract") || part.equals("final") || part.equals("static")) {
+                        modifiers.add(part);
+                    }
+                }
+            }
+            return modifiers;
+        }
+    }
+
+    /**
+     * JDK9 继承关系解析配置
+     */
+    private static class InheritanceParsingConfig implements JavadocParsingConfig.InheritanceParsingConfig {
+
+        @Override
+        public String extractSuperClass(Document doc) {
+            // 查找继承信息，通常在 ul 列表中
+            Elements inheritanceList = doc.select("ul.inheritance li");
+            if (inheritanceList.size() >= 2) {
+                // 倒数第二个通常是直接父类
+                Element superClassElement = inheritanceList.get(inheritanceList.size() - 2);
+                return superClassElement.text().trim();
+            }
+            return "";
+        }
+
+        @Override
+        public java.util.List<String> extractInterfaces(Document doc) {
+            // 查找实现的接口，通常在 dl dt dd 结构中
+            java.util.List<String> interfaces = new java.util.ArrayList<>();
+            Elements dlElements = doc.select("dl");
+            for (Element dl : dlElements) {
+                Element dt = dl.select("dt").first();
+                if (dt != null && dt.text().contains("All Implemented Interfaces")) {
+                    Element dd = dl.select("dd").first();
+                    if (dd != null) {
+                        String interfaceText = dd.text().trim();
+                        // 分割多个接口（通常用逗号分隔）
+                        String[] interfaceArray = interfaceText.split(",");
+                        for (String iface : interfaceArray) {
+                            interfaces.add(iface.trim());
+                        }
+                    }
+                }
+            }
+            return interfaces;
+        }
+    }
+
+    /**
+     * JDK9 构造函数解析配置
+     */
+    private static class ConstructorParsingConfig implements JavadocParsingConfig.ConstructorParsingConfig {
+
+        @Override
+        public String getConstructorSelector() {
+            // 构造函数通常在 constructor.summary 表格中
+            return "#constructor\\.summary ~ table.memberSummary tr:has(td.colFirst):has(td.colLast)";
+        }
+
+        @Override
+        public String extractConstructorName(Element constructorElement) {
+            // 构造函数名称在第二列
+            Element nameElement = constructorElement.select(".colSecond").first();
+            if (nameElement != null) {
+                String txt = nameElement.text().trim();
+                int paramStart = txt.indexOf("(");
+                return paramStart > 0 ? txt.substring(0, paramStart) : txt;
+            }
+            return "";
+        }
+
+        @Override
+        public String extractDescription(Element constructorElement) {
+            // 描述在最后一列
+            Element descElement = constructorElement.select(".colLast").first();
+            return descElement != null ? descElement.text().trim() : "";
+        }
+
+        @Override
+        public boolean isValidConstructorElement(Element element) {
+            // 验证是否为有效的构造函数元素
             Elements firstCol = element.select(".colFirst");
             Elements secondCol = element.select(".colSecond");
             Elements lastCol = element.select(".colLast");

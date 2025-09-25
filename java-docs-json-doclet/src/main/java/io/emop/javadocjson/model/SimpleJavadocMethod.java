@@ -3,45 +3,45 @@ package io.emop.javadocjson.model;
 import lombok.Data;
 
 /**
- * 简化的Javadoc方法模型，用于文本级别的解析
- * 包含方法名、修饰符和类型、描述和完整的原始文本
+ * Simplified Javadoc method model for text-level parsing.
+ * Contains method name, modifiers and type, description and complete raw text.
  */
 @Data
 public class SimpleJavadocMethod {
     
     /**
-     * 方法名称
+     * Method name
      */
     private String name;
     
     /**
-     * 修饰符和类型 (例如: "static CheckScope", "public static int")
+     * Modifiers and type (e.g.: "static CheckScope", "public static int")
      */
     private String modifierAndType;
     
     /**
-     * 方法描述
+     * Method description
      */
     private String description;
     
     /**
-     * 完整的原始文本，包含方法签名和详细描述
+     * Complete raw text containing method signature and detailed description
      */
     private String detailText;
     
     /**
-     * 默认构造函数
+     * Default constructor
      */
     public SimpleJavadocMethod() {
     }
     
     /**
-     * 完整构造函数
+     * Complete constructor
      * 
-     * @param name 方法名称
-     * @param modifierAndType 修饰符和类型
-     * @param description 方法描述
-     * @param detailText 完整的原始文本
+     * @param name Method name
+     * @param modifierAndType Modifiers and type
+     * @param description Method description
+     * @param detailText Complete raw text
      */
     public SimpleJavadocMethod(String name, String modifierAndType, String description, String detailText) {
         this.name = name;
@@ -51,11 +51,11 @@ public class SimpleJavadocMethod {
     }
     
     /**
-     * 构造函数
+     * Constructor
      * 
-     * @param name 方法名称
-     * @param description 方法描述
-     * @param detailText 完整的原始文本
+     * @param name Method name
+     * @param description Method description
+     * @param detailText Complete raw text
      */
     public SimpleJavadocMethod(String name, String description, String detailText) {
         this.name = name;
@@ -64,10 +64,10 @@ public class SimpleJavadocMethod {
     }
     
     /**
-     * 简化构造函数，只有名称和描述
+     * Simplified constructor with only name and description
      * 
-     * @param name 方法名称
-     * @param description 方法描述
+     * @param name Method name
+     * @param description Method description
      */
     public SimpleJavadocMethod(String name, String description) {
         this.name = name;

@@ -4,158 +4,268 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 /**
- * 解析配置接口，用于支持不同版本的Javadoc解析策略
+ * Parsing configuration interface for supporting different versions of Javadoc parsing strategies
  */
 public interface JavadocParsingConfig {
 
     /**
-     * 获取配置名称
+     * Get configuration name
      *
-     * @return 配置名称
+     * @return configuration name
      */
     String getConfigName();
 
     /**
-     * 检查此配置是否适用于给定的HTML内容
+     * Check if this configuration is applicable to the given HTML content
      *
-     * @param htmlContent HTML内容
-     * @return 如果适用返回true，否则返回false
+     * @param htmlContent HTML content
+     * @return true if applicable, false otherwise
      */
     boolean isApplicable(String htmlContent);
 
     /**
-     * 获取方法解析配置
+     * Get method parsing configuration
      *
-     * @return 方法解析配置
+     * @return method parsing configuration
      */
     MethodParsingConfig getMethodParsingConfig();
 
     /**
-     * 获取字段解析配置
+     * Get field parsing configuration
      *
-     * @return 字段解析配置
+     * @return field parsing configuration
      */
     FieldParsingConfig getFieldParsingConfig();
 
     /**
-     * 获取所有类页面的入口点
+     * Get entry point for all classes page
      *
-     * @return 入口点
+     * @return entry point
      */
     String getAllClassesEntryPoint();
 
     /**
-     * 方法解析配置接口
+     * Get class basic information parsing configuration
+     *
+     * @return class basic information parsing configuration
+     */
+    ClassInfoParsingConfig getClassInfoParsingConfig();
+
+    /**
+     * Get inheritance relationship parsing configuration
+     *
+     * @return inheritance relationship parsing configuration
+     */
+    InheritanceParsingConfig getInheritanceParsingConfig();
+
+    /**
+     * Get constructor parsing configuration
+     *
+     * @return constructor parsing configuration
+     */
+    ConstructorParsingConfig getConstructorParsingConfig();
+
+    /**
+     * Method parsing configuration interface
      */
     interface MethodParsingConfig {
 
         /**
-         * 获取方法选择器
+         * Get method selector
          *
-         * @return CSS选择器字符串
+         * @return CSS selector string
          */
         String getMethodSelector();
 
         /**
-         * 从元素中提取方法名
+         * Extract method name from element
          *
-         * @param methodElement 方法元素
-         * @return 方法名
+         * @param methodElement method element
+         * @return method name
          */
         String extractMethodName(Element methodElement);
 
         /**
-         * 帶参数的方法， 例如  valueOf(java.lang.String name)
+         * Method with parameters, e.g. valueOf(java.lang.String name)
          *
-         * @param methodElement 方法元素
-         * @return 带参数的方法
+         * @param methodElement method element
+         * @return method with parameters
          */
         String extractMethodNameWithParameters(Element methodElement);
 
         /**
-         * 从元素中提取修饰符和类型
+         * Extract modifiers and type from element
          *
-         * @param methodElement 方法元素
-         * @return 修饰符和类型
+         * @param methodElement method element
+         * @return modifiers and type
          */
         String extractModifierAndType(Element methodElement);
 
         /**
-         * 从元素中提取描述
+         * Extract description from element
          *
-         * @param methodElement 方法元素
-         * @return 描述
+         * @param methodElement method element
+         * @return description
          */
         String extractDescription(Element methodElement);
 
         /**
-         * 从元素中提取原始文本
+         * Extract raw text from element
          *
-         * @param methodElement 方法元素
+         * @param methodElement method element
          * @param doc           the full class document
-         * @return 原始文本
+         * @return raw text
          */
         String extractDetailText(Element methodElement, Document doc);
 
         /**
-         * 验证元素是否为有效的方法元素
+         * Validate if element is a valid method element
          *
-         * @param element 要验证的元素
-         * @return 如果是有效的方法元素返回true，否则返回false
+         * @param element element to validate
+         * @return true if it's a valid method element, false otherwise
          */
         boolean isValidMethodElement(Element element);
     }
 
     /**
-     * 字段解析配置接口
+     * Field parsing configuration interface
      */
     interface FieldParsingConfig {
 
         /**
-         * 获取字段选择器
+         * Get field selector
          *
-         * @return CSS选择器字符串
+         * @return CSS selector string
          */
         String getFieldSelector();
 
         /**
-         * 从元素中提取字段名
+         * Extract field name from element
          *
-         * @param fieldElement 字段元素
-         * @return 字段名
+         * @param fieldElement field element
+         * @return field name
          */
         String extractFieldName(Element fieldElement);
 
         /**
-         * 从元素中提取修饰符和类型
+         * Extract modifiers and type from element
          *
-         * @param fieldElement 字段元素
-         * @return 修饰符和类型
+         * @param fieldElement field element
+         * @return modifiers and type
          */
         String extractModifierAndType(Element fieldElement);
 
         /**
-         * 从元素中提取描述
+         * Extract description from element
          *
-         * @param fieldElement 字段元素
-         * @return 描述
+         * @param fieldElement field element
+         * @return description
          */
         String extractDescription(Element fieldElement);
 
         /**
-         * 从元素中提取原始文本
+         * Extract raw text from element
          *
-         * @param fieldElement 字段元素
-         * @return 原始文本
+         * @param fieldElement field element
+         * @return raw text
          */
         String extractRawText(Element fieldElement);
 
         /**
-         * 验证元素是否为有效的字段元素
+         * Validate if element is a valid field element
          *
-         * @param element 要验证的元素
-         * @return 如果是有效的字段元素返回true，否则返回false
+         * @param element element to validate
+         * @return true if it's a valid field element, false otherwise
          */
         boolean isValidFieldElement(Element element);
+    }
+
+    /**
+     * Class basic information parsing configuration interface
+     */
+    interface ClassInfoParsingConfig {
+
+        /**
+         * Extract class description from document
+         *
+         * @param doc document object
+         * @return class description
+         */
+        String extractClassDescription(Document doc);
+
+        /**
+         * Extract class type from document
+         *
+         * @param doc document object
+         * @return class type (class, interface, enum, annotation)
+         */
+        String extractClassType(Document doc);
+
+        /**
+         * Extract modifiers from document
+         *
+         * @param doc document object
+         * @return modifiers list
+         */
+        java.util.List<String> extractModifiers(Document doc);
+    }
+
+    /**
+     * Inheritance relationship parsing configuration interface
+     */
+    interface InheritanceParsingConfig {
+
+        /**
+         * Extract superclass from document
+         *
+         * @param doc document object
+         * @return superclass name, null if none
+         */
+        String extractSuperClass(Document doc);
+
+        /**
+         * Extract implemented interfaces from document
+         *
+         * @param doc document object
+         * @return interfaces list
+         */
+        java.util.List<String> extractInterfaces(Document doc);
+    }
+
+    /**
+     * Constructor parsing configuration interface
+     */
+    interface ConstructorParsingConfig {
+
+        /**
+         * Get constructor selector
+         *
+         * @return CSS selector string
+         */
+        String getConstructorSelector();
+
+        /**
+         * Extract constructor name from element
+         *
+         * @param constructorElement constructor element
+         * @return constructor name
+         */
+        String extractConstructorName(Element constructorElement);
+
+        /**
+         * Extract description from element
+         *
+         * @param constructorElement constructor element
+         * @return description
+         */
+        String extractDescription(Element constructorElement);
+
+        /**
+         * Validate if element is a valid constructor element
+         *
+         * @param element element to validate
+         * @return true if it's a valid constructor element, false otherwise
+         */
+        boolean isValidConstructorElement(Element element);
     }
 }

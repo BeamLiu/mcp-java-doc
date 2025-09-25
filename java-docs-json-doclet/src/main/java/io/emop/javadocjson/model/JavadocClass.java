@@ -52,6 +52,9 @@ public class JavadocClass {
     @JsonProperty("simpleFields")
     private List<SimpleJavadocField> simpleFields;
 
+    @JsonProperty("simpleConstructors")
+    private List<SimpleJavadocConstructor> simpleConstructors;
+
     public JavadocClass() {
         this.modifiers = new ArrayList<>();
         this.interfaces = new ArrayList<>();
@@ -60,6 +63,7 @@ public class JavadocClass {
         this.fields = new ArrayList<>();
         this.simpleMethods = new ArrayList<>();
         this.simpleFields = new ArrayList<>();
+        this.simpleConstructors = new ArrayList<>();
     }
 
     public JavadocClass(String name, String type) {

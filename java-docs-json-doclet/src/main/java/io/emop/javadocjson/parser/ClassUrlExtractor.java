@@ -66,34 +66,6 @@ public class ClassUrlExtractor {
         });
     }
 
-    /**
-     * Extracts class URLs from a package summary document.
-     *
-     * @param document The HTML document to extract URLs from
-     * @return List of absolute class URLs
-     */
-    public List<String> extractFromPackageDocument(Document document) {
-        List<String> classUrls = new ArrayList<>();
-
-        // Look for class links in package summary pages
-        Elements classLinks = document.select("a[href$='.html']:not([href*='package-'])");
-
-        for (Element link : classLinks) {
-            String href = link.attr("href");
-            String linkText = link.text().trim();
-
-            if (isValidClassUrl(href, linkText)) {
-                String absoluteUrl = convertToAbsoluteUrl(href);
-                if (absoluteUrl != null && passesPackageFilter(absoluteUrl)) {
-                    classUrls.add(absoluteUrl);
-                }
-            }
-        }
-
-        log.debug("Extracted " + classUrls.size() + " class URLs from package document");
-        return classUrls;
-    }
-
     private static boolean isValidClassUrl(String href, String linkText) {
         if (href == null || href.isEmpty() || linkText == null || linkText.isEmpty()) {
             return false;
@@ -167,7 +139,36 @@ public class ClassUrlExtractor {
         return true; // Default to include if we can't determine package
     }
 
-    private String extractPackageFromPath(String path) {
+    /**
+     * Extracts full class name (including package) from a URL.
+     *
+     * @param url The URL to extract class name from
+     * @return The full class name, or null if it cannot be extracted
+     */
+    public String extractSimpleClassNameFromUrl(String url) {
+        if (url == null || url.isEmpty()) {
+            return null;
+        }
+
+        try {
+            // Extract the file name from the URL
+            String fileName = url.substring(url.lastIndexOf('/') + 1);
+
+            int lastDot = url.lastIndexOf('.');
+            // Remove .html extension
+            if (lastDot > 0) {
+                fileName = fileName.substring(0, lastDot);
+            }
+
+            return fileName;
+        } catch (Exception e) {
+            log.debug("Failed to extract class name from URL: " + url + " - " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public String extractPackageFromPath(String path) {
         try {
             // First, remove the base URL path from the given path
             URL baseUrlObj = new URL(baseUrl);
