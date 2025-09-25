@@ -1,5 +1,9 @@
 package io.emop.javadocjson.parser;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.emop.javadocjson.model.JavadocClass;
+import lombok.Getter;
 import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
@@ -13,25 +17,31 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Cache management class for the Javadoc crawler.
  */
+@Getter
 public class CrawlerCache {
-    
+
     private final Log log;
     private final boolean enableCache;
     private final String cacheDir;
     private final Set<String> cachedClasses;
-    
+    private final ObjectMapper objectMapper;
+
     public CrawlerCache(Log log, boolean enableCache, String cacheDir) {
         this.log = log;
         this.enableCache = enableCache;
-        this.cacheDir = cacheDir != null ? cacheDir : 
-            System.getProperty("java.io.tmpdir") + File.separator + "javadoc-crawler-cache";
+        this.cacheDir = cacheDir != null ? cacheDir :
+                System.getProperty("java.io.tmpdir") + File.separator + "javadoc-crawler-cache";
         this.cachedClasses = ConcurrentHashMap.newKeySet();
-        
+
+        // Initialize ObjectMapper for JSON serialization
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+
         if (enableCache) {
             initializeCache();
         }
     }
-    
+
     /**
      * Initializes the cache directory and loads existing cache data.
      */
@@ -44,13 +54,13 @@ public class CrawlerCache {
             } else {
                 log.info("Using existing cache directory: " + cacheDir);
             }
-            
+
             loadExistingCache();
         } catch (IOException e) {
             log.warn("Failed to initialize cache directory: " + e.getMessage());
         }
     }
-    
+
     /**
      * Loads existing cache data from the cache directory.
      */
@@ -59,14 +69,16 @@ public class CrawlerCache {
             Path cachePath = Paths.get(cacheDir);
             if (Files.exists(cachePath) && Files.isDirectory(cachePath)) {
                 Files.walk(cachePath)
-                    .filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(".cache"))
-                    .forEach(path -> {
-                        String fileName = path.getFileName().toString();
-                        String className = fileName.replace(".cache", "");
-                        cachedClasses.add(className);
-                    });
-                
+                        .filter(Files::isRegularFile)
+                        .filter(path -> {
+                            String fileName = path.toString();
+                            return fileName.endsWith(".json");
+                        })
+                        .forEach(path -> {
+                            String fileName = path.getFileName().toString();
+                            cachedClasses.add(fileName.replace(".json", ""));
+                        });
+
                 if (!cachedClasses.isEmpty()) {
                     log.info("Loaded " + cachedClasses.size() + " cached classes");
                 }
@@ -75,10 +87,10 @@ public class CrawlerCache {
             log.warn("Failed to load existing cache: " + e.getMessage());
         }
     }
-    
+
     /**
      * Checks if a class is already cached.
-     * 
+     *
      * @param className The name of the class to check
      * @return true if the class is cached, false otherwise
      */
@@ -86,166 +98,69 @@ public class CrawlerCache {
         if (!enableCache) {
             return false;
         }
-        
+
         return cachedClasses.contains(className);
     }
-    
+
     /**
-     * Marks a class as cached.
-     * 
-     * @param className The name of the class to cache
+     * Marks a class as cached and stores the JavadocClass object.
+     *
+     * @param javadocClass The JavadocClass object to cache
      */
-    public void markAsCached(String className) {
-        if (!enableCache) {
+    public void markAsCached(JavadocClass javadocClass) {
+        if (!enableCache || javadocClass == null || javadocClass.getFullName() == null) {
             return;
         }
-        
+
+        String className = javadocClass.getFullName();
         cachedClasses.add(className);
-        
-        // Create a cache file for persistence
+
+        // Serialize and store the JavadocClass object
         try {
-            Path cacheFile = Paths.get(cacheDir, className + ".cache");
+            Path cacheFile = Paths.get(cacheDir, className + ".json");
             if (!Files.exists(cacheFile)) {
-                Files.createFile(cacheFile);
-                log.debug("Created cache file for class: " + className);
+                objectMapper.writeValue(cacheFile.toFile(), javadocClass);
+                log.debug("Cached JavadocClass object for: " + className);
             }
         } catch (IOException e) {
-            log.debug("Failed to create cache file for class " + className + ": " + e.getMessage());
+            log.debug("Failed to cache JavadocClass for " + className + ": " + e.getMessage());
         }
     }
-    
+
     /**
-     * Checks if a URL has been visited (cached).
-     * 
-     * @param url The URL to check
-     * @return true if the URL has been visited, false otherwise
+     * Gets a cached JavadocClass object from the cache.
+     *
+     * @param className The name of the class to retrieve
+     * @return The cached JavadocClass object, or null if not found or error occurred
      */
-    public boolean isUrlVisited(String url) {
-        if (!enableCache) {
-            return false;
-        }
-        
-        // Extract class name from URL for caching
-        String className = extractClassNameFromUrl(url);
-        return className != null && isCached(className);
-    }
-    
-    /**
-     * Marks a URL as visited by caching the associated class.
-     * 
-     * @param url The URL to mark as visited
-     */
-    public void markUrlAsVisited(String url) {
-        if (!enableCache) {
-            return;
-        }
-        
-        String className = extractClassNameFromUrl(url);
-        if (className != null) {
-            markAsCached(className);
-        }
-    }
-    
-    /**
-     * Clears the cache.
-     */
-    public void clearCache() {
-        if (!enableCache) {
-            return;
-        }
-        
-        cachedClasses.clear();
-        
-        try {
-            Path cachePath = Paths.get(cacheDir);
-            if (Files.exists(cachePath)) {
-                Files.walk(cachePath)
-                    .filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(".cache"))
-                    .forEach(path -> {
-                        try {
-                            Files.delete(path);
-                        } catch (IOException e) {
-                            log.debug("Failed to delete cache file: " + path + " - " + e.getMessage());
-                        }
-                    });
-                
-                log.info("Cache cleared");
-            }
-        } catch (IOException e) {
-            log.warn("Failed to clear cache: " + e.getMessage());
-        }
-    }
-    
-    /**
-     * Gets the number of cached classes.
-     * 
-     * @return The number of cached classes
-     */
-    public int getCacheSize() {
-        return cachedClasses.size();
-    }
-    
-    /**
-     * Checks if caching is enabled.
-     * 
-     * @return true if caching is enabled, false otherwise
-     */
-    public boolean isCacheEnabled() {
-        return enableCache;
-    }
-    
-    /**
-     * Gets the cache directory path.
-     * 
-     * @return The cache directory path
-     */
-    public String getCacheDirectory() {
-        return cacheDir;
-    }
-    
-    /**
-     * Extracts class name from a URL.
-     * 
-     * @param url The URL to extract class name from
-     * @return The class name, or null if it cannot be extracted
-     */
-    private String extractClassNameFromUrl(String url) {
-        if (url == null || url.isEmpty()) {
+    public JavadocClass getCachedClass(String className) {
+        if (!enableCache || className == null || !isCached(className)) {
             return null;
         }
-        
+
         try {
-            // Extract the file name from the URL
-            String fileName = url.substring(url.lastIndexOf('/') + 1);
-            
-            // Remove .html extension
-            if (fileName.endsWith(".html")) {
-                fileName = fileName.substring(0, fileName.length() - 5);
+            Path cacheFile = Paths.get(cacheDir, className + ".json");
+            if (Files.exists(cacheFile)) {
+                return objectMapper.readValue(cacheFile.toFile(), JavadocClass.class);
             }
-            
-            // Basic validation - class names should start with uppercase
-            if (!fileName.isEmpty() && Character.isUpperCase(fileName.charAt(0))) {
-                return fileName;
-            }
-        } catch (Exception e) {
-            log.debug("Failed to extract class name from URL: " + url + " - " + e.getMessage());
+        } catch (IOException e) {
+            log.debug("Failed to read cached JavadocClass for " + className + ": " + e.getMessage());
         }
-        
+
         return null;
     }
-    
+
     /**
      * Gets cache statistics as a formatted string.
-     * 
+     *
      * @return Cache statistics string
      */
     public String getCacheStats() {
         if (!enableCache) {
             return "Cache disabled";
         }
-        
-        return String.format("Cache: %d classes cached in %s", 
-                           cachedClasses.size(), cacheDir);
+
+        return String.format("Cache: %d classes cached in %s",
+                cachedClasses.size(), cacheDir);
     }
 }

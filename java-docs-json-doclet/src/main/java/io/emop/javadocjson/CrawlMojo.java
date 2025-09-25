@@ -2,6 +2,7 @@ package io.emop.javadocjson;
 
 import io.emop.javadocjson.model.JavadocMetadata;
 import io.emop.javadocjson.model.JavadocRoot;
+import io.emop.javadocjson.config.JDK9Dialet;
 import io.emop.javadocjson.util.JsonGenerator;
 import io.emop.javadocjson.parser.HtmlCrawler;
 
@@ -115,7 +116,7 @@ public class CrawlMojo extends AbstractMojo {
             JavadocMetadata metadata = new JavadocMetadata("crawl", baseUrl);
 
             // Create and configure HTML crawler
-            HtmlCrawler crawler = new HtmlCrawler(getLog());
+            HtmlCrawler crawler = new HtmlCrawler(getLog(), new JDK9Dialet());
             crawler.setUserAgent(userAgent);
             crawler.setTimeout(timeout);
             

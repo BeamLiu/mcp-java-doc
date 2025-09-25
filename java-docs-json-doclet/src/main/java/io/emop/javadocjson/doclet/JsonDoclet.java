@@ -159,7 +159,7 @@ public class JsonDoclet implements Doclet {
         String fullName = typeElement.getQualifiedName().toString();
         String classType = getElementType(typeElement);
         
-        JavadocClass javadocClass = new JavadocClass(className, fullName, classType);
+        JavadocClass javadocClass = new JavadocClass(className, classType);
         
         // Set description
         String docComment = environment.getElementUtils().getDocComment(typeElement);

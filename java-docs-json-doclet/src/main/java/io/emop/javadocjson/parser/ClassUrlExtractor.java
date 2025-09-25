@@ -30,8 +30,8 @@ public class ClassUrlExtractor {
      * @param document The HTML document to extract URLs from
      * @return List of absolute class URLs
      */
-    public List<String> extractFromAllClassesDocument(Document document) {
-        List<String> classUrls = new ArrayList<>();
+    public Set<String> extractFromAllClassesDocument(Document document) {
+        Set<String> classUrls = new HashSet<>();
 
         // Try different selectors for different Javadoc versions
         Elements links = document.select("a[href]");
@@ -67,45 +67,6 @@ public class ClassUrlExtractor {
     }
 
     /**
-     * Extracts class URLs from an overview-type document.
-     *
-     * @param document The HTML document to extract URLs from
-     * @return List of absolute class URLs
-     */
-    public List<String> extractFromOverviewDocument(Document document) {
-        List<String> classUrls = new ArrayList<>();
-
-        // Look for package links and class links in overview pages
-        Elements packageLinks = document.select("a[href*='package-summary.html'], a[href*='package-frame.html']");
-        Elements classLinks = document.select("a[href$='.html']:not([href*='package-'])");
-
-        // Add package links for further crawling
-        for (Element link : packageLinks) {
-            String href = link.attr("href");
-            String absoluteUrl = convertToAbsoluteUrl(href);
-            if (absoluteUrl != null && passesPackageFilter(absoluteUrl)) {
-                classUrls.add(absoluteUrl);
-            }
-        }
-
-        // Add direct class links
-        for (Element link : classLinks) {
-            String href = link.attr("href");
-            String linkText = link.text().trim();
-
-            if (isValidClassUrl(href, linkText)) {
-                String absoluteUrl = convertToAbsoluteUrl(href);
-                if (absoluteUrl != null && passesPackageFilter(absoluteUrl)) {
-                    classUrls.add(absoluteUrl);
-                }
-            }
-        }
-
-        log.info("Extracted " + classUrls.size() + " URLs from overview document");
-        return classUrls;
-    }
-
-    /**
      * Extracts class URLs from a package summary document.
      *
      * @param document The HTML document to extract URLs from
@@ -130,40 +91,6 @@ public class ClassUrlExtractor {
         }
 
         log.debug("Extracted " + classUrls.size() + " class URLs from package document");
-        return classUrls;
-    }
-
-    /**
-     * Alternative extraction method for different Javadoc formats.
-     *
-     * @param document The HTML document to extract URLs from
-     * @return List of absolute class URLs
-     */
-    public List<String> extractAlternative(Document document) {
-        List<String> classUrls = new ArrayList<>();
-
-        // Try more generic selectors
-        Elements allLinks = document.select("a[href]");
-
-        for (Element link : allLinks) {
-            String href = link.attr("href");
-            String linkText = link.text().trim();
-
-            // More lenient validation for alternative extraction
-            if (href.endsWith(".html") &&
-                    !href.contains("package-") &&
-                    !href.contains("overview") &&
-                    !href.contains("index") &&
-                    !linkText.isEmpty()) {
-
-                String absoluteUrl = convertToAbsoluteUrl(href);
-                if (absoluteUrl != null && passesPackageFilter(absoluteUrl)) {
-                    classUrls.add(absoluteUrl);
-                }
-            }
-        }
-
-        log.info("Alternative extraction found " + classUrls.size() + " potential class URLs");
         return classUrls;
     }
 

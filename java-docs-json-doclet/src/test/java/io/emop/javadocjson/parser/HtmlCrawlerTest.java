@@ -1,5 +1,6 @@
 package io.emop.javadocjson.parser;
 
+import io.emop.javadocjson.config.JDK9Dialet;
 import io.emop.javadocjson.model.JavadocMetadata;
 import io.emop.javadocjson.model.JavadocRoot;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,15 +21,25 @@ public class HtmlCrawlerTest {
 
     private String baseUrl = "https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/";
     private HtmlCrawler htmlCrawler;
+    private HtmlCrawler htmlCrawlerWithConfig;
 
     @BeforeEach
     void setUp() {
-        htmlCrawler = new HtmlCrawler(new SimpleConsoleLog());
+        // 创建默认的爬虫实例
+        htmlCrawler = new HtmlCrawler(new SimpleConsoleLog(), new JDK9Dialet());
         // 设置爬虫参数
         htmlCrawler.setTimeout(10000);  // 10秒超时
         htmlCrawler.setUserAgent("HtmlCrawlerTest/1.0");
         htmlCrawler.setProxyHost("localhost");
         htmlCrawler.setProxyPort(10809);
+        
+        // 创建带配置的爬虫实例
+        JavadocParsingConfig config = new JDK9Dialet();
+        htmlCrawlerWithConfig = new HtmlCrawler(new SimpleConsoleLog(), config);
+        htmlCrawlerWithConfig.setTimeout(10000);
+        htmlCrawlerWithConfig.setUserAgent("HtmlCrawlerTest/1.0");
+        htmlCrawlerWithConfig.setProxyHost("localhost");
+        htmlCrawlerWithConfig.setProxyPort(10809);
     }
 
     /**
@@ -72,6 +83,41 @@ public class HtmlCrawlerTest {
 
         // 这里可以添加验证逻辑
         assertTrue(true, "配置设置测试通过");
+    }
+    
+    /**
+     * 测试使用配置的爬虫
+     */
+    @Test
+    @Disabled("需要网络访问，仅在调试时启用")
+    void testCrawlWithParsingConfig() throws IOException {
+        // 准备测试数据
+        JavadocMetadata metadata = createTestMetadata();
+
+        htmlCrawlerWithConfig.setPackageFilters(Set.of("nxopen\\.features"));
+        // 执行爬取
+        JavadocRoot result = htmlCrawlerWithConfig.crawl(baseUrl);
+        result.setMetadata(metadata);
+
+        // 验证结果
+        assertNotNull(result, "爬取结果不应为空");
+        assertNotNull(result.getPackages(), "包列表不应为空");
+        assertTrue(result.getPackages().size() > 0, "应该爬取到至少一个包");
+
+        // 打印调试信息
+        System.out.println("使用配置的爬虫 - 爬取到的包数量: " + result.getPackages().size());
+        result.getPackages().forEach(pkg -> {
+            System.out.println("包名: " + pkg.getName() + ", 类数量: " + pkg.getClasses().size());
+            pkg.getClasses().forEach(cls -> {
+                System.out.println("  类名: " + cls.getName() + ", 方法数量: " + cls.getMethods().size());
+                // 验证方法是否有详细信息（name, signature, description）
+                cls.getMethods().forEach(method -> {
+                    if (!method.getName().isEmpty() || !method.getSignature().isEmpty() || !method.getDescription().isEmpty()) {
+                        System.out.println("    方法: " + method.getName() + " - " + method.getSignature());
+                    }
+                });
+            });
+        });
     }
 
     /**

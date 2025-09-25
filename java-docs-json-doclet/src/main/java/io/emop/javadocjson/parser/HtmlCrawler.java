@@ -1,5 +1,6 @@
 package io.emop.javadocjson.parser;
 
+import io.emop.javadocjson.config.JDK9Dialet;
 import io.emop.javadocjson.model.*;
 import lombok.Setter;
 import org.apache.maven.plugin.logging.Log;
@@ -43,8 +44,11 @@ public class HtmlCrawler {
     private final Set<String> visitedUrls = ConcurrentHashMap.newKeySet();
     private final Map<String, JavadocPackage> packageMap = new ConcurrentHashMap<>();
     
-    public HtmlCrawler(Log log) {
+    private final JavadocParsingConfig parsingConfig;
+
+    public HtmlCrawler(Log log, JavadocParsingConfig parsingConfig) {
         this.log = log;
+        this.parsingConfig = parsingConfig;
         initializeComponents();
     }
     
@@ -104,7 +108,10 @@ public class HtmlCrawler {
      * Initializes components that depend on the base URL.
      */
     private void initializeUrlDependentComponents(String baseUrl) {
-        this.entryPointStrategy = new EntryPointStrategy(log, baseUrl, userAgent, timeout, proxyHost, proxyPort, proxyUsername, proxyPassword);
+        // Use provided config or create default NXOpen config
+        JavadocParsingConfig config = this.parsingConfig != null ? this.parsingConfig : new JDK9Dialet();
+        
+        this.entryPointStrategy = new EntryPointStrategy(log, baseUrl, userAgent, timeout, proxyHost, proxyPort, proxyUsername, proxyPassword, config.getAllClassesEntryPoint());
         this.classUrlExtractor = new ClassUrlExtractor(log, baseUrl, packageFilters);
         this.pageParser = new JavadocPageParser(log, userAgent, timeout, proxyHost, proxyPort, proxyUsername, proxyPassword);
         
@@ -116,20 +123,7 @@ public class HtmlCrawler {
      * Extracts class URLs from the entry point document.
      */
     private Set<String> extractClassUrls(EntryPointStrategy.EntryPointResult entryPoint) {
-        Set<String> classUrls = new HashSet<>();
-        
-        if (entryPoint.isAllClassesType()) {
-            List<String> urls = classUrlExtractor.extractFromAllClassesDocument(entryPoint.getDocument());
-            classUrls.addAll(urls);
-        } else if (entryPoint.isOverviewType()) {
-            List<String> urls = classUrlExtractor.extractFromOverviewDocument(entryPoint.getDocument());
-            classUrls.addAll(urls);
-        } else {
-            // Fallback: try alternative extraction
-            List<String> urls = classUrlExtractor.extractAlternative(entryPoint.getDocument());
-            classUrls.addAll(urls);
-        }
-        
+        Set<String> classUrls = classUrlExtractor.extractFromAllClassesDocument(entryPoint.getDocument());
         log.info("Extracted " + classUrls.size() + " class URLs from entry point: " + entryPoint.getEntryPoint());
         return classUrls;
     }
@@ -196,22 +190,108 @@ public class HtmlCrawler {
             return null;
         }
         
-        if (cache.isUrlVisited(classUrl)) {
-            log.debug("Skipping cached class: " + classUrl);
-            progressTracker.incrementSkipped();
-            return null;
+        // Check if we have a cached JavadocClass object using the full class name from URL
+        String fullClassName = extractClassNameFromUrl(classUrl);
+        if (fullClassName != null && cache.isCached(fullClassName)) {
+            JavadocClass cachedClass = cache.getCachedClass(fullClassName);
+            if (cachedClass != null) {
+                log.debug("Using cached JavadocClass for: " + fullClassName);
+                progressTracker.incrementSkipped();
+                return cachedClass;
+            }
         }
         
         visitedUrls.add(classUrl);
         
         try {
             JavadocClass javadocClass = pageParser.parseClassPage(classUrl);
-            cache.markUrlAsVisited(classUrl);
+            
+            // Cache the parsed JavadocClass object
+            if (javadocClass != null) {
+                cache.markAsCached(javadocClass);
+            }
+            
             return javadocClass;
         } catch (IOException e) {
             log.debug("Failed to parse class page: " + classUrl + " - " + e.getMessage());
             throw e;
         }
+    }
+    
+    /**
+     * Extracts full class name (including package) from a URL.
+     * 
+     * @param url The URL to extract class name from
+     * @return The full class name, or null if it cannot be extracted
+     */
+    private String extractClassNameFromUrl(String url) {
+        if (url == null || url.isEmpty()) {
+            return null;
+        }
+        
+        try {
+            // Extract the file name from the URL
+            String fileName = url.substring(url.lastIndexOf('/') + 1);
+            
+            // Remove .html extension
+            if (fileName.endsWith(".html")) {
+                fileName = fileName.substring(0, fileName.length() - 5);
+            }
+            
+            // Basic validation - class names should start with uppercase
+            if (fileName.isEmpty() || !Character.isUpperCase(fileName.charAt(0))) {
+                return null;
+            }
+            
+            // Extract package name from URL path
+            String packageName = extractPackageNameFromUrl(url);
+            
+            if (packageName != null && !packageName.isEmpty()) {
+                return packageName + "." + fileName;
+            } else {
+                return fileName;
+            }
+        } catch (Exception e) {
+            log.debug("Failed to extract class name from URL: " + url + " - " + e.getMessage());
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Extracts package name from a URL path.
+     * 
+     * @param url The URL to extract package name from
+     * @return The package name, or null if it cannot be extracted
+     */
+    private String extractPackageNameFromUrl(String url) {
+        try {
+            // Find the base documentation path and extract the package path after it
+            // Look for common patterns in Javadoc URLs
+            String[] patterns = {
+                "/api/", "/javadoc/", "/docs/", "/reference/", "/open_java_ref/"
+            };
+            
+            for (String pattern : patterns) {
+                int patternIndex = url.indexOf(pattern);
+                if (patternIndex != -1) {
+                    // Extract the path after the pattern
+                    String pathAfterPattern = url.substring(patternIndex + pattern.length());
+                    
+                    // Remove the class file name from the end
+                    int lastSlash = pathAfterPattern.lastIndexOf('/');
+                    if (lastSlash > 0) {
+                        String packagePath = pathAfterPattern.substring(0, lastSlash);
+                        // Convert path separators to dots
+                        return packagePath.replace('/', '.');
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.debug("Failed to extract package name from URL: " + url + " - " + e.getMessage());
+        }
+        
+        return null;
     }
     
     /**
@@ -281,7 +361,7 @@ public class HtmlCrawler {
         log.info("Crawling completed. Found " + packageMap.size() + " packages with " + 
                 progressTracker.getProcessedCount() + " classes");
         
-        if (cache.isCacheEnabled()) {
+        if (cache.isEnableCache()) {
             log.info(cache.getCacheStats());
         }
         
