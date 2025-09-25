@@ -94,7 +94,7 @@ public class ClassUrlExtractor {
 
     private String convertToAbsoluteUrl(String href) {
         try {
-            if (href.startsWith("http://") || href.startsWith("https://")) {
+            if (href.contains("://")) {
                 return href;
             }
 
@@ -154,7 +154,7 @@ public class ClassUrlExtractor {
             // Extract the file name from the URL
             String fileName = url.substring(url.lastIndexOf('/') + 1);
 
-            int lastDot = url.lastIndexOf('.');
+            int lastDot = fileName.lastIndexOf('.');
             // Remove .html extension
             if (lastDot > 0) {
                 fileName = fileName.substring(0, lastDot);
@@ -173,6 +173,9 @@ public class ClassUrlExtractor {
             // First, remove the base URL path from the given path
             URL baseUrlObj = new URL(baseUrl);
             String basePath = baseUrlObj.getPath();
+            if (path.contains("://")) {
+                path = new URL(path).getPath();
+            }
 
             // Remove base path from the full path
             if (basePath != null && !basePath.equals("/") && path.startsWith(basePath)) {

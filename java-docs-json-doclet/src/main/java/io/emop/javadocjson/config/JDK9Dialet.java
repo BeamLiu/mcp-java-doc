@@ -5,6 +5,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * JDK9 Java API 的解析配置实现
  * 基于提供的 CheckScope HTML 示例进行配置
@@ -91,18 +95,41 @@ public class JDK9Dialet implements JavadocParsingConfig {
             return descElement.text().trim();
         }
 
-        @Override
         public String extractDetailText(Element methodElement, Document doc) {
             String methodNameWithParameters = extractMethodNameWithParameters(methodElement);
             // 先选择所有 pre.methodSignature，然后手动过滤
             Elements methodSignatures = doc.select("pre.methodSignature");
 
             for (Element signature : methodSignatures) {
-                if (signature.text().contains(methodNameWithParameters)) {
-                    return signature.parent().text();
+                if (cleanInvisibleChars(signature.text()).contains(cleanInvisibleChars(methodNameWithParameters))) {
+                    // 找到匹配的签名，获取其父元素
+                    Element parent = signature.parent();
+                    Elements children = parent.children(); // 获取所有直接子元素
+
+                    // 使用 StringBuilder 构建结果
+                    StringBuilder result = new StringBuilder();
+                    // 从索引 1 开始遍历（跳过第一个子元素，通常是 <h4>）
+                    for (int i = 1; i < children.size(); i++) {
+                        if (result.length() > 0) {
+                            result.append("\n"); // 用换行符连接
+                        }
+                        result.append(children.get(i).text());
+                    }
+                    return result.toString();
                 }
             }
-            return "";
+            return ""; // 如果没有找到匹配项，返回空字符串
+        }
+
+        /**
+         * 移除常见的不可见字符，并将各种空白字符标准化为空格，
+         * 然后压缩多个连续空格为单个空格。
+         */
+        private static String cleanInvisibleChars(String input) {
+            if (input == null) return null;
+            return input
+                    .replaceAll("[\\p{Cf}\\p{Z}\\p{Cc}]+", "") // Cf=格式控制符（如零宽空格），Z=分隔符（各种空格），Cc=控制字符
+                    .trim();
         }
 
         @Override
@@ -203,7 +230,7 @@ public class JDK9Dialet implements JavadocParsingConfig {
                 String[] parts = declaration.split("\\s+");
                 for (String part : parts) {
                     if (part.equals("public") || part.equals("private") || part.equals("protected") ||
-                        part.equals("abstract") || part.equals("final") || part.equals("static")) {
+                            part.equals("abstract") || part.equals("final") || part.equals("static")) {
                         modifiers.add(part);
                     }
                 }
@@ -219,12 +246,17 @@ public class JDK9Dialet implements JavadocParsingConfig {
 
         @Override
         public String extractSuperClass(Document doc) {
-            // 查找继承信息，通常在 ul 列表中
-            Elements inheritanceList = doc.select("ul.inheritance li");
-            if (inheritanceList.size() >= 2) {
-                // 倒数第二个通常是直接父类
-                Element superClassElement = inheritanceList.get(inheritanceList.size() - 2);
-                return superClassElement.text().trim();
+            List<String> inheritanceList = doc.select("ul.inheritance li")
+                    .stream()
+                    .map(Element::text)
+                    .map(String::trim)
+                    .filter(text -> !text.isEmpty())
+                    .collect(Collectors.toCollection(LinkedHashSet::new))
+                    .stream()
+                    .collect(Collectors.toList());
+            if (inheritanceList.size() >= 3) {
+                // 倒数第二个通常是直接父类，同时不要java.lang.Object
+                return inheritanceList.get(inheritanceList.size() - 2);
             }
             return "";
         }
