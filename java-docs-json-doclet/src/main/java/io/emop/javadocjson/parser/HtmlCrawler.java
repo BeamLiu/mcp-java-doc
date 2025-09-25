@@ -16,10 +16,15 @@ import java.util.concurrent.*;
 public class HtmlCrawler {
     
     private final Log log;
-    private int maxDepth = 10;
-    private String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
+    private String userAgent = "JavaDocCrawler/1.0";
     private int timeout = 30000;
     private int threadPoolSize = 5;
+    
+    // Proxy configuration
+    private String proxyHost;
+    private int proxyPort = 8080;
+    private String proxyUsername;
+    private String proxyPassword;
     
     // Package filtering
     private Set<String> packageFilters = new HashSet<>();
@@ -75,7 +80,7 @@ public class HtmlCrawler {
             }
             
             // Extract class URLs based on entry point type
-            Set<String> classUrls = extractClassUrls(entryPoint, baseUrl);
+            Set<String> classUrls = extractClassUrls(entryPoint);
             
             if (classUrls.isEmpty()) {
                 log.warn("No class URLs found");
@@ -99,9 +104,9 @@ public class HtmlCrawler {
      * Initializes components that depend on the base URL.
      */
     private void initializeUrlDependentComponents(String baseUrl) {
-        this.entryPointStrategy = new EntryPointStrategy(log, baseUrl, userAgent, timeout);
+        this.entryPointStrategy = new EntryPointStrategy(log, baseUrl, userAgent, timeout, proxyHost, proxyPort, proxyUsername, proxyPassword);
         this.classUrlExtractor = new ClassUrlExtractor(log, baseUrl, packageFilters);
-        this.pageParser = new JavadocPageParser(log, userAgent, timeout);
+        this.pageParser = new JavadocPageParser(log, userAgent, timeout, proxyHost, proxyPort, proxyUsername, proxyPassword);
         
         // Update cache with current settings
         this.cache = new CrawlerCache(log, enableCache, cacheDir);
@@ -110,7 +115,7 @@ public class HtmlCrawler {
     /**
      * Extracts class URLs from the entry point document.
      */
-    private Set<String> extractClassUrls(EntryPointStrategy.EntryPointResult entryPoint, String baseUrl) {
+    private Set<String> extractClassUrls(EntryPointStrategy.EntryPointResult entryPoint) {
         Set<String> classUrls = new HashSet<>();
         
         if (entryPoint.isAllClassesType()) {
@@ -292,12 +297,4 @@ public class HtmlCrawler {
         return root;
     }
     
-    // Getter methods for configuration
-    public int getMaxDepth() { return maxDepth; }
-    public String getUserAgent() { return userAgent; }
-    public int getTimeout() { return timeout; }
-    public int getThreadPoolSize() { return threadPoolSize; }
-    public Set<String> getPackageFilters() { return packageFilters; }
-    public boolean isEnableCache() { return enableCache; }
-    public String getCacheDir() { return cacheDir; }
 }

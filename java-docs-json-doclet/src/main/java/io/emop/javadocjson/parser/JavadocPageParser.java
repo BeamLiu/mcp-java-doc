@@ -4,6 +4,7 @@ import io.emop.javadocjson.model.JavadocClass;
 import io.emop.javadocjson.model.JavadocField;
 import io.emop.javadocjson.model.JavadocMethod;
 import org.apache.maven.plugin.logging.Log;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,11 +24,19 @@ public class JavadocPageParser {
     private final Log log;
     private final String userAgent;
     private final int timeout;
+    private final String proxyHost;
+    private final int proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
     
-    public JavadocPageParser(Log log, String userAgent, int timeout) {
+    public JavadocPageParser(Log log, String userAgent, int timeout, String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) {
         this.log = log;
         this.userAgent = userAgent;
         this.timeout = timeout;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        this.proxyUsername = proxyUsername;
+        this.proxyPassword = proxyPassword;
     }
     
     /**
@@ -40,10 +49,7 @@ public class JavadocPageParser {
     public JavadocClass parseClassPage(String classUrl) throws IOException {
         log.debug("Parsing class page: " + classUrl);
         
-        Document doc = Jsoup.connect(classUrl)
-                .userAgent(userAgent)
-                .timeout(timeout)
-                .get();
+        Document doc = configureConnection(classUrl).get();
         
         JavadocClass javadocClass = new JavadocClass();
         
@@ -76,10 +82,7 @@ public class JavadocPageParser {
     public Set<String> extractClassUrlsFromPackagePage(String packageUrl, String baseUrl, String packagePath) throws IOException {
         log.debug("Extracting class URLs from package page: " + packageUrl);
         
-        Document doc = Jsoup.connect(packageUrl)
-                .userAgent(userAgent)
-                .timeout(timeout)
-                .get();
+        Document doc = configureConnection(packageUrl).get();
         
         Set<String> classUrls = new HashSet<>();
         
@@ -283,5 +286,28 @@ public class JavadocPageParser {
             return path.replace("/", ".");
         }
         return null;
+    }
+    
+    /**
+     * Configures a Jsoup connection with proxy settings if available.
+     * 
+     * @param url The URL to connect to
+     * @return Configured Connection object
+     */
+    private Connection configureConnection(String url) {
+        Connection connection = Jsoup.connect(url)
+                .userAgent(userAgent)
+                .timeout(timeout);
+        
+        // Configure proxy if provided
+        if (proxyHost != null && !proxyHost.trim().isEmpty()) {
+            connection.proxy(proxyHost, proxyPort);
+            if (proxyUsername != null && !proxyUsername.trim().isEmpty()) {
+                connection.header("Proxy-Authorization", "Basic " + 
+                    java.util.Base64.getEncoder().encodeToString((proxyUsername + ":" + proxyPassword).getBytes()));
+            }
+        }
+        
+        return connection;
     }
 }

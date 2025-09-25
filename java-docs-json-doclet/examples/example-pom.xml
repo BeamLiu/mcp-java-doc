@@ -53,9 +53,23 @@
                         <configuration>
                             <baseUrl>https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/</baseUrl>
                             <outputFile>${project.build.directory}/external-javadoc.json</outputFile>
-                            <maxDepth>2</maxDepth>
                             <userAgent>Javadoc-JSON-Plugin/1.0</userAgent>
                             <timeout>30000</timeout>
+                            <!-- Package filters using regular expressions (uncomment and configure if needed) -->
+                            <!--
+                            <packageFilters>
+                                <packageFilter>com\.example\..*</packageFilter>
+                                <packageFilter>org\.springframework\..*</packageFilter>
+                                <packageFilter>.*\.util\..*</packageFilter>
+                            </packageFilters>
+                            -->
+                            <!-- Proxy configuration (uncomment and configure if needed) -->
+                            <!--
+                            <proxyHost>proxy.company.com</proxyHost>
+                            <proxyPort>8080</proxyPort>
+                            <proxyUsername>username</proxyUsername>
+                            <proxyPassword>password</proxyPassword>
+                            -->
                             <mcpCompatible>true</mcpCompatible>
                         </configuration>
                     </execution>

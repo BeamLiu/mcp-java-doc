@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,11 +24,11 @@ public class HtmlCrawlerTest {
     @BeforeEach
     void setUp() {
         htmlCrawler = new HtmlCrawler(new SimpleConsoleLog());
-
         // 设置爬虫参数
-        htmlCrawler.setMaxDepth(2);  // 限制深度避免爬取太多
         htmlCrawler.setTimeout(10000);  // 10秒超时
         htmlCrawler.setUserAgent("HtmlCrawlerTest/1.0");
+        htmlCrawler.setProxyHost("localhost");
+        htmlCrawler.setProxyPort(10809);
     }
 
     /**
@@ -40,6 +41,7 @@ public class HtmlCrawlerTest {
         // 准备测试数据
         JavadocMetadata metadata = createTestMetadata();
 
+        htmlCrawler.setPackageFilters(Set.of("nxopen\\.features"));
         // 执行爬取
         JavadocRoot result = htmlCrawler.crawl(baseUrl);
         result.setMetadata(metadata);
@@ -65,7 +67,6 @@ public class HtmlCrawlerTest {
     @Test
     void testCrawlerConfiguration() {
         // 测试设置各种参数
-        htmlCrawler.setMaxDepth(5);
         htmlCrawler.setTimeout(30000);
         htmlCrawler.setUserAgent("TestAgent/2.0");
 

@@ -16,6 +16,7 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Set;
 
 /**
  * Maven goal to crawl HTML Javadoc and generate JSON.
@@ -42,12 +43,6 @@ public class CrawlMojo extends AbstractMojo {
     private File outputFile;
 
     /**
-     * Maximum crawling depth.
-     */
-    @Parameter(property = "maxDepth", defaultValue = "10")
-    private int maxDepth;
-
-    /**
      * HTTP User-Agent header.
      */
     @Parameter(property = "userAgent", defaultValue = "JavaDocCrawler/1.0")
@@ -64,6 +59,44 @@ public class CrawlMojo extends AbstractMojo {
      */
     @Parameter(property = "mcpCompatible", defaultValue = "true")
     private boolean mcpCompatible;
+    
+    /**
+     * Proxy host for HTTP requests.
+     */
+    @Parameter(property = "proxyHost")
+    private String proxyHost;
+    
+    /**
+     * Proxy port for HTTP requests.
+     */
+    @Parameter(property = "proxyPort", defaultValue = "8080")
+    private int proxyPort;
+    
+    /**
+     * Proxy username for authentication.
+     */
+    @Parameter(property = "proxyUsername")
+    private String proxyUsername;
+    
+    /**
+     * Proxy password for authentication.
+     */
+    @Parameter(property = "proxyPassword")
+    private String proxyPassword;
+    
+    /**
+     * Package filters using regular expressions to limit crawling to specific packages.
+     * Each filter is treated as a regular expression pattern that must match the full package name.
+     * If no filters are specified, all packages will be crawled.
+     * 
+     * Examples:
+     * - "com\.example\..*" - matches all packages starting with com.example.
+     * - ".*\.util" - matches all packages ending with .util
+     * - "com\.example\.core" - matches exactly com.example.core package
+     * 
+     */
+    @Parameter(property = "packageFilters")
+    private Set<String> packageFilters;
     
 
     @Override
@@ -83,9 +116,25 @@ public class CrawlMojo extends AbstractMojo {
 
             // Create and configure HTML crawler
             HtmlCrawler crawler = new HtmlCrawler(getLog());
-            crawler.setMaxDepth(maxDepth);
             crawler.setUserAgent(userAgent);
             crawler.setTimeout(timeout);
+            
+            // Configure proxy if provided
+            if (proxyHost != null && !proxyHost.trim().isEmpty()) {
+                crawler.setProxyHost(proxyHost);
+                crawler.setProxyPort(proxyPort);
+                if (proxyUsername != null && !proxyUsername.trim().isEmpty()) {
+                    crawler.setProxyUsername(proxyUsername);
+                    crawler.setProxyPassword(proxyPassword);
+                }
+                getLog().info("Using proxy: " + proxyHost + ":" + proxyPort);
+            }
+            
+            // Configure package filters if provided
+            if (packageFilters != null && !packageFilters.isEmpty()) {
+                crawler.setPackageFilters(packageFilters);
+                getLog().info("Using package filters: " + packageFilters);
+            }
 
             // Crawl the Javadoc website
             JavadocRoot root = crawler.crawl(baseUrl);

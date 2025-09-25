@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.emop.javadocjson.parser.ClassUrlExtractor.validAllClassPage;
+
 /**
  * Strategy class for handling different entry point attempts in Javadoc crawling.
  */
@@ -20,6 +22,10 @@ public class EntryPointStrategy {
     private final String baseUrl;
     private final String userAgent;
     private final int timeout;
+    private final String proxyHost;
+    private final int proxyPort;
+    private final String proxyUsername;
+    private final String proxyPassword;
 
     private static final List<String> ALL_CLASSES_ENTRY_POINTS = Arrays.asList(
             "allclasses-frame.html",
@@ -38,11 +44,15 @@ public class EntryPointStrategy {
             "element-list"
     );
 
-    public EntryPointStrategy(Log log, String baseUrl, String userAgent, int timeout) {
+    public EntryPointStrategy(Log log, String baseUrl, String userAgent, int timeout, String proxyHost, int proxyPort, String proxyUsername, String proxyPassword) {
         this.log = log;
         this.baseUrl = baseUrl;
         this.userAgent = userAgent;
         this.timeout = timeout;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        this.proxyUsername = proxyUsername;
+        this.proxyPassword = proxyPassword;
     }
 
     /**
@@ -83,12 +93,10 @@ public class EntryPointStrategy {
             log.debug("Attempting entry point: " + fullUrl);
 
             try {
-                if (isPageAccessible(fullUrl)) {
-                    Document document = fetchDocument(fullUrl);
-                    if (document != null) {
-                        log.info("Successfully accessed " + groupName + " entry point: " + entryPoint);
-                        return new EntryPointResult(entryPoint, document, fullUrl);
-                    }
+                Document document = fetchDocument(fullUrl);
+                if (document != null && validAllClassPage(document)) {
+                    log.info("Successfully accessed " + groupName + " entry point: " + entryPoint);
+                    return new EntryPointResult(entryPoint, document, fullUrl);
                 }
             } catch (Exception e) {
                 log.debug("Failed to access " + entryPoint + ": " + e.getMessage());
@@ -99,28 +107,22 @@ public class EntryPointStrategy {
         return null;
     }
 
-    private boolean isPageAccessible(String url) {
-        try {
-            Connection.Response response = Jsoup.connect(url)
-                    .userAgent(userAgent)
-                    .timeout(timeout)
-                    .execute();
-
-            int statusCode = response.statusCode();
-            log.debug("Page " + url + " returned status: " + statusCode);
-            return statusCode == 200;
-        } catch (IOException e) {
-            log.debug("Page not accessible: " + url + " - " + e.getMessage());
-            return false;
-        }
-    }
-
     private Document fetchDocument(String url) {
         try {
-            return Jsoup.connect(url)
+            Connection connection = Jsoup.connect(url)
                     .userAgent(userAgent)
-                    .timeout(timeout)
-                    .get();
+                    .timeout(timeout);
+
+            // Configure proxy if provided
+            if (proxyHost != null && !proxyHost.trim().isEmpty()) {
+                connection.proxy(proxyHost, proxyPort);
+                if (proxyUsername != null && !proxyUsername.trim().isEmpty()) {
+                    connection.header("Proxy-Authorization", "Basic " +
+                            java.util.Base64.getEncoder().encodeToString((proxyUsername + ":" + proxyPassword).getBytes()));
+                }
+            }
+
+            return connection.get();
         } catch (IOException e) {
             log.debug("Failed to fetch document from: " + url + " - " + e.getMessage());
             return null;
