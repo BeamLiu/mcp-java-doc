@@ -197,7 +197,7 @@ public class HtmlCrawler {
         if (fullClassName != null && cache.isCached(fullClassName)) {
             JavadocClass cachedClass = cache.getCachedClass(fullClassName);
             if (cachedClass != null) {
-                log.debug("Using cached JavadocClass for: " + fullClassName);
+                log.info("Using cached JavadocClass for: " + fullClassName);
                 progressTracker.incrementSkipped();
                 return cachedClass;
             }

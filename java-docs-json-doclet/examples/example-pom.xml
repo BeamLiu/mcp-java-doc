@@ -64,10 +64,10 @@
                             <proxyPort>8080</proxyPort>
                             <proxyUsername>username</proxyUsername>
                             <proxyPassword>password</proxyPassword> -->
-                        </configuration>
-                    </execution>
-                    
-                    <!-- Simple Test Goal: Quick testing configuration -->
+                </configuration>
+            </execution>
+
+            <!-- Simple Test Goal: Quick testing configuration -->
                     <execution>
                         <id>simple-test</id>
                         <goals>

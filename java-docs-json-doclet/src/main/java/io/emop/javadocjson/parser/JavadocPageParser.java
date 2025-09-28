@@ -90,7 +90,7 @@ public class JavadocPageParser {
         javadocClass.setSimpleFields(parseFieldsWithConfig(doc, config));
         javadocClass.setSimpleConstructors(parseSimpleConstructorsWithConfig(doc, config));
 
-        log.debug("Parsed class: " + javadocClass.getName() + " with " +
+        log.info("Parsed class: " + javadocClass.getName() + " with " +
                 javadocClass.getSimpleMethods().size() + " simple methods, " +
                 javadocClass.getSimpleFields().size() + " simple fields, and " +
                 javadocClass.getSimpleConstructors().size() + " simple constructors");

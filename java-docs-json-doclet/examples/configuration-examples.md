@@ -210,7 +210,7 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish
 
 ### Run Crawl Goal
 ```bash
-mvn io.emop:java-docs-json-doclet:1.0.0:crawl -DbaseUrl=https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/
+mvn io.emop:java-docs-json-doclet:1.0.0:crawl
 ```
 
 ### With Custom Parameters
@@ -238,7 +238,7 @@ mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:publish -Dou
 #### Crawl Goal
 ```bash
 # Crawl external Javadoc
-mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:crawl -DbaseUrl='https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/' '-DoutputDirectory=external-docs'
+mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:crawl@crawl-external-javadoc
 ```
 
 ## Profile-Based Configuration

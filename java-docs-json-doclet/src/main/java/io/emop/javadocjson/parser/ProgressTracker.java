@@ -76,6 +76,9 @@ public class ProgressTracker {
      */
     public void incrementSkipped() {
         skippedClasses.incrementAndGet();
+        // Calculate total processed (including skipped) for progress tracking
+        int totalProcessed = processedClasses.get() + skippedClasses.get();
+        logProgressIfNeeded(totalProcessed);
     }
     
     /**
@@ -83,6 +86,9 @@ public class ProgressTracker {
      */
     public void incrementFailed() {
         failedClasses.incrementAndGet();
+        // Calculate total processed (including failed) for progress tracking
+        int totalProcessed = processedClasses.get() + skippedClasses.get() + failedClasses.get();
+        logProgressIfNeeded(totalProcessed);
     }
     
     /**
