@@ -1,0 +1,57 @@
+{
+  "name" : "TestInterface",
+  "packageName" : null,
+  "type" : "interface",
+  "description" : "测试接口，用于验证接口文档的 JSON 生成。\n \n @author Test Author\n @version 1.0",
+  "modifiers" : [ "public", "abstract" ],
+  "superClass" : "none",
+  "interfaces" : [ ],
+  "constructors" : [ ],
+  "methods" : [ {
+    "name" : "processData",
+    "signature" : "public abstract java.lang.String processData(java.lang.String data) throws java.lang.Exception",
+    "description" : "\\u5904\\u7406\\u6570\\u636e\\u7684\\u65b9\\u6cd5\\u3002",
+    "modifiers" : [ "public", "abstract" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "data",
+      "type" : "java.lang.String",
+      "description" : "\\u8981\\u5904\\u7406\\u7684\\u6570\\u636e"
+    } ],
+    "exceptions" : [ "java.lang.Exception" ]
+  }, {
+    "name" : "validateInput",
+    "signature" : "public abstract boolean validateInput(java.lang.String input)",
+    "description" : "\\u9a8c\\u8bc1\\u8f93\\u5165\\u7684\\u65b9\\u6cd5\\u3002",
+    "modifiers" : [ "public", "abstract" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "input",
+      "type" : "java.lang.String",
+      "description" : "\\u8981\\u9a8c\\u8bc1\\u7684\\u8f93\\u5165"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "logMessage",
+    "signature" : "public default void logMessage(java.lang.String message)",
+    "description" : "\\u9ed8\\u8ba4\\u65b9\\u6cd5\\u793a\\u4f8b\\uff08Java 8+\\uff09\\u3002",
+    "modifiers" : [ "public", "default" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "message",
+      "type" : "java.lang.String",
+      "description" : "\\u8981\\u8bb0\\u5f55\\u7684\\u6d88\\u606f"
+    } ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ {
+    "name" : "CONSTANT_VALUE",
+    "type" : "java.lang.String",
+    "description" : "常量字段示例。",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : "测试常量"
+  } ],
+  "simpleMethods" : [ ],
+  "simpleFields" : [ ],
+  "simpleConstructors" : [ ]
+}
