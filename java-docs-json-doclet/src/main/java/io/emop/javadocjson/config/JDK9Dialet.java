@@ -205,7 +205,7 @@ public class JDK9Dialet implements JavadocParsingConfig {
         @Override
         public String extractClassType(Document doc) {
             // 从标题中提取类型
-            Element titleElement = doc.select("h1.title").first();
+            Element titleElement = doc.select("h1.title, h2.title").first();
             if (titleElement != null) {
                 String title = titleElement.text().trim();
                 if (title.startsWith("Class ")) {
@@ -246,6 +246,12 @@ public class JDK9Dialet implements JavadocParsingConfig {
 
         @Override
         public String extractSuperClass(Document doc) {
+            // 首先检查是否是interface，interface没有superclass
+            Element titleElement = doc.select("h1.title, h2.title").first();
+            if (titleElement != null && titleElement.text().contains("Interface ")) {
+                return ""; // interface没有superclass
+            }
+            
             List<String> inheritanceList = doc.select("ul.inheritance li")
                     .stream()
                     .map(Element::text)
@@ -263,24 +269,135 @@ public class JDK9Dialet implements JavadocParsingConfig {
 
         @Override
         public java.util.List<String> extractInterfaces(Document doc) {
-            // 查找实现的接口，通常在 dl dt dd 结构中
+            // 查找实现的接口或父接口，通常在 dl dt dd 结构中
             java.util.List<String> interfaces = new java.util.ArrayList<>();
             Elements dlElements = doc.select("dl");
             for (Element dl : dlElements) {
                 Element dt = dl.select("dt").first();
-                if (dt != null && dt.text().contains("All Implemented Interfaces")) {
-                    Element dd = dl.select("dd").first();
-                    if (dd != null) {
-                        String interfaceText = dd.text().trim();
-                        // 分割多个接口（通常用逗号分隔）
-                        String[] interfaceArray = interfaceText.split(",");
-                        for (String iface : interfaceArray) {
-                            interfaces.add(iface.trim());
+                if (dt != null) {
+                    String dtText = dt.text();
+                    // 对于class，查找"All Implemented Interfaces"
+                    // 对于interface，查找"All Superinterfaces"
+                    if (dtText.contains("All Implemented Interfaces") || dtText.contains("All Superinterfaces")) {
+                        Element dd = dl.select("dd").first();
+                        if (dd != null) {
+                            // 首先尝试从链接中提取完整的包名和类名
+                            Elements links = dd.select("a");
+                            if (!links.isEmpty()) {
+                                // 有链接的情况，从链接中提取完整信息
+                                 for (Element link : links) {
+                                     String href = link.attr("href");
+                                     String title = link.attr("title");
+                                     String linkText = link.text().trim();
+                                     
+                                     // 优先使用title属性中的包信息
+                                     String fullClassName = extractFullClassNameFromTitle(title, linkText);
+                                     if (fullClassName == null || fullClassName.isEmpty()) {
+                                         // 如果title无法提取，尝试从URL提取
+                                         fullClassName = extractFullClassNameFromUrl(href, linkText);
+                                     }
+                                     
+                                     if (fullClassName != null && !fullClassName.isEmpty()) {
+                                         interfaces.add(fullClassName);
+                                     } else {
+                                         interfaces.add(linkText);
+                                     }
+                                 }
+                                
+                                // 处理没有链接的接口（如java.rmi.Remote等）
+                                String fullText = dd.text().trim();
+                                Elements codeElements = dd.select("code");
+                                for (Element codeElement : codeElements) {
+                                    String codeText = codeElement.text().trim();
+                                    // 如果这个code元素没有链接，且不在已添加的接口中
+                                    if (codeElement.select("a").isEmpty() && !interfaces.contains(codeText)) {
+                                        interfaces.add(codeText);
+                                    }
+                                }
+                            } else {
+                                // 没有链接的情况，使用原来的文本解析方式
+                                String interfaceText = dd.text().trim();
+                                String[] interfaceArray = interfaceText.split(",");
+                                for (String iface : interfaceArray) {
+                                    interfaces.add(iface.trim());
+                                }
+                            }
                         }
                     }
                 }
             }
             return interfaces;
+        }
+        
+        /**
+          * 从title属性中提取完整的类名（包括包名）
+          * title格式通常为: "interface in nxopen.features" 或 "class in java.lang"
+          */
+         private String extractFullClassNameFromTitle(String title, String linkText) {
+             if (title == null || title.isEmpty()) {
+                 return null;
+             }
+             
+             try {
+                 // 解析title格式: "interface in nxopen.features"
+                 if (title.contains(" in ")) {
+                     String[] parts = title.split(" in ");
+                     if (parts.length == 2) {
+                         String packageName = parts[1].trim();
+                         return packageName + "." + linkText;
+                     }
+                 }
+             } catch (Exception e) {
+                 // 解析失败，返回null让调用者尝试其他方法
+             }
+             
+             return null;
+         }
+         
+         /**
+          * 从URL中提取完整的类名（包括包名）
+          */
+         private String extractFullClassNameFromUrl(String url, String linkText) {
+            if (url == null || url.isEmpty()) {
+                return linkText;
+            }
+            
+            try {
+                // 提取包名部分
+                String packageName = null;
+                
+                // 从URL路径中提取包名
+                if (url.contains("/")) {
+                    String[] pathParts = url.split("/");
+                    java.util.List<String> packageParts = new java.util.ArrayList<>();
+                    
+                    // 查找.html文件之前的路径部分
+                    for (int i = 0; i < pathParts.length - 1; i++) {
+                        String part = pathParts[i];
+                        // 跳过协议、域名等部分，只保留包路径
+                        if (!part.isEmpty() && !part.contains(":") && !part.contains(".") 
+                            && !part.equals("documentation") && !part.equals("external") 
+                            && !part.equals("custom_api") && !part.equals("open_java_ref")) {
+                            packageParts.add(part);
+                        }
+                    }
+                    
+                    if (!packageParts.isEmpty()) {
+                        packageName = String.join(".", packageParts);
+                    }
+                }
+                
+                // 如果成功提取到包名，返回完整类名
+                if (packageName != null && !packageName.isEmpty()) {
+                    return packageName + "." + linkText;
+                } else {
+                    // 如果无法提取包名，返回类名
+                    return linkText;
+                }
+            } catch (Exception e) {
+                // 如果解析失败，返回原始链接文本
+                return linkText;
+            }
         }
     }
 
