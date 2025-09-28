@@ -36,16 +36,16 @@ public class PublishMojo extends AbstractMojo {
     private MavenProject project;
 
     /**
-     * Output JSON file path.
+     * Output directory for JSON files.
      */
-    @Parameter(property = "outputFile", defaultValue = "javadoc-doclet.json")
-    private String outputFile;
+    @Parameter(property = "outputDirectory", defaultValue = "javadoc-output")
+    private String outputDirectory;
 
     /**
      * Source directory to process.
      */
-    @Parameter(property = "sourceDir", defaultValue = "${project.build.sourceDirectory}")
-    private String sourceDir;
+    @Parameter(property = "sourceDirectory", defaultValue = "${project.build.sourceDirectory}")
+    private String sourceDirectory;
 
     /**
      * Include private members in the output.
@@ -69,8 +69,8 @@ public class PublishMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
             getLog().info("Generating JSON documentation using JDK Doclet API...");
-            getLog().info("Source directory: " + sourceDir);
-            getLog().info("Output file: " + outputFile);
+            getLog().info("Source directory: " + sourceDirectory);
+            getLog().info("Output directory: " + outputDirectory);
 
             // Get the documentation tool
             DocumentationTool docTool = ToolProvider.getSystemDocumentationTool();
@@ -85,7 +85,7 @@ public class PublishMojo extends AbstractMojo {
                 // Collect all Java source files
                 List<File> javaFiles = collectJavaFiles();
                 if (javaFiles.isEmpty()) {
-                    getLog().warn("No Java source files found in: " + sourceDir);
+                    getLog().warn("No Java source files found in: " + sourceDirectory);
                     return;
                 }
 
@@ -114,7 +114,7 @@ public class PublishMojo extends AbstractMojo {
                     throw new MojoExecutionException("Doclet execution failed");
                 }
 
-                getLog().info("JSON documentation generated successfully: " + outputFile);
+                getLog().info("JSON documentation generated successfully in: " + outputDirectory);
 
             } finally {
                 fileManager.close();
@@ -129,8 +129,8 @@ public class PublishMojo extends AbstractMojo {
         List<File> javaFiles = new ArrayList<>();
 
         // Add main source directory
-        if (sourceDir != null && !sourceDir.isEmpty()) {
-            Path sourcePath = Paths.get(sourceDir);
+        if (sourceDirectory != null && !sourceDirectory.isEmpty()) {
+            Path sourcePath = Paths.get(sourceDirectory);
             if (Files.exists(sourcePath)) {
                 javaFiles.addAll(findJavaFiles(sourcePath));
             }
@@ -163,8 +163,8 @@ public class PublishMojo extends AbstractMojo {
         List<String> options = new ArrayList<>();
 
         // Add custom doclet options
-        options.add("-outputFile");
-        options.add(outputFile);
+        options.add("-outputDirectory");
+        options.add(outputDirectory);
 
         if (includePrivate) {
             options.add("-includePrivate");

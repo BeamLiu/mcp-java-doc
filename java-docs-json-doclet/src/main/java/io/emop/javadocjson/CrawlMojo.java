@@ -1,7 +1,7 @@
 package io.emop.javadocjson;
 
 import io.emop.javadocjson.model.JavadocMetadata;
-import io.emop.javadocjson.model.JavadocRoot;
+import io.emop.javadocjson.model.JavadocClass;
 import io.emop.javadocjson.config.JDK9Dialet;
 import io.emop.javadocjson.util.JsonGenerator;
 import io.emop.javadocjson.parser.HtmlCrawler;
@@ -17,6 +17,7 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,10 +39,10 @@ public class CrawlMojo extends AbstractMojo {
     private String baseUrl;
 
     /**
-     * Output JSON file path.
+     * Output directory for individual class JSON files.
      */
-    @Parameter(property = "outputFile", defaultValue = "${project.build.directory}/javadocs_complete.json")
-    private File outputFile;
+    @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}/javadocs")
+    private File outputDirectory;
 
     /**
      * HTTP User-Agent header.
@@ -138,27 +139,31 @@ public class CrawlMojo extends AbstractMojo {
             }
 
             // Crawl the Javadoc website
-            JavadocRoot root = crawler.crawl(baseUrl);
-            root.setMetadata(metadata);
+            List<JavadocClass> classes = crawler.crawl(baseUrl);
 
             // Ensure output directory exists
-            if (!outputFile.getParentFile().exists()) {
-                outputFile.getParentFile().mkdirs();
+            if (!outputDirectory.exists()) {
+                outputDirectory.mkdirs();
             }
 
-            // Generate JSON output
+            // Generate individual JSON files for each class
             JsonGenerator generator = new JsonGenerator();
             generator.setMcpCompatible(mcpCompatible);
-            generator.writeToFile(root, outputFile);
             
-            getLog().info("Javadoc crawl completed. Output written to: " + outputFile.getAbsolutePath());
-            getLog().info("Found " + root.getPackages().size() + " packages");
-            getLog().info("MCP Compatible: " + mcpCompatible);
+            int totalClasses = 0;
+            for (JavadocClass javadocClass : classes) {
+                // Create filename based on full class name
+                String fileName = javadocClass.getFullName() + ".json";
+                File classFile = new File(outputDirectory, fileName);
+                
+                // Write individual class JSON file
+                generator.writeClassToFile(javadocClass, classFile);
+                totalClasses++;
+            }
             
-            int totalClasses = root.getPackages().stream()
-                .mapToInt(pkg -> pkg.getClasses().size())
-                .sum();
+            getLog().info("Javadoc crawl completed. Output written to: " + outputDirectory.getAbsolutePath());
             getLog().info("Total classes: " + totalClasses);
+            getLog().info("MCP Compatible: " + mcpCompatible);
 
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to crawl Javadoc HTML", e);

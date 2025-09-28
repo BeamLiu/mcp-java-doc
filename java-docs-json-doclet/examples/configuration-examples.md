@@ -97,8 +97,8 @@ This document provides various configuration examples for the Javadoc JSON Plugi
                 <goal>publish</goal>
             </goals>
             <configuration>
-                <!-- Output file path -->
-                <outputFile>${project.build.directory}/docs/javadoc.json</outputFile>
+                <!-- Output directory for JSON files -->
+                <outputDirectory>${project.build.directory}/docs</outputDirectory>
                 
                 <!-- Source directory (default: src/main/java) -->
                 <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
@@ -106,11 +106,10 @@ This document provides various configuration examples for the Javadoc JSON Plugi
                 <!-- Include private members -->
                 <includePrivate>true</includePrivate>
                 
-                <!-- Source encoding -->
-                <encoding>UTF-8</encoding>
-                
-                <!-- MCP compatibility mode -->
-                <mcpCompatible>true</mcpCompatible>
+                <!-- Additional source paths -->
+                <sourcePaths>
+                    <sourcePath>src/test/java</sourcePath>
+                </sourcePaths>
             </configuration>
         </execution>
     </executions>
@@ -134,8 +133,8 @@ This document provides various configuration examples for the Javadoc JSON Plugi
                 <!-- Base URL of the Javadoc website -->
                 <baseUrl>https://docs.oracle.com/en/java/javase/17/docs/api/</baseUrl>
                 
-                <!-- Output file path -->
-                <outputFile>${project.build.directory}/external-docs.json</outputFile>
+                <!-- Output directory for individual class JSON files -->
+                <outputDirectory>${project.build.directory}/external-docs</outputDirectory>
                 
                 <!-- Package filters using regular expressions (only crawl matching packages) -->
                 <packageFilters>
@@ -143,12 +142,6 @@ This document provides various configuration examples for the Javadoc JSON Plugi
                     <packageFilter>java\.util.*</packageFilter>
                     <packageFilter>java\.io.*</packageFilter>
                 </packageFilters>
-                
-                <!-- Enable caching for improved performance -->
-                <enableCache>true</enableCache>
-                
-                <!-- Thread pool size for concurrent crawling -->
-                <threadPoolSize>4</threadPoolSize>
                 
                 <!-- Custom user agent -->
                 <userAgent>MyProject-DocCrawler/1.0</userAgent>
@@ -187,7 +180,7 @@ This document provides various configuration examples for the Javadoc JSON Plugi
                 <goal>publish</goal>
             </goals>
             <configuration>
-                <outputFile>${project.build.directory}/local-javadoc.json</outputFile>
+                <outputDirectory>${project.build.directory}/local-javadoc</outputDirectory>
                 <includePrivate>true</includePrivate>
             </configuration>
         </execution>
@@ -201,7 +194,7 @@ This document provides various configuration examples for the Javadoc JSON Plugi
             </goals>
             <configuration>
                 <baseUrl>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</baseUrl>
-                <outputFile>${project.build.directory}/spring-javadoc.json</outputFile>
+                <outputDirectory>${project.build.directory}/spring-javadoc</outputDirectory>
             </configuration>
         </execution>
     </executions>
@@ -223,9 +216,9 @@ mvn io.emop:java-docs-json-doclet:1.0.0:crawl -DbaseUrl=https://docs.sw.siemens.
 ### With Custom Parameters
 ```bash
 mvn io.emop:java-docs-json-doclet:1.0.0:publish \
-    -DoutputFile=target/my-docs.json \
+    -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
-    -DmcpCompatible=false
+    -DsourceDirectory=src/main/java
 ```
 
 ### Test Commands (Using example-pom.xml)
@@ -239,13 +232,13 @@ mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:publish
 mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:publish@simple-test
 
 # Publish with custom parameters
-mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:publish -DoutputFile=custom-output.json -DsourceDir=src/main/java -DincludePrivate=false
+mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:publish -DoutputDirectory=custom-output -DsourceDirectory=src/main/java -DincludePrivate=false
 ```
 
 #### Crawl Goal
 ```bash
 # Crawl external Javadoc
-mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:crawl -DbaseUrl='https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/' '-DoutputFile=external-docs.json'
+mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:crawl -DbaseUrl='https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/' '-DoutputDirectory=external-docs'
 ```
 
 ## Profile-Based Configuration
@@ -268,7 +261,7 @@ mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:crawl -Dbase
                             </goals>
                             <configuration>
                                 <includePrivate>true</includePrivate>
-                                <outputFile>${project.build.directory}/dev-docs.json</outputFile>
+                                <outputDirectory>${project.build.directory}/dev-docs</outputDirectory>
                             </configuration>
                         </execution>
                     </executions>
@@ -297,8 +290,7 @@ mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:crawl -Dbase
                             </goals>
                             <configuration>
                                 <includePrivate>false</includePrivate>
-                                <outputFile>${project.build.directory}/public-docs.json</outputFile>
-                                <mcpCompatible>true</mcpCompatible>
+                                <outputDirectory>${project.build.directory}/public-docs</outputDirectory>
                             </configuration>
                         </execution>
                     </executions>
@@ -385,21 +377,19 @@ mvn -f examples/example-pom.xml io.emop:java-docs-json-doclet:1.0.0:crawl -Dbase
 ### Publish Goal Parameters
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `outputFile` | File | `${project.build.directory}/javadoc.json` | Output JSON file path |
-| `sourceDirectory` | File | `${project.build.sourceDirectory}` | Source directory to scan |
-| `includePrivate` | boolean | `false` | Include private members |
-| `encoding` | String | `UTF-8` | Source file encoding |
-| `mcpCompatible` | boolean | `true` | Generate MCP-compatible format |
+| `outputDirectory` | String | `javadoc-output` | Output directory for JSON files |
+| `sourceDirectory` | String | `${project.build.sourceDirectory}` | Source directory to process |
+| `includePrivate` | boolean | `false` | Include private members in the output |
+| `sourcePaths` | List<String> | (none) | Additional source paths to include |
+| `classpath` | String | (none) | Classpath for the documentation generation |
 
 ### Crawl Goal Parameters
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `baseUrl` | String | (required) | Base URL of Javadoc website |
-| `outputFile` | File | `${project.build.directory}/crawled-javadoc.json` | Output JSON file path |
-| `packageFilters` | List<String> | (none) | List of regular expression patterns to filter packages (only matching packages will be crawled) |
-| `enableCache` | boolean | `false` | Enable temporary caching for improved performance |
-| `threadPoolSize` | int | `2` | Number of threads for concurrent crawling |
-| `userAgent` | String | `Javadoc-JSON-Plugin/1.0` | HTTP User-Agent header |
+| `outputDirectory` | File | `${project.build.directory}/javadocs` | Output directory for individual class JSON files |
+| `packageFilters` | Set<String> | (none) | Set of regular expression patterns to filter packages (only matching packages will be crawled) |
+| `userAgent` | String | `JavaDocCrawler/1.0` | HTTP User-Agent header |
 | `timeout` | int | `30000` | Request timeout in milliseconds |
 | `proxyHost` | String | (none) | Proxy server hostname or IP address |
 | `proxyPort` | int | `8080` | Proxy server port number |

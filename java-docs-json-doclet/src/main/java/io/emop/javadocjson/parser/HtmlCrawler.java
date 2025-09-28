@@ -1,7 +1,7 @@
 package io.emop.javadocjson.parser;
 
 import io.emop.javadocjson.config.JDK9Dialet;
-import io.emop.javadocjson.model.*;
+import io.emop.javadocjson.model.JavadocClass;
 import lombok.Setter;
 import org.apache.maven.plugin.logging.Log;
 
@@ -42,7 +42,7 @@ public class HtmlCrawler {
     private JavadocPageParser pageParser;
 
     private final Set<String> visitedUrls = ConcurrentHashMap.newKeySet();
-    private final Map<String, JavadocPackage> packageMap = new ConcurrentHashMap<>();
+    private final Map<String, List<JavadocClass>> classMap = new ConcurrentHashMap<>();
 
     private final JavadocParsingConfig parsingConfig;
 
@@ -65,9 +65,9 @@ public class HtmlCrawler {
      * Crawls the Javadoc website and extracts documentation information.
      *
      * @param baseUrl The base URL of the Javadoc website
-     * @return JavadocRoot containing all extracted documentation
+     * @return List of JavadocClass containing all extracted documentation
      */
-    public JavadocRoot crawl(String baseUrl) {
+    public List<JavadocClass> crawl(String baseUrl) {
         log.info("Starting crawl of Javadoc website: " + baseUrl);
 
         // Initialize URL-dependent components
@@ -96,7 +96,7 @@ public class HtmlCrawler {
 
             progressTracker.logFinalSummary();
 
-            return buildResult();
+            return buildClassList();
 
         } catch (Exception e) {
             log.error("Error during crawling: " + e.getMessage(), e);
@@ -229,14 +229,8 @@ public class HtmlCrawler {
             packageName = "default";
         }
 
-        JavadocPackage javadocPackage = packageMap.computeIfAbsent(packageName, name -> {
-            JavadocPackage pkg = new JavadocPackage();
-            pkg.setName(name);
-            pkg.setClasses(new ArrayList<>());
-            return pkg;
-        });
-
-        javadocPackage.getClasses().add(javadocClass);
+        List<JavadocClass> classList = classMap.computeIfAbsent(packageName, name -> new ArrayList<>());
+        classList.add(javadocClass);
     }
 
     /**
@@ -270,37 +264,38 @@ public class HtmlCrawler {
     /**
      * Builds the final result from collected data.
      */
-    private JavadocRoot buildResult() {
-        JavadocRoot root = new JavadocRoot();
-        root.setPackages(new ArrayList<>(packageMap.values()));
-
-        // Sort packages by name
-        root.getPackages().sort(Comparator.comparing(JavadocPackage::getName));
-
-        // Sort classes within each package
-        for (JavadocPackage pkg : root.getPackages()) {
-            if (pkg.getClasses() != null) {
-                pkg.getClasses().sort(Comparator.comparing(JavadocClass::getName));
+    private List<JavadocClass> buildClassList() {
+        List<JavadocClass> allClasses = new ArrayList<>();
+        
+        // Collect all classes from all packages
+        for (List<JavadocClass> classList : classMap.values()) {
+            if (classList != null) {
+                allClasses.addAll(classList);
             }
         }
 
-        log.info("Crawling completed. Found " + packageMap.size() + " packages with " +
+        // Sort classes by name
+        allClasses.sort(Comparator.comparing(JavadocClass::getName));
+
+        if (log.isDebugEnabled()) {
+            log.debug("Packages found: " + classMap.keySet());
+        }
+
+        log.info("Crawling completed. Found " + classMap.size() + " packages with " +
                 progressTracker.getProcessedCount() + " classes");
 
         if (cache.isEnableCache()) {
             log.info(cache.getCacheStats());
         }
 
-        return root;
+        return allClasses;
     }
 
     /**
      * Creates an empty result when crawling fails.
      */
-    private JavadocRoot createEmptyResult() {
-        JavadocRoot root = new JavadocRoot();
-        root.setPackages(new ArrayList<>());
-        return root;
+    private List<JavadocClass> createEmptyResult() {
+        return new ArrayList<>();
     }
 
 }

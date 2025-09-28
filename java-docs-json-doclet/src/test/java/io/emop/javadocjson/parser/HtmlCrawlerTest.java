@@ -1,14 +1,15 @@
 package io.emop.javadocjson.parser;
 
 import io.emop.javadocjson.config.JDK9Dialet;
+import io.emop.javadocjson.model.JavadocClass;
 import io.emop.javadocjson.model.JavadocMetadata;
-import io.emop.javadocjson.model.JavadocRoot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,21 +55,16 @@ public class HtmlCrawlerTest {
 
         htmlCrawler.setPackageFilters(Set.of("nxopen\\.features"));
         // 执行爬取
-        JavadocRoot result = htmlCrawler.crawl(baseUrl);
-        result.setMetadata(metadata);
+        List<JavadocClass> result = htmlCrawler.crawl(baseUrl);
 
         // 验证结果
         assertNotNull(result, "爬取结果不应为空");
-        assertNotNull(result.getPackages(), "包列表不应为空");
-        assertTrue(result.getPackages().size() > 0, "应该爬取到至少一个包");
+        assertTrue(result.size() > 0, "应该爬取到至少一个类");
 
         // 打印调试信息
-        System.out.println("爬取到的包数量: " + result.getPackages().size());
-        result.getPackages().forEach(pkg -> {
-            System.out.println("包名: " + pkg.getName() + ", 类数量: " + pkg.getClasses().size());
-            pkg.getClasses().forEach(cls -> {
-                System.out.println("  类名: " + cls.getName() + ", 方法数量: " + cls.getMethods().size());
-            });
+        System.out.println("爬取到的类数量: " + result.size());
+        result.forEach(cls -> {
+            System.out.println("类名: " + cls.getName() + ", 包名: " + cls.getPackageName() + ", 方法数量: " + cls.getMethods().size());
         });
     }
 
@@ -96,26 +92,21 @@ public class HtmlCrawlerTest {
 
         htmlCrawlerWithConfig.setPackageFilters(Set.of("nxopen\\.features"));
         // 执行爬取
-        JavadocRoot result = htmlCrawlerWithConfig.crawl(baseUrl);
-        result.setMetadata(metadata);
+        List<JavadocClass> result = htmlCrawlerWithConfig.crawl(baseUrl);
 
         // 验证结果
         assertNotNull(result, "爬取结果不应为空");
-        assertNotNull(result.getPackages(), "包列表不应为空");
-        assertTrue(result.getPackages().size() > 0, "应该爬取到至少一个包");
+        assertTrue(result.size() > 0, "应该爬取到至少一个类");
 
         // 打印调试信息
-        System.out.println("使用配置的爬虫 - 爬取到的包数量: " + result.getPackages().size());
-        result.getPackages().forEach(pkg -> {
-            System.out.println("包名: " + pkg.getName() + ", 类数量: " + pkg.getClasses().size());
-            pkg.getClasses().forEach(cls -> {
-                System.out.println("  类名: " + cls.getName() + ", 方法数量: " + cls.getMethods().size());
-                // 验证方法是否有详细信息（name, signature, description）
-                cls.getMethods().forEach(method -> {
-                    if (!method.getName().isEmpty() || !method.getSignature().isEmpty() || !method.getDescription().isEmpty()) {
-                        System.out.println("    方法: " + method.getName() + " - " + method.getSignature());
-                    }
-                });
+        System.out.println("使用配置的爬虫 - 爬取到的类数量: " + result.size());
+        result.forEach(cls -> {
+            System.out.println("类名: " + cls.getName() + ", 包名: " + cls.getPackageName() + ", 方法数量: " + cls.getMethods().size());
+            // 验证方法是否有详细信息（name, signature, description）
+            cls.getMethods().forEach(method -> {
+                if (!method.getName().isEmpty() || !method.getSignature().isEmpty() || !method.getDescription().isEmpty()) {
+                    System.out.println("    方法: " + method.getName() + " - " + method.getSignature());
+                }
             });
         });
     }

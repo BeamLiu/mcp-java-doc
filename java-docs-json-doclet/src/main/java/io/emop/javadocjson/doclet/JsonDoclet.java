@@ -30,7 +30,7 @@ import com.sun.source.util.DocTrees;
 public class JsonDoclet implements Doclet {
     
     private Reporter reporter;
-    private String outputFile = "javadoc.json";
+    private String outputDirectory = "javadoc-output";
     private String baseUrl = "";
     private boolean includePrivate = false;
     
@@ -47,10 +47,10 @@ public class JsonDoclet implements Doclet {
     @Override
     public Set<? extends Option> getSupportedOptions() {
         return Set.of(
-            new SimpleOption("-outputFile", 1, "Output JSON file path") {
+            new SimpleOption("-outputDirectory", 1, "Output directory for JSON files") {
                 @Override
                 public boolean process(String option, List<String> arguments) {
-                    outputFile = arguments.get(0);
+                    outputDirectory = arguments.get(0);
                     return true;
                 }
             },
@@ -81,21 +81,17 @@ public class JsonDoclet implements Doclet {
         try {
             reporter.print(Diagnostic.Kind.NOTE, "Starting JSON generation...");
             
-            // Create metadata
-            JavadocMetadata metadata = new JavadocMetadata();
-            metadata.setGeneratedAt(Instant.now().toString());
-            metadata.setBaseUrl(baseUrl);
-            metadata.setSource("doclet");
-            metadata.setVersion("1.0.0");
-            
-            // Create root object
-            JavadocRoot root = new JavadocRoot(metadata);
+            // Create output directory
+            File outputDir = new File(outputDirectory);
+            if (!outputDir.exists()) {
+                outputDir.mkdirs();
+            }
             
             // Process all included elements
             Set<? extends Element> includedElements = environment.getIncludedElements();
-            Map<String, JavadocPackage> packageMap = new HashMap<>();
+            List<JavadocClass> allClasses = new ArrayList<>();
             
-            // Group elements by package
+            // Process each type element and generate individual JSON files
             for (Element element : includedElements) {
                 if (element.getKind() == ElementKind.CLASS || 
                     element.getKind() == ElementKind.INTERFACE ||
@@ -103,22 +99,26 @@ public class JsonDoclet implements Doclet {
                     element.getKind() == ElementKind.ANNOTATION_TYPE) {
                     
                     TypeElement typeElement = (TypeElement) element;
-                    processTypeElement(typeElement, packageMap, environment);
+                    JavadocClass javadocClass = createJavadocClass(typeElement, environment);
+                    
+                    if (javadocClass != null) {
+                        allClasses.add(javadocClass);
+                        
+                        // Generate individual JSON file for this class
+                        String className = typeElement.getQualifiedName().toString();
+                        String fileName = className + ".json";
+                        File classFile = new File(outputDir, fileName);
+                        
+                        ObjectMapper mapper = new ObjectMapper();
+                        mapper.findAndRegisterModules();
+                        mapper.writerWithDefaultPrettyPrinter().writeValue(classFile, javadocClass);
+                    }
                 }
             }
             
-            // Set packages in root
-            root.setPackages(new ArrayList<>(packageMap.values()));
-            
-            // Write JSON output
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.findAndRegisterModules(); // For LocalDateTime serialization
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputFile), root);
-            
             reporter.print(Diagnostic.Kind.NOTE, 
-                String.format("JSON documentation generated: %s (%d packages, %d classes)", 
-                    outputFile, packageMap.size(), 
-                    packageMap.values().stream().mapToInt(p -> p.getClasses().size()).sum()));
+                String.format("JSON documentation generated in: %s (%d classes)", 
+                    outputDirectory, allClasses.size()));
             
             return true;
             
@@ -126,26 +126,6 @@ public class JsonDoclet implements Doclet {
             reporter.print(Diagnostic.Kind.ERROR, "Error generating JSON: " + e.getMessage());
             e.printStackTrace();
             return false;
-        }
-    }
-    
-    private void processTypeElement(TypeElement typeElement, Map<String, JavadocPackage> packageMap, 
-                                   DocletEnvironment environment) {
-        
-        // Get package name
-        String packageName = environment.getElementUtils().getPackageOf(typeElement).getQualifiedName().toString();
-        
-        // Get or create package
-        JavadocPackage javadocPackage = packageMap.computeIfAbsent(packageName, name -> {
-            PackageElement packageElement = environment.getElementUtils().getPackageOf(typeElement);
-            String packageDescription = environment.getElementUtils().getDocComment(packageElement);
-            return new JavadocPackage(name, packageDescription != null ? packageDescription : "");
-        });
-        
-        // Create JavadocClass
-        JavadocClass javadocClass = createJavadocClass(typeElement, environment);
-        if (javadocClass != null) {
-            javadocPackage.getClasses().add(javadocClass);
         }
     }
     

@@ -1,7 +1,5 @@
 package io.emop.javadocjson.util;
 
-import io.emop.javadocjson.model.JavadocRoot;
-import io.emop.javadocjson.model.JavadocPackage;
 import io.emop.javadocjson.model.JavadocClass;
 import io.emop.javadocjson.model.JavadocMethod;
 import io.emop.javadocjson.model.JavadocField;
@@ -43,14 +41,16 @@ public class JsonGenerator {
         this.mcpCompatible = mcpCompatible;
     }
     
+
+    
     /**
-     * Write JavadocRoot to JSON file.
+     * Write individual JavadocClass to JSON file.
      * 
-     * @param root the JavadocRoot object to serialize
+     * @param javadocClass the JavadocClass object to serialize
      * @param outputFile the target file
      * @throws IOException if writing fails
      */
-    public void writeToFile(JavadocRoot root, File outputFile) throws IOException {
+    public void writeClassToFile(JavadocClass javadocClass, File outputFile) throws IOException {
         // Ensure parent directory exists
         File parentDir = outputFile.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
@@ -58,82 +58,44 @@ public class JsonGenerator {
         }
         
         if (mcpCompatible) {
-            writeEnhancedFormat(root, outputFile);
+            writeEnhancedClassFormat(javadocClass, outputFile);
         } else {
-            objectMapper.writeValue(outputFile, root);
+            objectMapper.writeValue(outputFile, javadocClass);
         }
     }
     
-    /**
-     * Convert JavadocRoot to JSON string.
-     * 
-     * @param root the JavadocRoot object to serialize
-     * @return JSON string representation
-     * @throws IOException if serialization fails
-     */
-    public String toJsonString(JavadocRoot root) throws IOException {
-        if (mcpCompatible) {
-            return createEnhancedFormat(root);
-        } else {
-            return objectMapper.writeValueAsString(root);
-        }
-    }
+
+    
+
     
     /**
-     * Write enhanced format with MCP compatibility.
+     * Write enhanced format for individual class with MCP compatibility.
      */
-    private void writeEnhancedFormat(JavadocRoot root, File outputFile) throws IOException {
-        String jsonContent = createEnhancedFormat(root);
+    private void writeEnhancedClassFormat(JavadocClass javadocClass, File outputFile) throws IOException {
+        String jsonContent = createEnhancedClassFormat(javadocClass);
         Files.write(outputFile.toPath(), jsonContent.getBytes(StandardCharsets.UTF_8));
     }
     
     /**
-     * Create enhanced JSON format with search index and MCP compatibility.
+     * Create enhanced JSON format for individual class with MCP compatibility.
      */
-    private String createEnhancedFormat(JavadocRoot root) throws IOException {
-        ObjectNode rootNode = objectMapper.createObjectNode();
+    private String createEnhancedClassFormat(JavadocClass javadocClass) throws IOException {
+        ObjectNode classNode = createClassNode(javadocClass);
         
-        // Add metadata
-        ObjectNode metadataNode = objectMapper.valueToTree(root.getMetadata());
-        rootNode.set("metadata", metadataNode);
-        
-        // Add packages
-        ArrayNode packagesArray = objectMapper.createArrayNode();
-        for (JavadocPackage pkg : root.getPackages()) {
-            ObjectNode packageNode = createPackageNode(pkg);
-            packagesArray.add(packageNode);
-        }
-        rootNode.set("packages", packagesArray);
-        
-        // Add MCP-specific metadata
+        // Add MCP-specific metadata for individual class
         ObjectNode mcpMetadata = objectMapper.createObjectNode();
         mcpMetadata.put("version", "1.0");
-        mcpMetadata.put("format", "javadoc-json");
+        mcpMetadata.put("format", "javadoc-class-json");
         mcpMetadata.put("compatible", "mcp-javadoc-search");
-        rootNode.set("mcpMetadata", mcpMetadata);
+        mcpMetadata.put("className", javadocClass.getFullName());
+        classNode.set("mcpMetadata", mcpMetadata);
         
-        return objectMapper.writeValueAsString(rootNode);
+        return objectMapper.writeValueAsString(classNode);
     }
     
-    /**
-     * Create package node with enhanced information.
-     */
-    private ObjectNode createPackageNode(JavadocPackage pkg) {
-        ObjectNode packageNode = objectMapper.valueToTree(pkg);
-        
-        // Add class count
-        packageNode.put("classCount", pkg.getClasses().size());
-        
-        // Add enhanced class information
-        ArrayNode classesArray = objectMapper.createArrayNode();
-        for (JavadocClass clazz : pkg.getClasses()) {
-            ObjectNode classNode = createClassNode(clazz);
-            classesArray.add(classNode);
-        }
-        packageNode.set("classes", classesArray);
-        
-        return packageNode;
-    }
+
+    
+
     
     /**
      * Create class node with enhanced information.
@@ -158,66 +120,5 @@ public class JsonGenerator {
         return classNode;
     }
     
-    /**
-     * Create search index for fast lookups.
-     */
-    private ObjectNode createSearchIndex(JavadocRoot root) {
-        ObjectNode searchIndex = objectMapper.createObjectNode();
-        
-        // Class index
-        ObjectNode classIndex = objectMapper.createObjectNode();
-        ArrayNode allClasses = objectMapper.createArrayNode();
-        
-        // Method index
-        ObjectNode methodIndex = objectMapper.createObjectNode();
-        ArrayNode allMethods = objectMapper.createArrayNode();
-        
-        // Field index
-        ArrayNode allFields = objectMapper.createArrayNode();
-        
-        for (JavadocPackage pkg : root.getPackages()) {
-            for (JavadocClass clazz : pkg.getClasses()) {
-                // Add to class index
-                ObjectNode classRef = objectMapper.createObjectNode();
-                classRef.put("name", clazz.getName());
-                classRef.put("fullName", clazz.getFullName());
-                classRef.put("package", pkg.getName());
-                classRef.put("type", clazz.getType());
-                allClasses.add(classRef);
-                
-                // Add methods to index
-                for (JavadocMethod method : clazz.getMethods()) {
-                    ObjectNode methodRef = objectMapper.createObjectNode();
-                    methodRef.put("name", method.getName());
-                    methodRef.put("className", clazz.getFullName());
-                    methodRef.put("returnType", method.getReturnType());
-                    methodRef.put("signature", method.getSignature());
-                    allMethods.add(methodRef);
-                }
-                
-                // Add fields to index
-                for (JavadocField field : clazz.getFields()) {
-                    ObjectNode fieldRef = objectMapper.createObjectNode();
-                    fieldRef.put("name", field.getName());
-                    fieldRef.put("className", clazz.getFullName());
-                    fieldRef.put("type", field.getType());
-                    allFields.add(fieldRef);
-                }
-            }
-        }
-        
-        searchIndex.set("classes", allClasses);
-        searchIndex.set("methods", allMethods);
-        searchIndex.set("fields", allFields);
-        
-        // Add statistics
-        ObjectNode stats = objectMapper.createObjectNode();
-        stats.put("totalPackages", root.getPackages().size());
-        stats.put("totalClasses", allClasses.size());
-        stats.put("totalMethods", allMethods.size());
-        stats.put("totalFields", allFields.size());
-        searchIndex.set("statistics", stats);
-        
-        return searchIndex;
-    }
+
 }

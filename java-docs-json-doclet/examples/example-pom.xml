@@ -35,11 +35,9 @@
                             <goal>publish</goal>
                         </goals>
                         <configuration>
-                            <outputFile>${project.build.directory}/javadoc.json</outputFile>
-                            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+                            <sourceDirectory>src/main/java</sourceDirectory>
                             <includePrivate>false</includePrivate>
-                            <encoding>UTF-8</encoding>
-                            <mcpCompatible>true</mcpCompatible>
                         </configuration>
                     </execution>
                     
@@ -52,25 +50,20 @@
                         </goals>
                         <configuration>
                             <baseUrl>https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/</baseUrl>
-                            <outputFile>${project.build.directory}/external-javadoc.json</outputFile>
-                            <userAgent>Javadoc-JSON-Plugin/1.0</userAgent>
+                            <outputDirectory>${project.build.directory}/external-javadoc</outputDirectory>
+                            <userAgent>JavaDocCrawler/1.0</userAgent>
                             <timeout>30000</timeout>
-                            <!-- Package filters using regular expressions (uncomment and configure if needed) -->
-                            <!--
+                            <mcpCompatible>true</mcpCompatible>
+                            <!-- Optional: Filter specific packages -->
                             <packageFilters>
-                                <packageFilter>com\.example\..*</packageFilter>
-                                <packageFilter>org\.springframework\..*</packageFilter>
-                                <packageFilter>.*\.util\..*</packageFilter>
+<!--                                <packageFilter>nxopen</packageFilter>-->
+                                <packageFilter>nxopen.features</packageFilter>
                             </packageFilters>
-                            -->
-                            <!-- Proxy configuration (uncomment and configure if needed) -->
-                            <!--
-                            <proxyHost>proxy.company.com</proxyHost>
+                            <!-- Optional: Proxy configuration -->
+                            <!-- <proxyHost>proxy.example.com</proxyHost>
                             <proxyPort>8080</proxyPort>
                             <proxyUsername>username</proxyUsername>
-                            <proxyPassword>password</proxyPassword>
-                            -->
-                            <mcpCompatible>true</mcpCompatible>
+                            <proxyPassword>password</proxyPassword> -->
                         </configuration>
                     </execution>
                     
@@ -81,8 +74,8 @@
                             <goal>publish</goal>
                         </goals>
                         <configuration>
-                            <outputFile>test-javadoc.json</outputFile>
-                            <sourceDir>src/test/java</sourceDir>
+                            <outputDirectory>${project.build.directory}/simple-test</outputDirectory>
+                            <sourceDirectory>src/main/java</sourceDirectory>
                             <includePrivate>true</includePrivate>
                         </configuration>
                     </execution>
