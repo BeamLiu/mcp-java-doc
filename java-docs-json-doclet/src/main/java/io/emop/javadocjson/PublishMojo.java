@@ -6,11 +6,13 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import javax.tools.DocumentationTool;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,7 @@ import java.util.stream.Stream;
  * Maven goal to generate JSON documentation using JDK Doclet API.
  * This replaces the manual parsing approach with the official Doclet implementation.
  */
-@Mojo(name = "publish", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
+@Mojo(name = "publish", defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class PublishMojo extends AbstractMojo {
 
     /**
@@ -82,6 +84,9 @@ public class PublishMojo extends AbstractMojo {
             StandardJavaFileManager fileManager = docTool.getStandardFileManager(null, null, null);
 
             try {
+                // Set up classpath for the file manager
+                setupClasspath(fileManager);
+                
                 // Collect all Java source files
                 List<File> javaFiles = collectJavaFiles();
                 if (javaFiles.isEmpty()) {
@@ -159,6 +164,51 @@ public class PublishMojo extends AbstractMojo {
         }
     }
 
+    private void setupClasspath(StandardJavaFileManager fileManager) throws MojoExecutionException {
+        try {
+            if (project != null) {
+                // Get both compile and runtime classpath elements
+                List<String> classpathElements = new ArrayList<>();
+                
+                // Add compile dependencies
+                List<String> compileClasspath = project.getCompileClasspathElements();
+                getLog().info("Compile classpath elements: " + compileClasspath.size());
+                for (String element : compileClasspath) {
+                    getLog().debug("Compile classpath: " + element);
+                }
+                classpathElements.addAll(compileClasspath);
+                
+                // Add runtime dependencies (this includes Apache Commons, etc.)
+                List<String> runtimeClasspath = project.getRuntimeClasspathElements();
+                getLog().info("Runtime classpath elements: " + runtimeClasspath.size());
+                for (String element : runtimeClasspath) {
+                    getLog().debug("Runtime classpath: " + element);
+                }
+                for (String runtimeElement : runtimeClasspath) {
+                    if (!classpathElements.contains(runtimeElement)) {
+                        classpathElements.add(runtimeElement);
+                    }
+                }
+                
+                if (!classpathElements.isEmpty()) {
+                    // Convert string paths to File objects
+                    List<File> classpathFiles = classpathElements.stream()
+                        .map(File::new)
+                        .filter(File::exists)
+                        .collect(Collectors.toList());
+                    
+                    // Set the classpath in the file manager
+                    fileManager.setLocation(StandardLocation.CLASS_PATH, classpathFiles);
+                    
+                    getLog().info("Set classpath with " + classpathFiles.size() + " entries");
+                    getLog().debug("Classpath entries: " + classpathFiles);
+                }
+            }
+        } catch (Exception e) {
+            throw new MojoExecutionException("Failed to setup classpath: " + e.getMessage(), e);
+        }
+    }
+
     private List<String> prepareDocletOptions() {
         List<String> options = new ArrayList<>();
 
@@ -174,17 +224,30 @@ public class PublishMojo extends AbstractMojo {
         options.add("-encoding");
         options.add("UTF-8");
 
-        // Add classpath if specified
+        // Add classpath - include both compile and runtime dependencies
         if (classpath != null && !classpath.isEmpty()) {
             options.add("-classpath");
             options.add(classpath);
         } else if (project != null) {
-            // Use project classpath
             try {
-                List<String> classpathElements = project.getCompileClasspathElements();
+                // Get both compile and runtime classpath elements
+                List<String> classpathElements = new ArrayList<>();
+
+                // Add compile dependencies
+                classpathElements.addAll(project.getCompileClasspathElements());
+                
+                // Add runtime dependencies (this includes Apache Commons, etc.)
+                List<String> runtimeClasspath = project.getRuntimeClasspathElements();
+                for (String runtimeElement : runtimeClasspath) {
+                    if (!classpathElements.contains(runtimeElement)) {
+                        classpathElements.add(runtimeElement);
+                    }
+                }
+                
                 if (!classpathElements.isEmpty()) {
                     options.add("-classpath");
                     options.add(String.join(File.pathSeparator, classpathElements));
+                    getLog().debug("Using classpath: " + String.join(File.pathSeparator, classpathElements));
                 }
             } catch (Exception e) {
                 getLog().warn("Could not determine project classpath: " + e.getMessage());
@@ -193,6 +256,12 @@ public class PublishMojo extends AbstractMojo {
 
         // Add standard javadoc options
         options.add("-quiet");
+        
+        // Add source path for better resolution
+        if (sourceDirectory != null && !sourceDirectory.isEmpty()) {
+            options.add("-sourcepath");
+            options.add(sourceDirectory);
+        }
 
         getLog().debug("Doclet options: " + String.join(" ", options));
         return options;
