@@ -1,20 +1,20 @@
-// 定义 Java 文档的数据结构，与 Java 模型完全兼容
+// Define Java documentation data structures, fully compatible with Java models
 export interface JavaDocClass {
   name: string;
   packageName: string | null;
-  type: string; // 支持 'class', 'interface', 'enum', 'annotation' 等
+  type: string; // Supports 'class', 'interface', 'enum', 'annotation', etc.
   description: string;
   modifiers: string[];
   superClass: string | null;
   interfaces: string[];
   
-  // 统一字段，可以包含详细和简化的解析结果
+  // Unified fields that can contain both detailed and simplified parsing results
   constructors: BaseConstructor[];
   methods: BaseMethod[];
   fields: BaseField[];
 }
 
-// 基类接口定义 - 只包含JSON序列化的字段
+// Base interface definitions - only contains JSON serializable fields
 export interface BaseMethod {
   name: string;
   description: string;
@@ -30,7 +30,7 @@ export interface BaseField {
   description: string;
 }
 
-// 详细类型定义（继承自基类）
+// Detailed type definitions (inheriting from base classes)
 export interface Constructor extends BaseConstructor {
   signature: string;
   modifiers: string[];
@@ -49,7 +49,7 @@ export interface Method extends BaseMethod {
 export interface Field extends BaseField {
   type: string;
   modifiers: string[];
-  defaultValue?: string; // 添加缺失的 defaultValue 字段
+  defaultValue?: string; // Add missing defaultValue field
 }
 
 export interface Parameter {
@@ -58,23 +58,23 @@ export interface Parameter {
   description: string;
 }
 
-// 简化类型定义（对应Java的Simple类）
+// Simplified type definitions (corresponding to Java Simple classes)
 export interface SimpleMethod extends BaseMethod {
-  modifierAndType?: string; // 修饰符和类型（如："static CheckScope", "public static int"）
-  detailText?: string; // 包含方法签名和详细描述的完整原始文本
+  modifierAndType?: string; // Modifier and type (e.g., "static CheckScope", "public static int")
+  detailText?: string; // Complete original text containing method signature and detailed description
 }
 
 export interface SimpleConstructor extends BaseConstructor {
-  modifierAndType?: string; // 修饰符和类型
-  detailText?: string; // 包含构造函数签名和详细描述的完整原始文本
+  modifierAndType?: string; // Modifier and type
+  detailText?: string; // Complete original text containing constructor signature and detailed description
 }
 
 export interface SimpleField extends BaseField {
-  modifierAndType?: string; // 修饰符和类型（如："static int", "public final String"）
-  detailText?: string; // 包含字段详细描述的完整原始文本
+  modifierAndType?: string; // Modifier and type (e.g., "static int", "public final String")
+  detailText?: string; // Complete original text containing detailed field description
 }
 
-// 类型判断工具函数
+// Type checking utility functions
 export function isDetailedMethod(method: BaseMethod): method is Method {
   return 'signature' in method && 'modifiers' in method;
 }

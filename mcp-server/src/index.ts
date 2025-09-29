@@ -10,7 +10,7 @@ import {
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { JavaDocDataLoader } from './dataLoader.js';
-import { JavaDocSearchEngine } from './searchEngine.js';
+import { JavaDocSearchEngine, SearchMode } from './searchEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -71,6 +71,12 @@ export class JavaDocMCPServer {
                 description: 'Maximum number of results to return (default: 10)',
                 default: 10,
               },
+              mode: {
+                type: 'string',
+                enum: ['fuzzy', 'keyword', 'regex'],
+                description: 'Search mode: fuzzy (default), keyword (contains), or regex (regular expression)',
+                default: 'fuzzy',
+              },
             },
             required: ['query'],
           },
@@ -89,6 +95,12 @@ export class JavaDocMCPServer {
                 type: 'number',
                 description: 'Maximum number of results (default: 10)',
                 default: 10,
+              },
+              mode: {
+                type: 'string',
+                enum: ['fuzzy', 'keyword', 'regex'],
+                description: 'Search mode: fuzzy (default), keyword (contains), or regex (regular expression)',
+                default: 'fuzzy',
               },
             },
             required: ['query'],
@@ -112,6 +124,41 @@ export class JavaDocMCPServer {
                 type: 'number',
                 description: 'Maximum number of results (default: 10)',
                 default: 10,
+              },
+              mode: {
+                type: 'string',
+                enum: ['fuzzy', 'keyword', 'regex'],
+                description: 'Search mode: fuzzy (default), keyword (contains), or regex (regular expression)',
+                default: 'fuzzy',
+              },
+            },
+            required: ['query'],
+          },
+        },
+        {
+          name: 'search_fields',
+          description: 'Search specifically for fields/properties',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              query: {
+                type: 'string',
+                description: 'Field name or type to search for',
+              },
+              className: {
+                type: 'string',
+                description: 'Optional: filter by class name',
+              },
+              limit: {
+                type: 'number',
+                description: 'Maximum number of results (default: 10)',
+                default: 10,
+              },
+              mode: {
+                type: 'string',
+                enum: ['fuzzy', 'keyword', 'regex'],
+                description: 'Search mode: fuzzy (default), keyword (contains), or regex (regular expression)',
+                default: 'fuzzy',
               },
             },
             required: ['query'],
@@ -148,14 +195,19 @@ export class JavaDocMCPServer {
       try {
         switch (name) {
           case 'search_all': {
-            const { query, limit = 10 } = args as { query: string; limit?: number };
-            const results = this.searchEngine.searchAll(query, limit);
+            const { query, limit = 10, mode = 'fuzzy' } = args as { 
+              query: string; 
+              limit?: number; 
+              mode?: SearchMode 
+            };
+            const results = this.searchEngine.searchAll(query, limit, mode);
             return {
               content: [
                 {
                   type: 'text',
                   text: JSON.stringify({
                     query,
+                    mode,
                     results,
                     total: results.length,
                   }, null, 2),
@@ -165,14 +217,19 @@ export class JavaDocMCPServer {
           }
 
           case 'search_classes': {
-            const { query, limit = 10 } = args as { query: string; limit?: number };
-            const results = this.searchEngine.searchClasses(query, limit);
+            const { query, limit = 10, mode = 'fuzzy' } = args as { 
+              query: string; 
+              limit?: number; 
+              mode?: SearchMode 
+            };
+            const results = this.searchEngine.searchClasses(query, limit, mode);
             return {
               content: [
                 {
                   type: 'text',
                   text: JSON.stringify({
                     query,
+                    mode,
                     results,
                     total: results.length,
                   }, null, 2),
@@ -182,12 +239,13 @@ export class JavaDocMCPServer {
           }
 
           case 'search_methods': {
-            const { query, className, limit = 10 } = args as { 
+            const { query, className, limit = 10, mode = 'fuzzy' } = args as { 
               query: string; 
               className?: string; 
-              limit?: number 
+              limit?: number;
+              mode?: SearchMode
             };
-            const results = this.searchEngine.searchMethods(query, className, limit);
+            const results = this.searchEngine.searchMethods(query, className, limit, mode);
             return {
               content: [
                 {
@@ -195,6 +253,31 @@ export class JavaDocMCPServer {
                   text: JSON.stringify({
                     query,
                     className,
+                    mode,
+                    results,
+                    total: results.length,
+                  }, null, 2),
+                },
+              ],
+            };
+          }
+
+          case 'search_fields': {
+            const { query, className, limit = 10, mode = 'fuzzy' } = args as { 
+               query: string; 
+               className?: string; 
+               limit?: number;
+               mode?: SearchMode
+             };
+            const results = this.searchEngine.searchFields(query, className, limit, mode);
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify({
+                    query,
+                    className,
+                    mode,
                     results,
                     total: results.length,
                   }, null, 2),
@@ -252,7 +335,7 @@ export class JavaDocMCPServer {
   }
 }
 
-// 如果直接运行此文件，启动服务器
+// If this file is run directly, start the server
 const isMainModule = import.meta.url === `file://${process.argv[1]}` || 
                      import.meta.url.endsWith(process.argv[1]) ||
                      process.argv[1].endsWith(__filename);
