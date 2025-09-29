@@ -12,7 +12,6 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 
 - **Publish Goal**: Generate JSON documentation from your project's source code
 - **Crawl Goal**: Extract documentation from external Javadoc websites
-- **MCP Compatible**: Generate documentation in MCP (Model Context Protocol) compatible format
 - **Package Filtering**: Use regular expressions to filter specific packages
 - **Proxy Support**: Configure proxy settings for crawling external documentation
 - **Multiple Output Formats**: Support for both individual class files and consolidated JSON
@@ -24,7 +23,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 <plugin>
     <groupId>io.emop</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <executions>
         <execution>
             <goals>
@@ -32,24 +31,6 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
             </goals>
         </execution>
     </executions>
-    <!-- Required dependencies -->
-    <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.16.1</version>
-        </dependency>
-    </dependencies>
 </plugin>
 ```
 
@@ -58,7 +39,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 <plugin>
     <groupId>io.emop</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <executions>
         <execution>
             <goals>
@@ -76,13 +57,13 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 
 ```bash
 # Generate documentation from source code
-mvn io.emop:java-docs-json-doclet:1.0.0:publish
+mvn io.emop:java-docs-json-doclet:0.1.0:publish
 
 # Crawl external Javadoc
-mvn io.emop:java-docs-json-doclet:1.0.0:crawl
+mvn io.emop:java-docs-json-doclet:0.1.0:crawl
 
 # With custom parameters
-mvn io.emop:java-docs-json-doclet:1.0.0:publish \
+mvn io.emop:java-docs-json-doclet:0.1.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -131,6 +112,102 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 </configuration>
 ```
 
+#### Working with Lombok
+
+When your project uses Lombok annotations, you need to use the delombok process to generate regular Java code before generating documentation. Lombok's auto-generated methods (getters, setters, constructors, etc.) won't appear in Javadoc without this step.
+
+**Complete Lombok Configuration Example:**
+
+```xml
+<dependencies>
+    <!-- Lombok dependency -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.30</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <!-- Maven Compiler Plugin with Lombok support -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+                <source>11</source>
+                <target>11</target>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>1.18.30</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+        
+        <!-- Maven Antrun Plugin for delombok -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>delombok</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                    <configuration>
+                        <target>
+                            <mkdir dir="target/generated-sources/delombok"/>
+                            <java classname="lombok.launch.Main" fork="true" classpathref="maven.compile.classpath">
+                                <arg value="delombok"/>
+                                <arg value="src/main/java"/>
+                                <arg value="-d"/>
+                                <arg value="target/generated-sources/delombok"/>
+                                <arg value="--encoding"/>
+                                <arg value="UTF-8"/>
+                            </java>
+                        </target>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        
+        <!-- Java Docs JSON Doclet Plugin -->
+        <plugin>
+            <groupId>io.emop</groupId>
+            <artifactId>java-docs-json-doclet</artifactId>
+            <version>0.1.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>publish</goal>
+                    </goals>
+                    <phase>package</phase>
+                    <configuration>
+                        <!-- Point to delombok generated sources -->
+                        <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
+                        <outputDirectory>target/javadoc-json</outputDirectory>
+                        <includePrivate>true</includePrivate>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+**Key Points:**
+- The delombok process runs in the `generate-sources` phase
+- Generated sources are placed in `target/generated-sources/delombok`
+- The JSON doclet plugin's `sourceDirectory` parameter points to the delombok output
+- This ensures all Lombok-generated methods appear in the documentation
+
 ---
 
 ## 中文
@@ -153,7 +230,7 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 <plugin>
     <groupId>io.emop</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <executions>
         <execution>
             <goals>
@@ -161,24 +238,6 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
             </goals>
         </execution>
     </executions>
-    <!-- 必需的依赖 -->
-    <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.16.1</version>
-        </dependency>
-    </dependencies>
 </plugin>
 ```
 
@@ -187,7 +246,7 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 <plugin>
     <groupId>io.emop</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <executions>
         <execution>
             <goals>
@@ -205,13 +264,13 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 
 ```bash
 # 从源代码生成文档
-mvn io.emop:java-docs-json-doclet:1.0.0:publish
+mvn io.emop:java-docs-json-doclet:0.1.0:publish
 
 # 爬取外部 Javadoc
-mvn io.emop:java-docs-json-doclet:1.0.0:crawl
+mvn io.emop:java-docs-json-doclet:0.1.0:crawl
 
 # 使用自定义参数
-mvn io.emop:java-docs-json-doclet:1.0.0:publish \
+mvn io.emop:java-docs-json-doclet:0.1.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -260,13 +319,101 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 </configuration>
 ```
 
-### 重要说明
+#### 处理 Lombok
 
-**重要**: 使用插件时，必须在插件配置中包含必需的依赖项以避免 `ClassNotFoundException`。请将以下依赖项添加到您的插件配置中：
+当您的项目使用 Lombok 注解时，需要使用 delombok 过程来生成常规的 Java 代码，然后再生成文档。如果不进行这一步，Lombok 自动生成的方法（getter、setter、构造函数等）不会出现在 Javadoc 中。
 
-- Jackson Databind (包含 core 和 annotations)
-- Jackson JSR310 (支持 LocalDateTime 等)
-- JSoup (HTML 解析)
+**完整的 Lombok 配置示例：**
+
+```xml
+<dependencies>
+    <!-- Lombok 依赖 -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.30</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <!-- 支持 Lombok 的 Maven 编译器插件 -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+                <source>11</source>
+                <target>11</target>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>1.18.30</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+        
+        <!-- 用于 delombok 的 Maven Antrun 插件 -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>delombok</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                    <configuration>
+                        <target>
+                            <mkdir dir="target/generated-sources/delombok"/>
+                            <java classname="lombok.launch.Main" fork="true" classpathref="maven.compile.classpath">
+                                <arg value="delombok"/>
+                                <arg value="src/main/java"/>
+                                <arg value="-d"/>
+                                <arg value="target/generated-sources/delombok"/>
+                                <arg value="--encoding"/>
+                                <arg value="UTF-8"/>
+                            </java>
+                        </target>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        
+        <!-- Java Docs JSON Doclet 插件 -->
+        <plugin>
+            <groupId>io.emop</groupId>
+            <artifactId>java-docs-json-doclet</artifactId>
+            <version>0.1.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>publish</goal>
+                    </goals>
+                    <phase>package</phase>
+                    <configuration>
+                        <!-- 指向 delombok 生成的源代码 -->
+                        <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
+                        <outputDirectory>target/javadoc-json</outputDirectory>
+                        <includePrivate>true</includePrivate>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+**关键要点：**
+- delombok 过程在 `generate-sources` 阶段运行
+- 生成的源代码放置在 `target/generated-sources/delombok` 目录中
+- JSON doclet 插件的 `sourceDirectory` 参数指向 delombok 的输出目录
+- 这确保所有 Lombok 生成的方法都会出现在文档中
 
 ### 示例项目
 

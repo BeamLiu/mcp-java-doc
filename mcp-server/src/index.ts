@@ -22,7 +22,7 @@ export class JavaDocMCPServer {
   constructor() {
     this.server = new Server({
       name: 'mcp-javadoc-server',
-      version: '1.0.0',
+      version: '0.1.0',
     }, {
       capabilities: {
         tools: {},

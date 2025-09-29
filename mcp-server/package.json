@@ -1,6 +1,6 @@
 {
   "name": "mcp-javadoc-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "MCP server for searching Java documentation JSON files",
   "main": "dist/index.js",
   "type": "module",
