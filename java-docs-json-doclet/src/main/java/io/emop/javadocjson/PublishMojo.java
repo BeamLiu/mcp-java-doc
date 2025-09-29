@@ -170,6 +170,10 @@ public class PublishMojo extends AbstractMojo {
             options.add("-includePrivate");
         }
 
+        // Add encoding option to handle UTF-8 source files
+        options.add("-encoding");
+        options.add("UTF-8");
+
         // Add classpath if specified
         if (classpath != null && !classpath.isEmpty()) {
             options.add("-classpath");
