@@ -65,11 +65,13 @@ export interface SimpleMethod extends BaseMethod {
 }
 
 export interface SimpleConstructor extends BaseConstructor {
+  modifierAndType?: string; // 修饰符和类型
   detailText?: string; // 包含构造函数签名和详细描述的完整原始文本
 }
 
 export interface SimpleField extends BaseField {
   modifierAndType?: string; // 修饰符和类型（如："static int", "public final String"）
+  detailText?: string; // 包含字段详细描述的完整原始文本
 }
 
 // 类型判断工具函数

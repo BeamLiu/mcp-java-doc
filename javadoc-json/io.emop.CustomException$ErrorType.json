@@ -1,6 +1,6 @@
 {
-  "name" : "ErrorType",
-  "packageName" : null,
+  "name" : "CustomException$ErrorType",
+  "packageName" : "io.emop",
   "type" : "enum",
   "description" : "错误类型枚举。\n Error type enumeration.\n エラータイプ列挙型。\n 오류 타입 열거형。",
   "modifiers" : [ "public", "static", "final" ],

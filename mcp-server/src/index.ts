@@ -253,7 +253,20 @@ export class JavaDocMCPServer {
 }
 
 // 如果直接运行此文件，启动服务器
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const server = new JavaDocMCPServer();
-  server.run().catch(console.error);
+const isMainModule = import.meta.url === `file://${process.argv[1]}` || 
+                     import.meta.url.endsWith(process.argv[1]) ||
+                     process.argv[1].endsWith(__filename);
+
+if (isMainModule) {
+  try {
+    console.error('Starting JavaDoc MCP Server...');
+    const server = new JavaDocMCPServer();
+    server.run().catch((error) => {
+      console.error('Server run error:', error);
+      process.exit(1);
+    });
+  } catch (error) {
+    console.error('Server initialization error:', error);
+    process.exit(1);
+  }
 }

@@ -1,6 +1,6 @@
 {
-  "name" : "UserStatus",
-  "packageName" : null,
+  "name" : "AdvancedTestClass$UserStatus",
+  "packageName" : "io.emop",
   "type" : "enum",
   "description" : "用户状态枚举。\n User status enumeration.\n ユーザーステータス列挙型。\n 사용자 상태 열거형。",
   "modifiers" : [ "public", "static", "final" ],

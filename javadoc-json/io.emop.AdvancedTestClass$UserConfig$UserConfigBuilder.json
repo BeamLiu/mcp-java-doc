@@ -1,6 +1,6 @@
 {
-  "name" : "UserConfigBuilder",
-  "packageName" : null,
+  "name" : "AdvancedTestClass$UserConfig$UserConfigBuilder",
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "",
   "modifiers" : [ "public", "static" ],

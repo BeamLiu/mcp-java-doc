@@ -1,6 +1,6 @@
 {
-  "name" : "TestClassBuilder",
-  "packageName" : null,
+  "name" : "TestClass$TestClassBuilder",
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "",
   "modifiers" : [ "public", "static" ],

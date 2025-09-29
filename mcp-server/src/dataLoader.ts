@@ -40,16 +40,61 @@ export class JavaDocDataLoader {
       try {
         const filePath = join(dirPath, file);
         const content = readFileSync(filePath, 'utf-8');
-        const classData = JSON.parse(content) as JavaDocClass;
+        const jsonData = JSON.parse(content);
         
-        // Validate data structure
-        if (this.isValidClassData(classData)) {
-          classes.push(classData);
+        // Check if this is a package-structured JSON file
+        if (this.isPackageStructuredData(jsonData)) {
+          const extractedClasses = this.extractClassesFromPackageStructure(jsonData);
+          classes.push(...extractedClasses);
+          console.log(`Extracted ${extractedClasses.length} classes from package-structured file: ${file}`);
+        } else if (this.isValidClassData(jsonData)) {
+          // Handle single class JSON files
+          classes.push(jsonData as JavaDocClass);
         } else {
-          console.warn(`Invalid class data in file: ${file}`);
+          console.warn(`Invalid data structure in file: ${file}`);
         }
       } catch (error) {
         console.error(`Error loading file ${file}:`, error);
+      }
+    }
+
+    return classes;
+  }
+
+  /**
+   * Check if the JSON data has package structure (contains packages array)
+   */
+  private isPackageStructuredData(data: any): boolean {
+    return data && Array.isArray(data.packages);
+  }
+
+  /**
+   * Extract classes from package-structured JSON data
+   */
+  private extractClassesFromPackageStructure(data: any): JavaDocClass[] {
+    const classes: JavaDocClass[] = [];
+    
+    if (!data.packages || !Array.isArray(data.packages)) {
+      return classes;
+    }
+
+    for (const pkg of data.packages) {
+      if (!pkg.classes || !Array.isArray(pkg.classes)) {
+        continue;
+      }
+
+      for (const cls of pkg.classes) {
+        // Add package name to the class if not already present
+        if (!cls.packageName && pkg.name) {
+          cls.packageName = pkg.name;
+        }
+        
+        // Validate the extracted class data
+        if (this.isValidClassData(cls)) {
+          classes.push(cls as JavaDocClass);
+        } else {
+          console.warn(`Invalid class data for ${cls.name || 'unknown'} in package ${pkg.name || 'unknown'}`);
+        }
       }
     }
 
@@ -113,9 +158,9 @@ export class JavaDocDataLoader {
    * Check if a class has detailed parsing information
    */
   private hasDetailedInfo(cls: JavaDocClass): boolean {
-    return (cls.methods && cls.methods.length > 0) || 
-           (cls.fields && cls.fields.length > 0) ||
-           (cls.constructors && cls.constructors.length > 0);
+    return !!(cls.methods && cls.methods.length > 0) || 
+           !!(cls.fields && cls.fields.length > 0) ||
+           !!(cls.constructors && cls.constructors.length > 0);
   }
 
   /**

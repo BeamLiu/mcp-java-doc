@@ -1,6 +1,6 @@
 {
   "name" : "UtilityClassTest",
-  "packageName" : null,
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "实用工具类，提供各种静态方法。\n Utility class providing various static methods.\n さまざまな静的メソッドを提供するユーティリティクラス。\n 다양한 정적 메서드를 제공하는 유틸리티 클래스。\n \n <p>该类包含以下功能模块：\n This class contains the following functional modules:\n このクラスには以下の機能モジュールが含まれています：\n 이 클래스에는 다음과 같은 기능 모듈이 포함되어 있습니다:</p>\n \n <ul>\n   <li>字符串处理工具 / String processing utilities / 文字列処理ユーティリティ / 문자열 처리 유틸리티</li>\n   <li>文件操作工具 / File operation utilities / ファイル操作ユーティリティ / 파일 작업 유틸리티</li>\n   <li>日期时间工具 / Date and time utilities / 日時ユーティリティ / 날짜 시간 유틸리티</li>\n   <li>集合处理工具 / Collection processing utilities / コレクション処理ユーティリティ / 컬렉션 처리 유틸리티</li>\n   <li>验证工具 / Validation utilities / 検証ユーティリティ / 검증 유틸리티</li>\n </ul>\n \n @author Utility Author / ユーティリティ作成者 / 유틸리티 작성자\n @version 2.0\n @since 2024-01-01",
   "modifiers" : [ "public", "final" ],

@@ -1,6 +1,6 @@
 {
   "name" : "AdvancedTestClass",
-  "packageName" : null,
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "高级测试类，展示复杂的 Java 特性和文档生成。\n Advanced test class demonstrating complex Java features and documentation generation.\n 複雑なJava機能とドキュメント生成を実演する高度なテストクラス。\n 복잡한 Java 기능과 문서 생성을 보여주는 고급 테스트 클래스。\n \n <p>该类包含以下高级特性：\n This class contains the following advanced features:\n このクラスには以下の高度な機能が含まれています：\n 이 클래스에는 다음과 같은 고급 기능이 포함되어 있습니다:</p>\n \n <ul>\n   <li>嵌套类和枚举 / Nested classes and enums / ネストクラスと列挙型 / 중첩 클래스와 열거형</li>\n   <li>泛型和流处理 / Generics and stream processing / ジェネリクスとストリーム処理 / 제네릭과 스트림 처리</li>\n   <li>Builder 模式 / Builder pattern / Builderパターン / 빌더 패턴</li>\n   <li>异步处理 / Asynchronous processing / 非同期処理 / 비동기 처리</li>\n </ul>\n \n @author Advanced Test Author / 高度テスト作成者 / 고급 테스트 작성자\n @version 3.0\n @since 2024-01-01",
   "modifiers" : [ "public" ],

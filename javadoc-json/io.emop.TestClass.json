@@ -1,6 +1,6 @@
 {
   "name" : "TestClass",
-  "packageName" : null,
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "这是一个测试类，用于验证 Java 文档 JSON 插件的功能。\n This is a test class for verifying the functionality of the Java documentation JSON plugin.\n これは、Java ドキュメント JSON プラグインの機能を検証するためのテストクラスです。\n 이것은 Java 문서 JSON 플러그인의 기능을 검증하기 위한 테스트 클래스입니다。\n \n <p>该类演示了以下功能：\n This class demonstrates the following features:\n このクラスは以下の機能を実演します：\n 이 클래스는 다음 기능을 보여줍니다:</p>\n \n <ul>\n   <li>Lombok 注解的使用 / Lombok annotation usage / Lombok アノテーションの使用 / Lombok 어노테이션 사용</li>\n   <li>Apache Commons 工具类 / Apache Commons utilities / Apache Commons ユーティリティ / Apache Commons 유틸리티</li>\n   <li>多语言文档注释 / Multilingual documentation / 多言語ドキュメント / 다국어 문서</li>\n </ul>\n \n @author Test Author / テスト作成者 / 테스트 작성자\n @version 2.0\n @since 2024-01-01",
   "modifiers" : [ "public" ],

@@ -1,6 +1,6 @@
 {
   "name" : "TestInterface",
-  "packageName" : null,
+  "packageName" : "io.emop",
   "type" : "interface",
   "description" : "测试接口，用于验证接口文档的 JSON 生成。\n Test interface for verifying JSON generation of interface documentation.\n インターフェースドキュメントのJSON生成を検証するためのテストインターフェース。\n 인터페이스 문서의 JSON 생성을 검증하기 위한 테스트 인터페이스。\n \n <p>该接口演示了以下特性：\n This interface demonstrates the following features:\n このインターフェースは以下の機能を実演します：\n 이 인터페이스는 다음 기능을 보여줍니다:</p>\n \n <ul>\n   <li>泛型方法 / Generic methods / ジェネリックメソッド / 제네릭 메서드</li>\n   <li>默认方法 / Default methods / デフォルトメソッド / 기본 메서드</li>\n   <li>静态方法 / Static methods / 静的メソッド / 정적 메서드</li>\n   <li>异步处理 / Asynchronous processing / 非同期処理 / 비동기 처리</li>\n </ul>\n \n @param <T> 数据类型参数 / Data type parameter / データ型パラメータ / 데이터 타입 매개변수\n @author Test Author / テスト作成者 / 테스트 작성자\n @version 2.0\n @since 2024-01-01",
   "modifiers" : [ "public", "abstract" ],

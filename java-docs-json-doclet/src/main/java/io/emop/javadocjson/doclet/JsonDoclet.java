@@ -28,138 +28,162 @@ import com.sun.source.util.DocTrees;
  * This replaces the manual parsing approach with the official JDK Doclet API.
  */
 public class JsonDoclet implements Doclet {
-    
+
     private Reporter reporter;
     private String outputDirectory = "javadoc-output";
     private String baseUrl = "";
     private boolean includePrivate = false;
-    
+
     @Override
     public void init(Locale locale, Reporter reporter) {
         this.reporter = reporter;
     }
-    
+
     @Override
     public String getName() {
         return "JsonDoclet";
     }
-    
+
     @Override
     public Set<? extends Option> getSupportedOptions() {
         return Set.of(
-            new SimpleOption("-outputDirectory", 1, "Output directory for JSON files") {
-                @Override
-                public boolean process(String option, List<String> arguments) {
-                    outputDirectory = arguments.get(0);
-                    return true;
+                new SimpleOption("-outputDirectory", 1, "Output directory for JSON files") {
+                    @Override
+                    public boolean process(String option, List<String> arguments) {
+                        outputDirectory = arguments.get(0);
+                        return true;
+                    }
+                },
+                new SimpleOption("-baseUrl", 1, "Base URL for documentation") {
+                    @Override
+                    public boolean process(String option, List<String> arguments) {
+                        baseUrl = arguments.get(0);
+                        return true;
+                    }
+                },
+                new SimpleOption("-includePrivate", 0, "Include private members") {
+                    @Override
+                    public boolean process(String option, List<String> arguments) {
+                        includePrivate = true;
+                        return true;
+                    }
                 }
-            },
-            new SimpleOption("-baseUrl", 1, "Base URL for documentation") {
-                @Override
-                public boolean process(String option, List<String> arguments) {
-                    baseUrl = arguments.get(0);
-                    return true;
-                }
-            },
-            new SimpleOption("-includePrivate", 0, "Include private members") {
-                @Override
-                public boolean process(String option, List<String> arguments) {
-                    includePrivate = true;
-                    return true;
-                }
-            }
         );
     }
-    
+
     @Override
     public SourceVersion getSupportedSourceVersion() {
         return SourceVersion.latest();
     }
-    
+
     @Override
     public boolean run(DocletEnvironment environment) {
         try {
             reporter.print(Diagnostic.Kind.NOTE, "Starting JSON generation...");
-            
+
             // Create output directory
             File outputDir = new File(outputDirectory);
             if (!outputDir.exists()) {
                 outputDir.mkdirs();
             }
-            
+
             // Process all included elements
             Set<? extends Element> includedElements = environment.getIncludedElements();
             List<JavadocClass> allClasses = new ArrayList<>();
-            
+
             // Process each type element and generate individual JSON files
             for (Element element : includedElements) {
-                if (element.getKind() == ElementKind.CLASS || 
-                    element.getKind() == ElementKind.INTERFACE ||
-                    element.getKind() == ElementKind.ENUM ||
-                    element.getKind() == ElementKind.ANNOTATION_TYPE) {
-                    
+                if (element.getKind() == ElementKind.CLASS ||
+                        element.getKind() == ElementKind.INTERFACE ||
+                        element.getKind() == ElementKind.ENUM ||
+                        element.getKind() == ElementKind.ANNOTATION_TYPE) {
+
                     TypeElement typeElement = (TypeElement) element;
                     JavadocClass javadocClass = createJavadocClass(typeElement, environment);
-                    
+
                     if (javadocClass != null) {
                         allClasses.add(javadocClass);
-                        
+
                         // Generate individual JSON file for this class
-                        String className = typeElement.getQualifiedName().toString();
-                        String fileName = className + ".json";
+                        String fileName = javadocClass.getFullName() + ".json";
                         File classFile = new File(outputDir, fileName);
-                        
+
                         ObjectMapper mapper = new ObjectMapper();
                         mapper.findAndRegisterModules();
                         mapper.writerWithDefaultPrettyPrinter().writeValue(classFile, javadocClass);
                     }
                 }
             }
-            
-            reporter.print(Diagnostic.Kind.NOTE, 
-                String.format("JSON documentation generated in: %s (%d classes)", 
-                    outputDirectory, allClasses.size()));
-            
+
+            reporter.print(Diagnostic.Kind.NOTE,
+                    String.format("JSON documentation generated in: %s (%d classes)",
+                            outputDirectory, allClasses.size()));
+
             return true;
-            
+
         } catch (Exception e) {
             reporter.print(Diagnostic.Kind.ERROR, "Error generating JSON: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
-    
+
     private JavadocClass createJavadocClass(TypeElement typeElement, DocletEnvironment environment) {
         // Check visibility
         if (!includePrivate && !isPublicOrProtected(typeElement)) {
             return null;
         }
-        
+
         String className = typeElement.getSimpleName().toString();
         String fullName = typeElement.getQualifiedName().toString();
         String classType = getElementType(typeElement);
-        
+
         JavadocClass javadocClass = new JavadocClass(className, classType);
-        
+
+        // Handle package name correctly for inner classes
+        if (!fullName.equals(className)) {
+            // Get the actual package name by finding the enclosing package element
+            Element enclosingElement = typeElement.getEnclosingElement();
+            String packageName = "";
+
+            // Traverse up to find the package element
+            while (enclosingElement != null && enclosingElement.getKind() != ElementKind.PACKAGE) {
+                enclosingElement = enclosingElement.getEnclosingElement();
+            }
+
+            if (enclosingElement != null && enclosingElement.getKind() == ElementKind.PACKAGE) {
+                packageName = ((PackageElement) enclosingElement).getQualifiedName().toString();
+            }
+
+            javadocClass.setPackageName(packageName);
+
+            // For inner classes, set the full class name including outer class
+            if (packageName.length() > 0 && fullName.startsWith(packageName + ".")) {
+                String classNameWithOuter = fullName.substring(packageName.length() + 1);
+                classNameWithOuter = classNameWithOuter.replaceAll("\\.", "\\$");
+                javadocClass.setName(classNameWithOuter);
+            }
+        }
+
         // Set description
         String docComment = environment.getElementUtils().getDocComment(typeElement);
         javadocClass.setDescription(docComment != null ? decodeUnicodeEscapes(docComment.trim()) : "");
-        
+
         // Set modifiers
         javadocClass.setModifiers(getModifiers(typeElement));
-        
+
         // Set superclass
         TypeMirror superclass = typeElement.getSuperclass();
         if (superclass != null && !superclass.toString().equals("java.lang.Object")) {
             javadocClass.setSuperClass(superclass.toString());
         }
-        
+
         // Set interfaces
         List<String> interfaces = typeElement.getInterfaces().stream()
-            .map(TypeMirror::toString)
-            .collect(Collectors.toList());
+                .map(TypeMirror::toString)
+                .collect(Collectors.toList());
         javadocClass.setInterfaces(interfaces);
-        
+
         // Process methods
         List<ExecutableElement> methods = ElementFilter.methodsIn(typeElement.getEnclosedElements());
         for (ExecutableElement method : methods) {
@@ -168,7 +192,7 @@ public class JsonDoclet implements Doclet {
                 javadocClass.getMethods().add(javadocMethod);
             }
         }
-        
+
         // Process fields
         List<VariableElement> fields = ElementFilter.fieldsIn(typeElement.getEnclosedElements());
         for (VariableElement field : fields) {
@@ -177,7 +201,7 @@ public class JsonDoclet implements Doclet {
                 javadocClass.getFields().add(javadocField);
             }
         }
-        
+
         // Process constructors
         List<ExecutableElement> constructors = ElementFilter.constructorsIn(typeElement.getEnclosedElements());
         for (ExecutableElement constructor : constructors) {
@@ -186,28 +210,28 @@ public class JsonDoclet implements Doclet {
                 javadocClass.getConstructors().add(javadocConstructor);
             }
         }
-        
+
         return javadocClass;
     }
-    
+
     private JavadocMethod createJavadocMethod(ExecutableElement method, DocletEnvironment environment) {
         // Check visibility
         if (!includePrivate && !isPublicOrProtected(method)) {
             return null;
         }
-        
+
         JavadocMethod javadocMethod = new JavadocMethod();
         javadocMethod.setName(method.getSimpleName().toString());
         javadocMethod.setReturnType(method.getReturnType().toString());
         javadocMethod.setSignature(generateMethodSignature(method));
         javadocMethod.setModifiers(getModifiers(method));
-        
+
         // Set description (main body only, excluding block tags to avoid duplication)
         javadocMethod.setDescription(extractMainDescription(method, environment));
-        
+
         // Extract parameter descriptions from @param tags
         Map<String, String> paramDescriptions = extractParameterDescriptions(method, environment);
-        
+
         // Set parameters
         List<JavadocParameter> parameters = new ArrayList<>();
         for (VariableElement param : method.getParameters()) {
@@ -219,57 +243,57 @@ public class JsonDoclet implements Doclet {
             parameters.add(javadocParam);
         }
         javadocMethod.setParameters(parameters);
-        
+
         // Set exceptions
         List<String> exceptions = method.getThrownTypes().stream()
-            .map(TypeMirror::toString)
-            .collect(Collectors.toList());
+                .map(TypeMirror::toString)
+                .collect(Collectors.toList());
         javadocMethod.setExceptions(exceptions);
-        
+
         return javadocMethod;
     }
-    
+
     private JavadocField createJavadocField(VariableElement field, DocletEnvironment environment) {
         // Check visibility
         if (!includePrivate && !isPublicOrProtected(field)) {
             return null;
         }
-        
+
         JavadocField javadocField = new JavadocField();
         javadocField.setName(field.getSimpleName().toString());
         javadocField.setType(field.asType().toString());
         javadocField.setModifiers(getModifiers(field));
-        
+
         // Set description
         String docComment = environment.getElementUtils().getDocComment(field);
         javadocField.setDescription(docComment != null ? decodeUnicodeEscapes(docComment.trim()) : "");
-        
+
         // Set default value if available
         Object constantValue = field.getConstantValue();
         if (constantValue != null) {
             javadocField.setDefaultValue(constantValue.toString());
         }
-        
+
         return javadocField;
     }
-    
+
     private JavadocConstructor createJavadocConstructor(ExecutableElement constructor, DocletEnvironment environment) {
         // Check visibility
         if (!includePrivate && !isPublicOrProtected(constructor)) {
             return null;
         }
-        
+
         JavadocConstructor javadocConstructor = new JavadocConstructor();
         javadocConstructor.setName(constructor.getEnclosingElement().getSimpleName().toString());
         javadocConstructor.setSignature(generateMethodSignature(constructor));
         javadocConstructor.setModifiers(getModifiers(constructor));
-        
+
         // Set description (main body only, excluding block tags to avoid duplication)
         javadocConstructor.setDescription(extractMainDescription(constructor, environment));
-        
+
         // Extract parameter descriptions from @param tags
         Map<String, String> paramDescriptions = extractParameterDescriptions(constructor, environment);
-        
+
         // Set parameters
         List<JavadocParameter> parameters = new ArrayList<>();
         for (VariableElement param : constructor.getParameters()) {
@@ -281,54 +305,59 @@ public class JsonDoclet implements Doclet {
             parameters.add(javadocParam);
         }
         javadocConstructor.setParameters(parameters);
-        
+
         // Set exceptions
         List<String> exceptions = constructor.getThrownTypes().stream()
-            .map(TypeMirror::toString)
-            .collect(Collectors.toList());
+                .map(TypeMirror::toString)
+                .collect(Collectors.toList());
         javadocConstructor.setExceptions(exceptions);
-        
+
         return javadocConstructor;
     }
-    
+
     private boolean isPublicOrProtected(Element element) {
         Set<Modifier> modifiers = element.getModifiers();
         return modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED);
     }
-    
+
     private List<String> getModifiers(Element element) {
         return element.getModifiers().stream()
-            .map(Modifier::toString)
-            .collect(Collectors.toList());
+                .map(Modifier::toString)
+                .collect(Collectors.toList());
     }
-    
+
     private String getElementType(TypeElement element) {
         switch (element.getKind()) {
-            case CLASS: return "class";
-            case INTERFACE: return "interface";
-            case ENUM: return "enum";
-            case ANNOTATION_TYPE: return "annotation";
-            default: return "class";
+            case CLASS:
+                return "class";
+            case INTERFACE:
+                return "interface";
+            case ENUM:
+                return "enum";
+            case ANNOTATION_TYPE:
+                return "annotation";
+            default:
+                return "class";
         }
     }
-    
+
     private String generateMethodSignature(ExecutableElement method) {
         StringBuilder signature = new StringBuilder();
-        
+
         // Add modifiers
         Set<Modifier> modifiers = method.getModifiers();
         for (Modifier modifier : modifiers) {
             signature.append(modifier.toString()).append(" ");
         }
-        
+
         // Add return type (for methods, not constructors)
         if (method.getKind() == ElementKind.METHOD) {
             signature.append(method.getReturnType().toString()).append(" ");
         }
-        
+
         // Add method name
         signature.append(method.getSimpleName().toString());
-        
+
         // Add parameters
         signature.append("(");
         List<? extends VariableElement> parameters = method.getParameters();
@@ -338,7 +367,7 @@ public class JsonDoclet implements Doclet {
             signature.append(param.asType().toString()).append(" ").append(param.getSimpleName());
         }
         signature.append(")");
-        
+
         // Add exceptions
         List<? extends TypeMirror> thrownTypes = method.getThrownTypes();
         if (!thrownTypes.isEmpty()) {
@@ -348,23 +377,23 @@ public class JsonDoclet implements Doclet {
                 signature.append(thrownTypes.get(i).toString());
             }
         }
-        
+
         return signature.toString();
     }
-    
+
     /**
      * Extracts parameter descriptions from @param tags in the Javadoc comment.
-     * 
-     * @param element The method or constructor element
+     *
+     * @param element     The method or constructor element
      * @param environment The doclet environment
      * @return A map of parameter names to their descriptions
      */
     private Map<String, String> extractParameterDescriptions(ExecutableElement element, DocletEnvironment environment) {
         Map<String, String> paramDescriptions = new HashMap<>();
-        
+
         DocTrees docTrees = environment.getDocTrees();
         DocCommentTree docCommentTree = docTrees.getDocCommentTree(element);
-        
+
         if (docCommentTree != null) {
             for (DocTree blockTag : docCommentTree.getBlockTags()) {
                 if (blockTag.getKind() == DocTree.Kind.PARAM) {
@@ -375,36 +404,36 @@ public class JsonDoclet implements Doclet {
                 }
             }
         }
-        
+
         return paramDescriptions;
     }
-    
+
     /**
      * Extracts the main description from Javadoc comment, excluding @param and other block tags.
      * This helps avoid duplicate parameter descriptions in method descriptions.
-     * 
-     * @param element The element to extract description from
+     *
+     * @param element     The element to extract description from
      * @param environment The doclet environment
      * @return The main description without block tags
      */
     private String extractMainDescription(Element element, DocletEnvironment environment) {
         DocTrees docTrees = environment.getDocTrees();
         DocCommentTree docCommentTree = docTrees.getDocCommentTree(element);
-        
+
         if (docCommentTree != null) {
             // Get only the main body, excluding block tags
             return decodeUnicodeEscapes(docCommentTree.getFullBody().toString().trim());
         }
-        
+
         // Fallback to the old method if DocCommentTree is not available
         String docComment = environment.getElementUtils().getDocComment(element);
         return docComment != null ? decodeUnicodeEscapes(docComment.trim()) : "";
     }
-    
+
     /**
      * Decodes Unicode escape sequences in a string.
      * Converts sequences like \u6587\u4ef6\u8def\u5f84 back to readable characters.
-     * 
+     *
      * @param input The input string that may contain Unicode escape sequences
      * @return The decoded string with Unicode characters
      */
@@ -412,7 +441,7 @@ public class JsonDoclet implements Doclet {
         if (input == null || input.isEmpty()) {
             return input;
         }
-        
+
         StringBuilder result = new StringBuilder();
         int i = 0;
         while (i < input.length()) {
@@ -433,10 +462,10 @@ public class JsonDoclet implements Doclet {
                 i++;
             }
         }
-        
+
         return result.toString();
     }
-    
+
     /**
      * Simple option implementation for command-line arguments.
      */

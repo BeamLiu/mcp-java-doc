@@ -1,6 +1,6 @@
 {
   "name" : "CustomException",
-  "packageName" : null,
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "自定义业务异常类。\n Custom business exception class.\n カスタムビジネス例外クラス。\n 사용자 정의 비즈니스 예외 클래스。\n \n <p>该异常类用于处理业务逻辑中的特定错误情况，提供详细的错误信息和错误代码。\n This exception class is used to handle specific error situations in business logic, \n providing detailed error information and error codes.\n この例外クラスは、ビジネスロジックの特定のエラー状況を処理するために使用され、\n 詳細なエラー情報とエラーコードを提供します。\n 이 예외 클래스는 비즈니스 로직의 특정 오류 상황을 처리하는 데 사용되며,\n 자세한 오류 정보와 오류 코드를 제공합니다。</p>\n \n <h3>错误代码说明 / Error Code Description / エラーコード説明 / 오류 코드 설명:</h3>\n <ul>\n   <li><strong>1000-1999:</strong> 用户相关错误 / User-related errors / ユーザー関連エラー / 사용자 관련 오류</li>\n   <li><strong>2000-2999:</strong> 数据验证错误 / Data validation errors / データ検証エラー / 데이터 검증 오류</li>\n   <li><strong>3000-3999:</strong> 业务逻辑错误 / Business logic errors / ビジネスロジックエラー / 비즈니스 로직 오류</li>\n   <li><strong>4000-4999:</strong> 系统错误 / System errors / システムエラー / 시스템 오류</li>\n   <li><strong>5000-5999:</strong> 外部服务错误 / External service errors / 外部サービスエラー / 외부 서비스 오류</li>\n </ul>\n \n @author Exception Author / 例外作成者 / 예외 작성자\n @version 1.0\n @since 2024-01-01\n @see RuntimeException\n @see TestInterface",
   "modifiers" : [ "public" ],

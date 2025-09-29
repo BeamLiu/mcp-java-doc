@@ -1,6 +1,6 @@
 {
-  "name" : "UserConfig",
-  "packageName" : null,
+  "name" : "AdvancedTestClass$UserConfig",
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "用户配置内部类。\n User configuration inner class.\n ユーザー設定内部クラス。\n 사용자 구성 내부 클래스。",
   "modifiers" : [ "public", "static" ],

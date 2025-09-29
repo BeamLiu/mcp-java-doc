@@ -1,6 +1,6 @@
 {
-  "name" : "AdvancedTestClassBuilder",
-  "packageName" : null,
+  "name" : "AdvancedTestClass$AdvancedTestClassBuilder",
+  "packageName" : "io.emop",
   "type" : "class",
   "description" : "",
   "modifiers" : [ "public", "static" ],
