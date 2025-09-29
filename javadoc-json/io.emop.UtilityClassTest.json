@@ -1,0 +1,192 @@
+{
+  "name" : "UtilityClassTest",
+  "packageName" : null,
+  "type" : "class",
+  "description" : "实用工具类，提供各种静态方法。\n Utility class providing various static methods.\n さまざまな静的メソッドを提供するユーティリティクラス。\n 다양한 정적 메서드를 제공하는 유틸리티 클래스。\n \n <p>该类包含以下功能模块：\n This class contains the following functional modules:\n このクラスには以下の機能モジュールが含まれています：\n 이 클래스에는 다음과 같은 기능 모듈이 포함되어 있습니다:</p>\n \n <ul>\n   <li>字符串处理工具 / String processing utilities / 文字列処理ユーティリティ / 문자열 처리 유틸리티</li>\n   <li>文件操作工具 / File operation utilities / ファイル操作ユーティリティ / 파일 작업 유틸리티</li>\n   <li>日期时间工具 / Date and time utilities / 日時ユーティリティ / 날짜 시간 유틸리티</li>\n   <li>集合处理工具 / Collection processing utilities / コレクション処理ユーティリティ / 컬렉션 처리 유틸리티</li>\n   <li>验证工具 / Validation utilities / 検証ユーティリティ / 검증 유틸리티</li>\n </ul>\n \n @author Utility Author / ユーティリティ作成者 / 유틸리티 작성자\n @version 2.0\n @since 2024-01-01",
+  "modifiers" : [ "public", "final" ],
+  "superClass" : null,
+  "interfaces" : [ ],
+  "constructors" : [ ],
+  "methods" : [ {
+    "name" : "isValidEmail",
+    "description" : "检查字符串是否为有效的邮箱地址。\n Checks if a string is a valid email address.\n 文字列が有効なメールアドレスかどうかをチェックします。\n 문자열이 유효한 이메일 주소인지 확인합니다。",
+    "signature" : "public static boolean isValidEmail(java.lang.String email)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "email",
+      "type" : "java.lang.String",
+      "description" : "要验证的邮箱地址 / Email address to validate / 検証するメールアドレス / 검증할 이메일 주소"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "isValidPhone",
+    "description" : "检查字符串是否为有效的电话号码。\n Checks if a string is a valid phone number.\n 文字列が有効な電話番号かどうかをチェックします。\n 문자열이 유효한 전화번호인지 확인합니다。",
+    "signature" : "public static boolean isValidPhone(java.lang.String phone)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "phone",
+      "type" : "java.lang.String",
+      "description" : "要验证的电话号码 / Phone number to validate / 検証する電話番号 / 검증할 전화번호"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "generateRandomString",
+    "description" : "生成随机字符串。\n Generates a random string.\n ランダム文字列を生成します。\n 임의의 문자열을 생성합니다。",
+    "signature" : "public static java.lang.String generateRandomString(int length, boolean includeNumbers, boolean includeSpecialChars)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "length",
+      "type" : "int",
+      "description" : "字符串长度 / String length / 文字列の長さ / 문자열 길이"
+    }, {
+      "name" : "includeNumbers",
+      "type" : "boolean",
+      "description" : "是否包含数字 / Whether to include numbers / 数字を含むかどうか / 숫자 포함 여부"
+    }, {
+      "name" : "includeSpecialChars",
+      "type" : "boolean",
+      "description" : "是否包含特殊字符 / Whether to include special characters / \n                           特殊文字を含むかどうか / 특수 문자 포함 여부"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "toCamelCase",
+    "description" : "将字符串转换为驼峰命名法。\n Converts string to camel case.\n 文字列をキャメルケースに変換します。\n 문자열을 카멜 케이스로 변환합니다。",
+    "signature" : "public static java.lang.String toCamelCase(java.lang.String input, java.lang.String delimiter)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "input",
+      "type" : "java.lang.String",
+      "description" : "输入字符串 / Input string / 入力文字列 / 입력 문자열"
+    }, {
+      "name" : "delimiter",
+      "type" : "java.lang.String",
+      "description" : "分隔符 / Delimiter / 区切り文字 / 구분자"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "createDirectorySafely",
+    "description" : "安全地创建目录。\n Safely creates directories.\n ディレクトリを安全に作成します。\n 디렉토리를 안전하게 생성합니다。",
+    "signature" : "public static boolean createDirectorySafely(java.lang.String dirPath)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "dirPath",
+      "type" : "java.lang.String",
+      "description" : "目录路径 / Directory path / ディレクトリパス / 디렉토리 경로"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getFileExtension",
+    "description" : "获取文件扩展名。\n Gets file extension.\n ファイル拡張子を取得します。\n 파일 확장자를 가져옵니다。",
+    "signature" : "public static java.lang.String getFileExtension(java.lang.String filename)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "filename",
+      "type" : "java.lang.String",
+      "description" : "文件名 / Filename / ファイル名 / 파일명"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getHumanReadableFileSize",
+    "description" : "计算文件大小的人类可读格式。\n Calculates human-readable file size format.\n 人間が読みやすいファイルサイズ形式を計算します。\n 사람이 읽기 쉬운 파일 크기 형식을 계산합니다。",
+    "signature" : "public static java.lang.String getHumanReadableFileSize(java.lang.String filePath)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "filePath",
+      "type" : "java.lang.String",
+      "description" : "文件路径 / File path / ファイルパス / 파일 경로"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "parseDate",
+    "description" : "解析日期字符串，支持多种格式。\n Parses date string supporting multiple formats.\n 複数の形式をサポートする日付文字列を解析します。\n 여러 형식을 지원하는 날짜 문자열을 구문 분석합니다。",
+    "signature" : "public static java.util.Date parseDate(java.lang.String dateString) throws java.text.ParseException",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.util.Date",
+    "parameters" : [ {
+      "name" : "dateString",
+      "type" : "java.lang.String",
+      "description" : "日期字符串 / Date string / 日付文字列 / 날짜 문자열"
+    } ],
+    "exceptions" : [ "java.text.ParseException" ]
+  }, {
+    "name" : "formatCurrentTime",
+    "description" : "格式化当前时间。\n Formats current time.\n 現在時刻をフォーマットします。\n 현재 시간을 형식화합니다。",
+    "signature" : "public static java.lang.String formatCurrentTime(java.lang.String pattern)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "pattern",
+      "type" : "java.lang.String",
+      "description" : "格式模式 / Format pattern / フォーマットパターン / 형식 패턴"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "safeGet",
+    "description" : "安全地获取列表中的元素。\n Safely gets element from list.\n リストから要素を安全に取得します。\n 목록에서 요소를 안전하게 가져옵니다。",
+    "signature" : "public static java.util.Optional<T> safeGet(java.util.List<T> list, int index)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.util.Optional<T>",
+    "parameters" : [ {
+      "name" : "list",
+      "type" : "java.util.List<T>",
+      "description" : "列表 / List / リスト / 목록"
+    }, {
+      "name" : "index",
+      "type" : "int",
+      "description" : "索引 / Index / インデックス / 인덱스"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "filterAndMap",
+    "description" : "过滤并转换列表。\n Filters and transforms list.\n リストをフィルタリングして変換します。\n 목록을 필터링하고 변환합니다。",
+    "signature" : "public static java.util.List<R> filterAndMap(java.util.List<T> list, java.util.function.Predicate<T> filter, java.util.function.Function<T,R> mapper)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.util.List<R>",
+    "parameters" : [ {
+      "name" : "list",
+      "type" : "java.util.List<T>",
+      "description" : "输入列表 / Input list / 入力リスト / 입력 목록"
+    }, {
+      "name" : "filter",
+      "type" : "java.util.function.Predicate<T>",
+      "description" : "过滤条件 / Filter condition / フィルタ条件 / 필터 조건"
+    }, {
+      "name" : "mapper",
+      "type" : "java.util.function.Function<T,R>",
+      "description" : "转换函数 / Mapper function / マッパー関数 / 매퍼 함수"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "isEmpty",
+    "description" : "检查集合是否为空或 null。\n Checks if collection is null or empty.\n コレクションがnullまたは空かどうかをチェックします。\n 컬렉션이 null이거나 비어있는지 확인합니다。",
+    "signature" : "public static boolean isEmpty(java.util.Collection<?> collection)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "collection",
+      "type" : "java.util.Collection<?>",
+      "description" : "要检查的集合 / Collection to check / チェックするコレクション / 확인할 컬렉션"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "isNotEmpty",
+    "description" : "检查集合是否不为空。\n Checks if collection is not empty.\n コレクションが空でないかどうかをチェックします。\n 컬렉션이 비어있지 않은지 확인합니다。",
+    "signature" : "public static boolean isNotEmpty(java.util.Collection<?> collection)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "collection",
+      "type" : "java.util.Collection<?>",
+      "description" : "要检查的集合 / Collection to check / チェックするコレクション / 확인할 컬렉션"
+    } ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ ]
+}

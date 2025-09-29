@@ -1,0 +1,156 @@
+{
+  "name" : "AdvancedTestClassBuilder",
+  "packageName" : null,
+  "type" : "class",
+  "description" : "",
+  "modifiers" : [ "public", "static" ],
+  "superClass" : null,
+  "interfaces" : [ ],
+  "constructors" : [ ],
+  "methods" : [ {
+    "name" : "userId",
+    "description" : "用户 ID / User ID / ユーザーID / 사용자 ID",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder userId(java.lang.String userId)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "userId",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "username",
+    "description" : "用户名 / Username / ユーザー名 / 사용자명",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder username(java.lang.String username)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "username",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "status",
+    "description" : "用户状态 / User status / ユーザーステータス / 사용자 상태",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder status(io.emop.AdvancedTestClass.UserStatus status)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "status",
+      "type" : "io.emop.AdvancedTestClass.UserStatus",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "config",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder config(io.emop.AdvancedTestClass.UserConfig config)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "config",
+      "type" : "io.emop.AdvancedTestClass.UserConfig",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "configs",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder configs(java.util.Collection<? extends io.emop.AdvancedTestClass.UserConfig> configs)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "configs",
+      "type" : "java.util.Collection<? extends io.emop.AdvancedTestClass.UserConfig>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "clearConfigs",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder clearConfigs()",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "property",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder property(java.lang.String propertyKey, java.lang.Object propertyValue)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "propertyKey",
+      "type" : "java.lang.String",
+      "description" : ""
+    }, {
+      "name" : "propertyValue",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "properties",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder properties(java.util.Map<? extends java.lang.String,? extends java.lang.Object> properties)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "properties",
+      "type" : "java.util.Map<? extends java.lang.String,? extends java.lang.Object>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "clearProperties",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder clearProperties()",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "createdAt",
+    "description" : "创建时间 / Creation time / 作成時間 / 생성 시간",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder createdAt(java.time.LocalDateTime createdAt)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "createdAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "updatedAt",
+    "description" : "最后更新时间 / Last update time / 最終更新時間 / 마지막 업데이트 시간",
+    "signature" : "public io.emop.AdvancedTestClass.AdvancedTestClassBuilder updatedAt(java.time.LocalDateTime updatedAt)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ {
+      "name" : "updatedAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "build",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass build()",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "toString",
+    "description" : "",
+    "signature" : "public java.lang.String toString()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ ]
+}

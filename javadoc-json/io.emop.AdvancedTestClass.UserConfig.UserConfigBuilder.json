@@ -1,0 +1,76 @@
+{
+  "name" : "UserConfigBuilder",
+  "packageName" : null,
+  "type" : "class",
+  "description" : "",
+  "modifiers" : [ "public", "static" ],
+  "superClass" : null,
+  "interfaces" : [ ],
+  "constructors" : [ ],
+  "methods" : [ {
+    "name" : "name",
+    "description" : "配置名称 / Configuration name / 設定名 / 구성 이름",
+    "signature" : "public io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder name(java.lang.String name)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder",
+    "parameters" : [ {
+      "name" : "name",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "value",
+    "description" : "配置值 / Configuration value / 設定値 / 구성 값",
+    "signature" : "public io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder value(java.lang.Object value)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder",
+    "parameters" : [ {
+      "name" : "value",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "type",
+    "description" : "配置类型 / Configuration type / 設定タイプ / 구성 타입",
+    "signature" : "public io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder type(java.lang.String type)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder",
+    "parameters" : [ {
+      "name" : "type",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "required",
+    "description" : "是否必需 / Is required / 必須かどうか / 필수 여부",
+    "signature" : "public io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder required(boolean required)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder",
+    "parameters" : [ {
+      "name" : "required",
+      "type" : "boolean",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "build",
+    "description" : "",
+    "signature" : "public io.emop.AdvancedTestClass.UserConfig build()",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserConfig",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "toString",
+    "description" : "",
+    "signature" : "public java.lang.String toString()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ ]
+}

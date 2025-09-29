@@ -1,0 +1,170 @@
+{
+  "name" : "UserConfig",
+  "packageName" : null,
+  "type" : "class",
+  "description" : "用户配置内部类。\n User configuration inner class.\n ユーザー設定内部クラス。\n 사용자 구성 내부 클래스。",
+  "modifiers" : [ "public", "static" ],
+  "superClass" : null,
+  "interfaces" : [ ],
+  "constructors" : [ {
+    "name" : "UserConfig",
+    "description" : "",
+    "signature" : "public <init>()",
+    "modifiers" : [ "public" ],
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "UserConfig",
+    "description" : "",
+    "signature" : "public <init>(java.lang.String name, java.lang.Object value, java.lang.String type, boolean required)",
+    "modifiers" : [ "public" ],
+    "parameters" : [ {
+      "name" : "name",
+      "type" : "java.lang.String",
+      "description" : ""
+    }, {
+      "name" : "value",
+      "type" : "java.lang.Object",
+      "description" : ""
+    }, {
+      "name" : "type",
+      "type" : "java.lang.String",
+      "description" : ""
+    }, {
+      "name" : "required",
+      "type" : "boolean",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  } ],
+  "methods" : [ {
+    "name" : "builder",
+    "description" : "",
+    "signature" : "public static io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder builder()",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getName",
+    "description" : "配置名称 / Configuration name / 設定名 / 구성 이름",
+    "signature" : "public java.lang.String getName()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getValue",
+    "description" : "配置值 / Configuration value / 設定値 / 구성 값",
+    "signature" : "public java.lang.Object getValue()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.Object",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getType",
+    "description" : "配置类型 / Configuration type / 設定タイプ / 구성 타입",
+    "signature" : "public java.lang.String getType()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "isRequired",
+    "description" : "是否必需 / Is required / 必須かどうか / 필수 여부",
+    "signature" : "public boolean isRequired()",
+    "modifiers" : [ "public" ],
+    "returnType" : "boolean",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setName",
+    "description" : "配置名称 / Configuration name / 設定名 / 구성 이름",
+    "signature" : "public void setName(java.lang.String name)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "name",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setValue",
+    "description" : "配置值 / Configuration value / 設定値 / 구성 값",
+    "signature" : "public void setValue(java.lang.Object value)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "value",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setType",
+    "description" : "配置类型 / Configuration type / 設定タイプ / 구성 타입",
+    "signature" : "public void setType(java.lang.String type)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "type",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setRequired",
+    "description" : "是否必需 / Is required / 必須かどうか / 필수 여부",
+    "signature" : "public void setRequired(boolean required)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "required",
+      "type" : "boolean",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "equals",
+    "description" : "",
+    "signature" : "public boolean equals(java.lang.Object o)",
+    "modifiers" : [ "public" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "o",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "canEqual",
+    "description" : "",
+    "signature" : "protected boolean canEqual(java.lang.Object other)",
+    "modifiers" : [ "protected" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "other",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "hashCode",
+    "description" : "",
+    "signature" : "public int hashCode()",
+    "modifiers" : [ "public" ],
+    "returnType" : "int",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "toString",
+    "description" : "",
+    "signature" : "public java.lang.String toString()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ ]
+}

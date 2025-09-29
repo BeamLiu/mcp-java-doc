@@ -1,0 +1,70 @@
+{
+  "name" : "ErrorType",
+  "packageName" : null,
+  "type" : "enum",
+  "description" : "错误类型枚举。\n Error type enumeration.\n エラータイプ列挙型。\n 오류 타입 열거형。",
+  "modifiers" : [ "public", "static", "final" ],
+  "superClass" : "java.lang.Enum<io.emop.CustomException.ErrorType>",
+  "interfaces" : [ ],
+  "constructors" : [ ],
+  "methods" : [ {
+    "name" : "values",
+    "description" : "",
+    "signature" : "public static io.emop.CustomException.ErrorType[] values()",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "io.emop.CustomException.ErrorType[]",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "valueOf",
+    "description" : "",
+    "signature" : "public static io.emop.CustomException.ErrorType valueOf(java.lang.String name)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "io.emop.CustomException.ErrorType",
+    "parameters" : [ {
+      "name" : "name",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getDescription",
+    "description" : "获取错误类型描述。\n Gets error type description.\n エラータイプの説明を取得します。\n 오류 타입 설명을 가져옵니다。",
+    "signature" : "public java.lang.String getDescription()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ {
+    "name" : "USER_ERROR",
+    "description" : "用户错误 / User error / ユーザーエラー / 사용자 오류",
+    "type" : "io.emop.CustomException.ErrorType",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "VALIDATION_ERROR",
+    "description" : "验证错误 / Validation error / 検証エラー / 검증 오류",
+    "type" : "io.emop.CustomException.ErrorType",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "BUSINESS_ERROR",
+    "description" : "业务错误 / Business error / ビジネスエラー / 비즈니스 오류",
+    "type" : "io.emop.CustomException.ErrorType",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "SYSTEM_ERROR",
+    "description" : "系统错误 / System error / システムエラー / 시스템 오류",
+    "type" : "io.emop.CustomException.ErrorType",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "EXTERNAL_ERROR",
+    "description" : "外部服务错误 / External service error / 外部サービスエラー / 외부 서비스 오류",
+    "type" : "io.emop.CustomException.ErrorType",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : null
+  } ]
+}

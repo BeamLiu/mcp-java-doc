@@ -1,0 +1,370 @@
+{
+  "name" : "AdvancedTestClass",
+  "packageName" : null,
+  "type" : "class",
+  "description" : "高级测试类，展示复杂的 Java 特性和文档生成。\n Advanced test class demonstrating complex Java features and documentation generation.\n 複雑なJava機能とドキュメント生成を実演する高度なテストクラス。\n 복잡한 Java 기능과 문서 생성을 보여주는 고급 테스트 클래스。\n \n <p>该类包含以下高级特性：\n This class contains the following advanced features:\n このクラスには以下の高度な機能が含まれています：\n 이 클래스에는 다음과 같은 고급 기능이 포함되어 있습니다:</p>\n \n <ul>\n   <li>嵌套类和枚举 / Nested classes and enums / ネストクラスと列挙型 / 중첩 클래스와 열거형</li>\n   <li>泛型和流处理 / Generics and stream processing / ジェネリクスとストリーム処理 / 제네릭과 스트림 처리</li>\n   <li>Builder 模式 / Builder pattern / Builderパターン / 빌더 패턴</li>\n   <li>异步处理 / Asynchronous processing / 非同期処理 / 비동기 처리</li>\n </ul>\n \n @author Advanced Test Author / 高度テスト作成者 / 고급 테스트 작성자\n @version 3.0\n @since 2024-01-01",
+  "modifiers" : [ "public" ],
+  "superClass" : null,
+  "interfaces" : [ "io.emop.TestInterface<java.lang.String>" ],
+  "constructors" : [ {
+    "name" : "AdvancedTestClass",
+    "description" : "",
+    "signature" : "public <init>()",
+    "modifiers" : [ "public" ],
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "AdvancedTestClass",
+    "description" : "",
+    "signature" : "public <init>(java.lang.String userId, java.lang.String username, io.emop.AdvancedTestClass.UserStatus status, java.util.List<io.emop.AdvancedTestClass.UserConfig> configs, java.util.Map<java.lang.String,java.lang.Object> properties, java.time.LocalDateTime createdAt, java.time.LocalDateTime updatedAt)",
+    "modifiers" : [ "public" ],
+    "parameters" : [ {
+      "name" : "userId",
+      "type" : "java.lang.String",
+      "description" : ""
+    }, {
+      "name" : "username",
+      "type" : "java.lang.String",
+      "description" : ""
+    }, {
+      "name" : "status",
+      "type" : "io.emop.AdvancedTestClass.UserStatus",
+      "description" : ""
+    }, {
+      "name" : "configs",
+      "type" : "java.util.List<io.emop.AdvancedTestClass.UserConfig>",
+      "description" : ""
+    }, {
+      "name" : "properties",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : ""
+    }, {
+      "name" : "createdAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    }, {
+      "name" : "updatedAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  } ],
+  "methods" : [ {
+    "name" : "processData",
+    "description" : "",
+    "signature" : "public java.lang.String processData(java.lang.String data) throws java.lang.Exception",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "data",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ "java.lang.Exception" ]
+  }, {
+    "name" : "processBatch",
+    "description" : "",
+    "signature" : "public java.util.List<java.lang.String> processBatch(java.util.List<java.lang.String> dataList) throws java.lang.Exception",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.List<java.lang.String>",
+    "parameters" : [ {
+      "name" : "dataList",
+      "type" : "java.util.List<java.lang.String>",
+      "description" : ""
+    } ],
+    "exceptions" : [ "java.lang.Exception" ]
+  }, {
+    "name" : "processAsync",
+    "description" : "",
+    "signature" : "public java.util.concurrent.CompletableFuture<java.lang.String> processAsync(java.lang.String data)",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.concurrent.CompletableFuture<java.lang.String>",
+    "parameters" : [ {
+      "name" : "data",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "validateInput",
+    "description" : "",
+    "signature" : "public boolean validateInput(java.lang.String input)",
+    "modifiers" : [ "public" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "input",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "findData",
+    "description" : "",
+    "signature" : "public java.util.Optional<java.lang.String> findData(java.util.Map<java.lang.String,java.lang.Object> criteria)",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.Optional<java.lang.String>",
+    "parameters" : [ {
+      "name" : "criteria",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "addConfig",
+    "description" : "添加用户配置。\n Adds user configuration.\n ユーザー設定を追加します。\n 사용자 구성을 추가합니다。",
+    "signature" : "public void addConfig(io.emop.AdvancedTestClass.UserConfig config)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "config",
+      "type" : "io.emop.AdvancedTestClass.UserConfig",
+      "description" : "要添加的配置 / Configuration to add / 追加する設定 / 추가할 구성"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "findConfigByName",
+    "description" : "根据名称查找配置。\n Finds configuration by name.\n 名前で設定を検索します。\n 이름으로 구성을 찾습니다。",
+    "signature" : "public java.util.Optional<io.emop.AdvancedTestClass.UserConfig> findConfigByName(java.lang.String configName)",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.Optional<io.emop.AdvancedTestClass.UserConfig>",
+    "parameters" : [ {
+      "name" : "configName",
+      "type" : "java.lang.String",
+      "description" : "配置名称 / Configuration name / 設定名 / 구성 이름"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getRequiredConfigs",
+    "description" : "获取所有必需的配置。\n Gets all required configurations.\n すべての必須設定を取得します。\n 모든 필수 구성을 가져옵니다。",
+    "signature" : "public java.util.List<io.emop.AdvancedTestClass.UserConfig> getRequiredConfigs()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.List<io.emop.AdvancedTestClass.UserConfig>",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "isActive",
+    "description" : "检查用户是否处于活跃状态。\n Checks if user is in active status.\n ユーザーがアクティブステータスかどうかをチェックします。\n 사용자가 활성 상태인지 확인합니다。",
+    "signature" : "public boolean isActive()",
+    "modifiers" : [ "public" ],
+    "returnType" : "boolean",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "activate",
+    "description" : "激活用户。\n Activates the user.\n ユーザーをアクティベートします。\n 사용자를 활성화합니다。",
+    "signature" : "public void activate()",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "deactivate",
+    "description" : "停用用户。\n Deactivates the user.\n ユーザーを非アクティベートします。\n 사용자를 비활성화합니다。",
+    "signature" : "public void deactivate()",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "exportToFile",
+    "description" : "导出用户数据到文件。\n Exports user data to file.\n ユーザーデータをファイルにエクスポートします。\n 사용자 데이터를 파일로 내보냅니다。",
+    "signature" : "public void exportToFile(java.lang.String filePath) throws java.io.IOException",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "filePath",
+      "type" : "java.lang.String",
+      "description" : "导出文件路径 / Export file path / エクスポートファイルパス / 내보내기 파일 경로"
+    } ],
+    "exceptions" : [ "java.io.IOException" ]
+  }, {
+    "name" : "builder",
+    "description" : "",
+    "signature" : "public static io.emop.AdvancedTestClass.AdvancedTestClassBuilder builder()",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "io.emop.AdvancedTestClass.AdvancedTestClassBuilder",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getUserId",
+    "description" : "用户 ID / User ID / ユーザーID / 사용자 ID",
+    "signature" : "public java.lang.String getUserId()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getUsername",
+    "description" : "用户名 / Username / ユーザー名 / 사용자명",
+    "signature" : "public java.lang.String getUsername()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getStatus",
+    "description" : "用户状态 / User status / ユーザーステータス / 사용자 상태",
+    "signature" : "public io.emop.AdvancedTestClass.UserStatus getStatus()",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserStatus",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getConfigs",
+    "description" : "用户配置列表 / User configuration list / ユーザー設定リスト / 사용자 구성 목록",
+    "signature" : "public java.util.List<io.emop.AdvancedTestClass.UserConfig> getConfigs()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.List<io.emop.AdvancedTestClass.UserConfig>",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getProperties",
+    "description" : "用户属性映射 / User properties map / ユーザープロパティマップ / 사용자 속성 맵",
+    "signature" : "public java.util.Map<java.lang.String,java.lang.Object> getProperties()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.Map<java.lang.String,java.lang.Object>",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getCreatedAt",
+    "description" : "创建时间 / Creation time / 作成時間 / 생성 시간",
+    "signature" : "public java.time.LocalDateTime getCreatedAt()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.time.LocalDateTime",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getUpdatedAt",
+    "description" : "最后更新时间 / Last update time / 最終更新時間 / 마지막 업데이트 시간",
+    "signature" : "public java.time.LocalDateTime getUpdatedAt()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.time.LocalDateTime",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setUserId",
+    "description" : "用户 ID / User ID / ユーザーID / 사용자 ID",
+    "signature" : "public void setUserId(java.lang.String userId)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "userId",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setUsername",
+    "description" : "用户名 / Username / ユーザー名 / 사용자명",
+    "signature" : "public void setUsername(java.lang.String username)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "username",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setStatus",
+    "description" : "用户状态 / User status / ユーザーステータス / 사용자 상태",
+    "signature" : "public void setStatus(io.emop.AdvancedTestClass.UserStatus status)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "status",
+      "type" : "io.emop.AdvancedTestClass.UserStatus",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setConfigs",
+    "description" : "用户配置列表 / User configuration list / ユーザー設定リスト / 사용자 구성 목록",
+    "signature" : "public void setConfigs(java.util.List<io.emop.AdvancedTestClass.UserConfig> configs)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "configs",
+      "type" : "java.util.List<io.emop.AdvancedTestClass.UserConfig>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setProperties",
+    "description" : "用户属性映射 / User properties map / ユーザープロパティマップ / 사용자 속성 맵",
+    "signature" : "public void setProperties(java.util.Map<java.lang.String,java.lang.Object> properties)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "properties",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setCreatedAt",
+    "description" : "创建时间 / Creation time / 作成時間 / 생성 시간",
+    "signature" : "public void setCreatedAt(java.time.LocalDateTime createdAt)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "createdAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setUpdatedAt",
+    "description" : "最后更新时间 / Last update time / 最終更新時間 / 마지막 업데이트 시간",
+    "signature" : "public void setUpdatedAt(java.time.LocalDateTime updatedAt)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "updatedAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "equals",
+    "description" : "",
+    "signature" : "public boolean equals(java.lang.Object o)",
+    "modifiers" : [ "public" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "o",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "canEqual",
+    "description" : "",
+    "signature" : "protected boolean canEqual(java.lang.Object other)",
+    "modifiers" : [ "protected" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "other",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "hashCode",
+    "description" : "",
+    "signature" : "public int hashCode()",
+    "modifiers" : [ "public" ],
+    "returnType" : "int",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "toString",
+    "description" : "",
+    "signature" : "public java.lang.String toString()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ ]
+}

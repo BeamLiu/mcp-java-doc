@@ -1,0 +1,100 @@
+{
+  "name" : "TestClassBuilder",
+  "packageName" : null,
+  "type" : "class",
+  "description" : "",
+  "modifiers" : [ "public", "static" ],
+  "superClass" : null,
+  "interfaces" : [ ],
+  "constructors" : [ ],
+  "methods" : [ {
+    "name" : "name",
+    "description" : "用户名称字段。\n User name field.\n ユーザー名フィールド。\n 사용자 이름 필드。",
+    "signature" : "public io.emop.TestClass.TestClassBuilder name(java.lang.String name)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.TestClass.TestClassBuilder",
+    "parameters" : [ {
+      "name" : "name",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "age",
+    "description" : "用户年龄字段。\n User age field.\n ユーザー年齢フィールド。\n 사용자 나이 필드。",
+    "signature" : "public io.emop.TestClass.TestClassBuilder age(int age)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.TestClass.TestClassBuilder",
+    "parameters" : [ {
+      "name" : "age",
+      "type" : "int",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "email",
+    "description" : "用户邮箱地址。\n User email address.\n ユーザーのメールアドレス。\n 사용자 이메일 주소。",
+    "signature" : "public io.emop.TestClass.TestClassBuilder email(java.lang.String email)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.TestClass.TestClassBuilder",
+    "parameters" : [ {
+      "name" : "email",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "createdAt",
+    "description" : "创建时间戳。\n Creation timestamp.\n 作成タイムスタンプ。\n 생성 타임스탬프。",
+    "signature" : "public io.emop.TestClass.TestClassBuilder createdAt(java.time.LocalDateTime createdAt)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.TestClass.TestClassBuilder",
+    "parameters" : [ {
+      "name" : "createdAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "tags",
+    "description" : "用户标签列表。\n User tags list.\n ユーザータグリスト。\n 사용자 태그 목록。",
+    "signature" : "public io.emop.TestClass.TestClassBuilder tags(java.util.List<java.lang.String> tags)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.TestClass.TestClassBuilder",
+    "parameters" : [ {
+      "name" : "tags",
+      "type" : "java.util.List<java.lang.String>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "properties",
+    "description" : "用户属性映射。\n User properties mapping.\n ユーザープロパティマッピング。\n 사용자 속성 매핑。",
+    "signature" : "public io.emop.TestClass.TestClassBuilder properties(java.util.Map<java.lang.String,java.lang.Object> properties)",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.TestClass.TestClassBuilder",
+    "parameters" : [ {
+      "name" : "properties",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "build",
+    "description" : "",
+    "signature" : "public io.emop.TestClass build()",
+    "modifiers" : [ "public" ],
+    "returnType" : "io.emop.TestClass",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "toString",
+    "description" : "",
+    "signature" : "public java.lang.String toString()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ ]
+}

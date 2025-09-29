@@ -1,0 +1,286 @@
+{
+  "name" : "TestClass",
+  "packageName" : null,
+  "type" : "class",
+  "description" : "这是一个测试类，用于验证 Java 文档 JSON 插件的功能。\n This is a test class for verifying the functionality of the Java documentation JSON plugin.\n これは、Java ドキュメント JSON プラグインの機能を検証するためのテストクラスです。\n 이것은 Java 문서 JSON 플러그인의 기능을 검증하기 위한 테스트 클래스입니다。\n \n <p>该类演示了以下功能：\n This class demonstrates the following features:\n このクラスは以下の機能を実演します：\n 이 클래스는 다음 기능을 보여줍니다:</p>\n \n <ul>\n   <li>Lombok 注解的使用 / Lombok annotation usage / Lombok アノテーションの使用 / Lombok 어노테이션 사용</li>\n   <li>Apache Commons 工具类 / Apache Commons utilities / Apache Commons ユーティリティ / Apache Commons 유틸리티</li>\n   <li>多语言文档注释 / Multilingual documentation / 多言語ドキュメント / 다국어 문서</li>\n </ul>\n \n @author Test Author / テスト作成者 / 테스트 작성자\n @version 2.0\n @since 2024-01-01",
+  "modifiers" : [ "public" ],
+  "superClass" : null,
+  "interfaces" : [ ],
+  "constructors" : [ {
+    "name" : "TestClass",
+    "description" : "",
+    "signature" : "public <init>()",
+    "modifiers" : [ "public" ],
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "TestClass",
+    "description" : "",
+    "signature" : "public <init>(java.lang.String name, int age, java.lang.String email, java.time.LocalDateTime createdAt, java.util.List<java.lang.String> tags, java.util.Map<java.lang.String,java.lang.Object> properties)",
+    "modifiers" : [ "public" ],
+    "parameters" : [ {
+      "name" : "name",
+      "type" : "java.lang.String",
+      "description" : ""
+    }, {
+      "name" : "age",
+      "type" : "int",
+      "description" : ""
+    }, {
+      "name" : "email",
+      "type" : "java.lang.String",
+      "description" : ""
+    }, {
+      "name" : "createdAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    }, {
+      "name" : "tags",
+      "type" : "java.util.List<java.lang.String>",
+      "description" : ""
+    }, {
+      "name" : "properties",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  } ],
+  "methods" : [ {
+    "name" : "isValidName",
+    "description" : "验证用户名是否有效。\n Validates if the username is valid.\n ユーザー名が有効かどうかを検証します。\n 사용자 이름이 유효한지 검증합니다。",
+    "signature" : "public boolean isValidName()",
+    "modifiers" : [ "public" ],
+    "returnType" : "boolean",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getFormattedInfo",
+    "description" : "获取格式化的用户信息。\n Gets formatted user information.\n フォーマットされたユーザー情報を取得します。\n 형식화된 사용자 정보를 가져옵니다。",
+    "signature" : "public java.lang.String getFormattedInfo()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "saveToFile",
+    "description" : "将用户信息保存到文件。\n Saves user information to a file.\n ユーザー情報をファイルに保存します。\n 사용자 정보를 파일에 저장합니다。",
+    "signature" : "public void saveToFile(java.lang.String filePath) throws java.io.IOException",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "filePath",
+      "type" : "java.lang.String",
+      "description" : "文件路径 / File path / ファイルパス / 파일 경로"
+    } ],
+    "exceptions" : [ "java.io.IOException" ]
+  }, {
+    "name" : "loadFromFile",
+    "description" : "从文件加载用户信息。\n Loads user information from a file.\n ファイルからユーザー情報を読み込みます。\n 파일에서 사용자 정보를 로드합니다。",
+    "signature" : "public static java.lang.String loadFromFile(java.lang.String filePath) throws java.io.IOException",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ {
+      "name" : "filePath",
+      "type" : "java.lang.String",
+      "description" : "文件路径 / File path / ファイルパス / 파일 경로"
+    } ],
+    "exceptions" : [ "java.io.IOException" ]
+  }, {
+    "name" : "add",
+    "description" : "计算两个数的和（静态工具方法）。\n Calculates the sum of two numbers (static utility method).\n 2つの数の合計を計算します（静的ユーティリティメソッド）。\n 두 숫자의 합을 계산합니다 (정적 유틸리티 메서드)。",
+    "signature" : "public static int add(int a, int b)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "int",
+    "parameters" : [ {
+      "name" : "a",
+      "type" : "int",
+      "description" : "第一个数 / First number / 最初の数 / 첫 번째 숫자"
+    }, {
+      "name" : "b",
+      "type" : "int",
+      "description" : "第二个数 / Second number / 2番目の数 / 두 번째 숫자"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "isPalindrome",
+    "description" : "检查字符串是否为回文。\n Checks if a string is a palindrome.\n 文字列が回文かどうかをチェックします。\n 문자열이 회문인지 확인합니다。",
+    "signature" : "public static boolean isPalindrome(java.lang.String text)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "text",
+      "type" : "java.lang.String",
+      "description" : "要检查的文本 / Text to check / チェックするテキスト / 확인할 텍스트"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "builder",
+    "description" : "",
+    "signature" : "public static io.emop.TestClass.TestClassBuilder builder()",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "io.emop.TestClass.TestClassBuilder",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getName",
+    "description" : "用户名称字段。\n User name field.\n ユーザー名フィールド。\n 사용자 이름 필드。",
+    "signature" : "public java.lang.String getName()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getAge",
+    "description" : "用户年龄字段。\n User age field.\n ユーザー年齢フィールド。\n 사용자 나이 필드。",
+    "signature" : "public int getAge()",
+    "modifiers" : [ "public" ],
+    "returnType" : "int",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getEmail",
+    "description" : "用户邮箱地址。\n User email address.\n ユーザーのメールアドレス。\n 사용자 이메일 주소。",
+    "signature" : "public java.lang.String getEmail()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getCreatedAt",
+    "description" : "创建时间戳。\n Creation timestamp.\n 作成タイムスタンプ。\n 생성 타임스탬프。",
+    "signature" : "public java.time.LocalDateTime getCreatedAt()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.time.LocalDateTime",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getTags",
+    "description" : "用户标签列表。\n User tags list.\n ユーザータグリスト。\n 사용자 태그 목록。",
+    "signature" : "public java.util.List<java.lang.String> getTags()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.List<java.lang.String>",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getProperties",
+    "description" : "用户属性映射。\n User properties mapping.\n ユーザープロパティマッピング。\n 사용자 속성 매핑。",
+    "signature" : "public java.util.Map<java.lang.String,java.lang.Object> getProperties()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.util.Map<java.lang.String,java.lang.Object>",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setName",
+    "description" : "用户名称字段。\n User name field.\n ユーザー名フィールド。\n 사용자 이름 필드。",
+    "signature" : "public void setName(java.lang.String name)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "name",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setAge",
+    "description" : "用户年龄字段。\n User age field.\n ユーザー年齢フィールド。\n 사용자 나이 필드。",
+    "signature" : "public void setAge(int age)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "age",
+      "type" : "int",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setEmail",
+    "description" : "用户邮箱地址。\n User email address.\n ユーザーのメールアドレス。\n 사용자 이메일 주소。",
+    "signature" : "public void setEmail(java.lang.String email)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "email",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setCreatedAt",
+    "description" : "创建时间戳。\n Creation timestamp.\n 作成タイムスタンプ。\n 생성 타임스탬프。",
+    "signature" : "public void setCreatedAt(java.time.LocalDateTime createdAt)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "createdAt",
+      "type" : "java.time.LocalDateTime",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setTags",
+    "description" : "用户标签列表。\n User tags list.\n ユーザータグリスト。\n 사용자 태그 목록。",
+    "signature" : "public void setTags(java.util.List<java.lang.String> tags)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "tags",
+      "type" : "java.util.List<java.lang.String>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "setProperties",
+    "description" : "用户属性映射。\n User properties mapping.\n ユーザープロパティマッピング。\n 사용자 속성 매핑。",
+    "signature" : "public void setProperties(java.util.Map<java.lang.String,java.lang.Object> properties)",
+    "modifiers" : [ "public" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "properties",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "equals",
+    "description" : "",
+    "signature" : "public boolean equals(java.lang.Object o)",
+    "modifiers" : [ "public" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "o",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "canEqual",
+    "description" : "",
+    "signature" : "protected boolean canEqual(java.lang.Object other)",
+    "modifiers" : [ "protected" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "other",
+      "type" : "java.lang.Object",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "hashCode",
+    "description" : "",
+    "signature" : "public int hashCode()",
+    "modifiers" : [ "public" ],
+    "returnType" : "int",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "toString",
+    "description" : "",
+    "signature" : "public java.lang.String toString()",
+    "modifiers" : [ "public" ],
+    "returnType" : "java.lang.String",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ ]
+}

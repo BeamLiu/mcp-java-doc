@@ -1,0 +1,130 @@
+{
+  "name" : "TestInterface",
+  "packageName" : null,
+  "type" : "interface",
+  "description" : "测试接口，用于验证接口文档的 JSON 生成。\n Test interface for verifying JSON generation of interface documentation.\n インターフェースドキュメントのJSON生成を検証するためのテストインターフェース。\n 인터페이스 문서의 JSON 생성을 검증하기 위한 테스트 인터페이스。\n \n <p>该接口演示了以下特性：\n This interface demonstrates the following features:\n このインターフェースは以下の機能を実演します：\n 이 인터페이스는 다음 기능을 보여줍니다:</p>\n \n <ul>\n   <li>泛型方法 / Generic methods / ジェネリックメソッド / 제네릭 메서드</li>\n   <li>默认方法 / Default methods / デフォルトメソッド / 기본 메서드</li>\n   <li>静态方法 / Static methods / 静的メソッド / 정적 메서드</li>\n   <li>异步处理 / Asynchronous processing / 非同期処理 / 비동기 처리</li>\n </ul>\n \n @param <T> 数据类型参数 / Data type parameter / データ型パラメータ / 데이터 타입 매개변수\n @author Test Author / テスト作成者 / 테스트 작성자\n @version 2.0\n @since 2024-01-01",
+  "modifiers" : [ "public", "abstract" ],
+  "superClass" : "none",
+  "interfaces" : [ ],
+  "constructors" : [ ],
+  "methods" : [ {
+    "name" : "processData",
+    "description" : "处理数据的方法。\n Method for processing data.\n データを処理するメソッド。\n 데이터를 처리하는 메서드。",
+    "signature" : "public abstract T processData(T data) throws java.lang.Exception",
+    "modifiers" : [ "public", "abstract" ],
+    "returnType" : "T",
+    "parameters" : [ {
+      "name" : "data",
+      "type" : "T",
+      "description" : "要处理的数据 / Data to process / 処理するデータ / 처리할 데이터"
+    } ],
+    "exceptions" : [ "java.lang.Exception" ]
+  }, {
+    "name" : "processBatch",
+    "description" : "批量处理数据的方法。\n Method for batch processing data.\n データをバッチ処理するメソッド。\n 데이터를 일괄 처리하는 메서드。",
+    "signature" : "public abstract java.util.List<T> processBatch(java.util.List<T> dataList) throws java.lang.Exception",
+    "modifiers" : [ "public", "abstract" ],
+    "returnType" : "java.util.List<T>",
+    "parameters" : [ {
+      "name" : "dataList",
+      "type" : "java.util.List<T>",
+      "description" : "要处理的数据列表 / List of data to process / 処理するデータリスト / 처리할 데이터 목록"
+    } ],
+    "exceptions" : [ "java.lang.Exception" ]
+  }, {
+    "name" : "processAsync",
+    "description" : "异步处理数据的方法。\n Method for asynchronous data processing.\n 非同期データ処理のメソッド。\n 비동기 데이터 처리 메서드。",
+    "signature" : "public abstract java.util.concurrent.CompletableFuture<T> processAsync(T data)",
+    "modifiers" : [ "public", "abstract" ],
+    "returnType" : "java.util.concurrent.CompletableFuture<T>",
+    "parameters" : [ {
+      "name" : "data",
+      "type" : "T",
+      "description" : "要异步处理的数据 / Data to process asynchronously / 非同期処理するデータ / 비동기로 처리할 데이터"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "validateInput",
+    "description" : "验证输入的方法。\n Method for validating input.\n 入力を検証するメソッド。\n 입력을 검증하는 메서드。",
+    "signature" : "public abstract boolean validateInput(T input)",
+    "modifiers" : [ "public", "abstract" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "input",
+      "type" : "T",
+      "description" : "要验证的输入 / Input to validate / 検証する入力 / 검증할 입력"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "findData",
+    "description" : "查找数据的方法。\n Method for finding data.\n データを検索するメソッド。\n 데이터를 찾는 메서드。",
+    "signature" : "public abstract java.util.Optional<T> findData(java.util.Map<java.lang.String,java.lang.Object> criteria)",
+    "modifiers" : [ "public", "abstract" ],
+    "returnType" : "java.util.Optional<T>",
+    "parameters" : [ {
+      "name" : "criteria",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : "搜索条件 / Search criteria / 検索条件 / 검색 조건"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "logMessage",
+    "description" : "默认方法示例（Java 8+）。\n Default method example (Java 8+).\n デフォルトメソッドの例（Java 8+）。\n 기본 메서드 예제 (Java 8+)。",
+    "signature" : "public default void logMessage(java.lang.String message)",
+    "modifiers" : [ "public", "default" ],
+    "returnType" : "void",
+    "parameters" : [ {
+      "name" : "message",
+      "type" : "java.lang.String",
+      "description" : "要记录的消息 / Message to log / ログに記録するメッセージ / 로그에 기록할 메시지"
+    } ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "getProcessingStats",
+    "description" : "默认方法：获取处理统计信息。\n Default method: Get processing statistics.\n デフォルトメソッド：処理統計情報を取得。\n 기본 메서드: 처리 통계 정보 가져오기。",
+    "signature" : "public default java.util.Map<java.lang.String,java.lang.Object> getProcessingStats()",
+    "modifiers" : [ "public", "default" ],
+    "returnType" : "java.util.Map<java.lang.String,java.lang.Object>",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "createDefaultConfig",
+    "description" : "静态方法：创建默认配置。\n Static method: Create default configuration.\n 静的メソッド：デフォルト設定を作成。\n 정적 메서드: 기본 구성 생성。",
+    "signature" : "public static java.util.Map<java.lang.String,java.lang.Object> createDefaultConfig()",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "java.util.Map<java.lang.String,java.lang.Object>",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "isValidConfig",
+    "description" : "静态方法：验证配置是否有效。\n Static method: Validate if configuration is valid.\n 静的メソッド：設定が有効かどうかを検証。\n 정적 메서드: 구성이 유효한지 검증。",
+    "signature" : "public static boolean isValidConfig(java.util.Map<java.lang.String,java.lang.Object> config)",
+    "modifiers" : [ "public", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ {
+      "name" : "config",
+      "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+      "description" : "要验证的配置 / Configuration to validate / 検証する設定 / 검증할 구성"
+    } ],
+    "exceptions" : [ ]
+  } ],
+  "fields" : [ {
+    "name" : "CONSTANT_VALUE",
+    "description" : "常量字段示例。\n Constant field example.\n 定数フィールドの例。\n 상수 필드 예제。",
+    "type" : "java.lang.String",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : "测试常量 / Test Constant / テスト定数 / 테스트 상수"
+  }, {
+    "name" : "MAX_RETRY_COUNT",
+    "description" : "最大重试次数常量。\n Maximum retry count constant.\n 最大リトライ回数定数。\n 최대 재시도 횟수 상수。",
+    "type" : "int",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : "3"
+  }, {
+    "name" : "DEFAULT_TIMEOUT_MS",
+    "description" : "默认超时时间（毫秒）。\n Default timeout in milliseconds.\n デフォルトタイムアウト（ミリ秒）。\n 기본 타임아웃 (밀리초)。",
+    "type" : "long",
+    "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : "5000"
+  } ]
+}
