@@ -21,7 +21,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 #### Basic Publish Configuration
 ```xml
 <plugin>
-    <groupId>io.emop</groupId>
+    <groupId>com.emopdata</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -37,7 +37,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 #### Basic Crawl Configuration
 ```xml
 <plugin>
-    <groupId>io.emop</groupId>
+    <groupId>com.emopdata</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -57,13 +57,13 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 
 ```bash
 # Generate documentation from source code
-mvn io.emop:java-docs-json-doclet:0.1.0:publish
+mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
 
 # Crawl external Javadoc
-mvn io.emop:java-docs-json-doclet:0.1.0:crawl
+mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl
 
 # With custom parameters
-mvn io.emop:java-docs-json-doclet:0.1.0:publish \
+mvn com.emopdata:java-docs-json-doclet:0.1.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -180,7 +180,7 @@ When your project uses Lombok annotations, you need to use the delombok process 
         
         <!-- Java Docs JSON Doclet Plugin -->
         <plugin>
-            <groupId>io.emop</groupId>
+            <groupId>com.emopdata</groupId>
             <artifactId>java-docs-json-doclet</artifactId>
             <version>0.1.0</version>
             <executions>
@@ -228,7 +228,7 @@ When your project uses Lombok annotations, you need to use the delombok process 
 #### 基本发布配置
 ```xml
 <plugin>
-    <groupId>io.emop</groupId>
+    <groupId>com.emopdata</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -244,7 +244,7 @@ When your project uses Lombok annotations, you need to use the delombok process 
 #### 基本爬取配置
 ```xml
 <plugin>
-    <groupId>io.emop</groupId>
+    <groupId>com.emopdata</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -264,13 +264,13 @@ When your project uses Lombok annotations, you need to use the delombok process 
 
 ```bash
 # 从源代码生成文档
-mvn io.emop:java-docs-json-doclet:0.1.0:publish
+mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
 
 # 爬取外部 Javadoc
-mvn io.emop:java-docs-json-doclet:0.1.0:crawl
+mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl
 
 # 使用自定义参数
-mvn io.emop:java-docs-json-doclet:0.1.0:publish \
+mvn com.emopdata:java-docs-json-doclet:0.1.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -387,7 +387,7 @@ mvn io.emop:java-docs-json-doclet:0.1.0:publish \
         
         <!-- Java Docs JSON Doclet 插件 -->
         <plugin>
-            <groupId>io.emop</groupId>
+            <groupId>com.emopdata</groupId>
             <artifactId>java-docs-json-doclet</artifactId>
             <version>0.1.0</version>
             <executions>

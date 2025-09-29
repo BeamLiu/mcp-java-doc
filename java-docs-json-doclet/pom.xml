@@ -5,7 +5,7 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.emop</groupId>
+    <groupId>com.emopdata</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <packaging>maven-plugin</packaging>

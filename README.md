@@ -63,10 +63,10 @@ A Maven plugin that converts Java documentation into structured JSON format.
 
 **Supported Java Versions:**
 
-| Goal | Supported Versions | Notes                              |
-|------|-------------------|------------------------------------|
-| **Publish** | Java 8, 11, 17, 21+ | Supports all Java 8+ versions      |
-| **Crawl** | Java 9 | To be supported for other versions |
+| Goal | Supported Versions | Notes                                  |
+|------|-------------------|----------------------------------------|
+| **Publish** | Java 8+ | Supports all Java 8 and above versions |
+| **Crawl** | Java 9 | To be supported for other versions     |
 
 *Future Java versions will be supported in upcoming releases*
 
@@ -81,7 +81,7 @@ A Maven plugin that converts Java documentation into structured JSON format.
 **Quick Start:**
 ```xml
 <plugin>
-    <groupId>io.emop</groupId>
+    <groupId>com.emopdata</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -124,12 +124,12 @@ Contains example JSON documentation files generated from various Java projects f
 1. **From Source Code:**
 ```bash
 cd your-java-project
-mvn io.emop:java-docs-json-doclet:0.1.0:publish
+mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
 ```
 
 2. **From HTML Javadoc:**
 ```bash
-mvn io.emop:java-docs-json-doclet:0.1.0:crawl \
+mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl \
     -DbaseUrl=https://docs.oracle.com/en/java/javase/11/docs/api/
 ```
 
@@ -280,10 +280,10 @@ This project is licensed under the MIT License.
 
 **支持的 Java 版本：**
 
-| 目标 | 支持版本 | 说明              |
-|------|--------|-----------------|
-| **发布 (Publish)** | Java 8, 11, 17, 21+ | 支持所有 Java 8+ 版本 |
-| **爬取 (Crawl)** | Java 9 | 其他版本陆续支持中       |
+| 目标 | 支持版本 | 说明                 |
+|------|--------|--------------------|
+| **发布 (Publish)** | Java 8+ | 支持所有 Java 8 及以上版本 |
+| **爬取 (Crawl)** | Java 9 | 其他版本陆续支持中          |
 
 *后续 Java 版本将在未来发布中支持*
 
@@ -298,7 +298,7 @@ This project is licensed under the MIT License.
 **快速开始：**
 ```xml
 <plugin>
-    <groupId>io.emop</groupId>
+    <groupId>com.emopdata</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -341,12 +341,12 @@ npm start
 1. **从源代码：**
 ```bash
 cd your-java-project
-mvn io.emop:java-docs-json-doclet:0.1.0:publish
+mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
 ```
 
 2. **从 HTML Javadoc：**
 ```bash
-mvn io.emop:java-docs-json-doclet:0.1.0:crawl \
+mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl \
     -DbaseUrl=https://docs.oracle.com/en/java/javase/11/docs/api/
 ```
 
