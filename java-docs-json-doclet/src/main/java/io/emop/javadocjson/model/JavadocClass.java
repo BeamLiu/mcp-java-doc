@@ -35,25 +35,15 @@ public class JavadocClass {
     @JsonProperty("interfaces")
     private List<String> interfaces;
 
+    // Unified fields that can contain both detailed and simplified parsing results
     @JsonProperty("constructors")
-    private List<JavadocConstructor> constructors;
+    private List<BaseJavadocConstructor> constructors;
 
-    // Detailed parsing fields (from JsonDoclet)
     @JsonProperty("methods")
-    private List<JavadocMethod> methods;
+    private List<BaseJavadocMethod> methods;
 
     @JsonProperty("fields")
-    private List<JavadocField> fields;
-
-    // Simplified parsing fields (from HTML pages)
-    @JsonProperty("simpleMethods")
-    private List<SimpleJavadocMethod> simpleMethods;
-
-    @JsonProperty("simpleFields")
-    private List<SimpleJavadocField> simpleFields;
-
-    @JsonProperty("simpleConstructors")
-    private List<SimpleJavadocConstructor> simpleConstructors;
+    private List<BaseJavadocField> fields;
 
     public JavadocClass() {
         this.modifiers = new ArrayList<>();
@@ -61,9 +51,6 @@ public class JavadocClass {
         this.constructors = new ArrayList<>();
         this.methods = new ArrayList<>();
         this.fields = new ArrayList<>();
-        this.simpleMethods = new ArrayList<>();
-        this.simpleFields = new ArrayList<>();
-        this.simpleConstructors = new ArrayList<>();
     }
 
     public JavadocClass(String name, String type) {
@@ -73,41 +60,30 @@ public class JavadocClass {
     }
 
     /**
-     * Returns true if this class has detailed parsing information (from JsonDoclet).
-     */
-    @JsonIgnore
-    public boolean hasDetailedInfo() {
-        return (methods != null && !methods.isEmpty()) || (fields != null && !fields.isEmpty());
-    }
-
-    /**
-     * Returns true if this class has simplified parsing information (from HTML pages).
-     */
-    @JsonIgnore
-    public boolean hasSimplifiedInfo() {
-        return (simpleMethods != null && !simpleMethods.isEmpty()) || (simpleFields != null && !simpleFields.isEmpty());
-    }
-
-    /**
-     * Returns the total number of methods (both detailed and simplified).
+     * Get total method count (both detailed and simplified)
+     * @return total method count
      */
     @JsonIgnore
     public int getTotalMethodCount() {
-        int count = 0;
-        if (methods != null) count += methods.size();
-        if (simpleMethods != null) count += simpleMethods.size();
-        return count;
+        return methods != null ? methods.size() : 0;
     }
 
     /**
-     * Returns the total number of fields (both detailed and simplified).
+     * Get total field count (both detailed and simplified)
+     * @return total field count
      */
     @JsonIgnore
     public int getTotalFieldCount() {
-        int count = 0;
-        if (fields != null) count += fields.size();
-        if (simpleFields != null) count += simpleFields.size();
-        return count;
+        return fields != null ? fields.size() : 0;
+    }
+    
+    /**
+     * Get total constructor count (both detailed and simplified)
+     * @return total constructor count
+     */
+    @JsonIgnore
+    public int getTotalConstructorCount() {
+        return constructors != null ? constructors.size() : 0;
     }
 
     @JsonIgnore

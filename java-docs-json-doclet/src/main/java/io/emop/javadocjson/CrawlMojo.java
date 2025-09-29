@@ -1,11 +1,9 @@
 package io.emop.javadocjson;
 
-import io.emop.javadocjson.model.JavadocMetadata;
-import io.emop.javadocjson.model.JavadocClass;
 import io.emop.javadocjson.config.JDK9Dialet;
-import io.emop.javadocjson.util.JsonGenerator;
+import io.emop.javadocjson.model.JavadocClass;
 import io.emop.javadocjson.parser.HtmlCrawler;
-
+import io.emop.javadocjson.util.JsonGenerator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -112,9 +110,6 @@ public class CrawlMojo extends AbstractMojo {
         try {
             // Validate URL
             new URL(baseUrl);
-
-            // Create metadata
-            JavadocMetadata metadata = new JavadocMetadata("crawl", baseUrl);
 
             // Create and configure HTML crawler
             HtmlCrawler crawler = new HtmlCrawler(getLog(), new JDK9Dialet());

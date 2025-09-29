@@ -86,14 +86,14 @@ public class JavadocPageParser {
         javadocClass.setInterfaces(inheritanceConfig.extractInterfaces(doc));
 
         // Extract methods, fields and constructors using configured parsing strategy
-        javadocClass.setSimpleMethods(parseMethodsWithConfig(doc, config));
-        javadocClass.setSimpleFields(parseFieldsWithConfig(doc, config));
-        javadocClass.setSimpleConstructors(parseSimpleConstructorsWithConfig(doc, config));
+        javadocClass.getMethods().addAll(parseMethodsWithConfig(doc, config));
+        javadocClass.getFields().addAll(parseFieldsWithConfig(doc, config));
+        javadocClass.getConstructors().addAll(parseSimpleConstructorsWithConfig(doc, config));
 
         log.info("Parsed class: " + javadocClass.getName() + " with " +
-                javadocClass.getSimpleMethods().size() + " simple methods, " +
-                javadocClass.getSimpleFields().size() + " simple fields, and " +
-                javadocClass.getSimpleConstructors().size() + " simple constructors");
+                javadocClass.getMethods().size() + " simple methods, " +
+                javadocClass.getFields().size() + " simple fields, and " +
+                javadocClass.getConstructors().size() + " simple constructors");
 
         return javadocClass;
     }

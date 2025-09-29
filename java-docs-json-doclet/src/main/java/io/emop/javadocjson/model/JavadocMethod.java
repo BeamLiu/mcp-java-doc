@@ -2,24 +2,20 @@ package io.emop.javadocjson.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Represents a method in a Java class.
+ * Represents a method in a Java class with detailed parsing information.
  */
 @Data
-public class JavadocMethod {
-    
-    @JsonProperty("name")
-    private String name;
+@EqualsAndHashCode(callSuper = true)
+public class JavadocMethod extends BaseJavadocMethod {
     
     @JsonProperty("signature")
     private String signature;
-    
-    @JsonProperty("description")
-    private String description;
     
     @JsonProperty("modifiers")
     private List<String> modifiers;
@@ -34,15 +30,17 @@ public class JavadocMethod {
     private List<String> exceptions;
     
     public JavadocMethod() {
+        super();
         this.modifiers = new ArrayList<>();
         this.parameters = new ArrayList<>();
         this.exceptions = new ArrayList<>();
     }
     
     public JavadocMethod(String name, String signature, String description) {
-        this();
-        this.name = name;
+        super(name, description);
         this.signature = signature;
-        this.description = description;
+        this.modifiers = new ArrayList<>();
+        this.parameters = new ArrayList<>();
+        this.exceptions = new ArrayList<>();
     }
 }

@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 console.log('Testing TypeScript model compatibility with Java models...\n');
 
 // Set JavaDoc JSON path
-const javadocJsonPath = join(__dirname, '..', '..', 'sample-javadoc-json');
+const javadocJsonPath = join(__dirname, '..', '..', 'javadoc-json');
 process.env.JAVADOC_JSON_PATH = javadocJsonPath;
 console.log(`Using JavaDoc JSON path: ${javadocJsonPath}\n`);
 

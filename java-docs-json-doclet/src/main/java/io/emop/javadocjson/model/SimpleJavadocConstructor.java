@@ -1,23 +1,15 @@
 package io.emop.javadocjson.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Simplified Javadoc constructor model for text-level parsing.
  * Contains constructor name, modifiers, description and complete raw text.
  */
 @Data
-public class SimpleJavadocConstructor {
-    
-    /**
-     * Constructor name (usually same as class name)
-     */
-    private String name;
-    
-    /**
-     * Constructor description
-     */
-    private String description;
+@EqualsAndHashCode(callSuper = true)
+public class SimpleJavadocConstructor extends BaseJavadocConstructor {
     
     /**
      * Complete raw text containing constructor signature and detailed description
@@ -28,6 +20,7 @@ public class SimpleJavadocConstructor {
      * Default constructor
      */
     public SimpleJavadocConstructor() {
+        super();
     }
     
 
@@ -39,8 +32,7 @@ public class SimpleJavadocConstructor {
      * @param detailText Complete raw text
      */
     public SimpleJavadocConstructor(String name, String description, String detailText) {
-        this.name = name;
-        this.description = description;
+        super(name, description);
         this.detailText = detailText;
     }
     
@@ -51,8 +43,7 @@ public class SimpleJavadocConstructor {
      * @param description Constructor description
      */
     public SimpleJavadocConstructor(String name, String description) {
-        this.name = name;
-        this.description = description;
+        super(name, description);
         this.detailText = "";
     }
 }

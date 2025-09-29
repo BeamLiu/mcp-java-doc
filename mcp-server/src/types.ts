@@ -8,40 +8,46 @@ export interface JavaDocClass {
   superClass: string | null;
   interfaces: string[];
   
-  // 详细解析字段（来自 JsonDoclet）
-  constructors: Constructor[];
-  methods: Method[];
-  fields: Field[];
-  
-  // 简化解析字段（来自 HTML 页面）
-  simpleMethods?: SimpleMethod[];
-  simpleFields?: SimpleField[];
-  simpleConstructors?: SimpleConstructor[];
+  // 统一字段，可以包含详细和简化的解析结果
+  constructors: BaseConstructor[];
+  methods: BaseMethod[];
+  fields: BaseField[];
 }
 
-export interface Constructor {
+// 基类接口定义 - 只包含JSON序列化的字段
+export interface BaseMethod {
   name: string;
-  signature: string;
   description: string;
+}
+
+export interface BaseConstructor {
+  name: string;
+  description: string;
+}
+
+export interface BaseField {
+  name: string;
+  description: string;
+}
+
+// 详细类型定义（继承自基类）
+export interface Constructor extends BaseConstructor {
+  signature: string;
   modifiers: string[];
   parameters: Parameter[];
   exceptions: string[];
 }
 
-export interface Method {
-  name: string;
+export interface Method extends BaseMethod {
   signature: string;
-  description: string;
   modifiers: string[];
   returnType?: string;
   parameters: Parameter[];
   exceptions: string[];
 }
 
-export interface Field {
-  name: string;
+export interface Field extends BaseField {
   type: string;
-  description: string;
   modifiers: string[];
   defaultValue?: string; // 添加缺失的 defaultValue 字段
 }
@@ -52,26 +58,31 @@ export interface Parameter {
   description: string;
 }
 
-// 简化模型定义（对应 Java 的 Simple* 类）
-export interface SimpleMethod {
-  name: string;
-  modifierAndType: string; // 修饰符和类型（如："static CheckScope", "public static int"）
-  description: string;
-  detailText: string; // 包含方法签名和详细描述的完整原始文本
+// 简化类型定义（对应Java的Simple类）
+export interface SimpleMethod extends BaseMethod {
+  modifierAndType?: string; // 修饰符和类型（如："static CheckScope", "public static int"）
+  detailText?: string; // 包含方法签名和详细描述的完整原始文本
 }
 
-export interface SimpleField {
-  name: string;
-  modifierAndType: string;
-  description: string;
-  detailText: string;
+export interface SimpleConstructor extends BaseConstructor {
+  detailText?: string; // 包含构造函数签名和详细描述的完整原始文本
 }
 
-export interface SimpleConstructor {
-  name: string;
-  modifierAndType: string;
-  description: string;
-  detailText: string;
+export interface SimpleField extends BaseField {
+  modifierAndType?: string; // 修饰符和类型（如："static int", "public final String"）
+}
+
+// 类型判断工具函数
+export function isDetailedMethod(method: BaseMethod): method is Method {
+  return 'signature' in method && 'modifiers' in method;
+}
+
+export function isDetailedConstructor(constructor: BaseConstructor): constructor is Constructor {
+  return 'signature' in constructor && 'modifiers' in constructor;
+}
+
+export function isDetailedField(field: BaseField): field is Field {
+  return 'type' in field && 'modifiers' in field;
 }
 
 export interface SearchResult {

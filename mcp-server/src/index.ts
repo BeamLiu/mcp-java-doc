@@ -36,7 +36,7 @@ export class JavaDocMCPServer {
   private initializeData() {
     try {
       // Get JavaDoc JSON directory from environment variable or use default
-      const javadocJsonPath = process.env.JAVADOC_JSON_PATH || join(__dirname, '..', '..', 'tmp', 'javadoc-json');
+      const javadocJsonPath = process.env.JAVADOC_JSON_PATH || join(__dirname, '..', '..', 'javadoc-json');
 
       console.error('Loading JavaDoc data...');
       console.error(`JavaDoc JSON path: ${javadocJsonPath}`);

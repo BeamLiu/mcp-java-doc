@@ -1,25 +1,22 @@
 package io.emop.javadocjson.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Represents a constructor in a Java class.
+ * Represents a constructor in a Java class with detailed parsing information.
  */
 @Data
-public class JavadocConstructor {
-    
-    @JsonProperty("name")
-    private String name;
+@EqualsAndHashCode(callSuper = true)
+public class JavadocConstructor extends BaseJavadocConstructor {
     
     @JsonProperty("signature")
     private String signature;
-    
-    @JsonProperty("description")
-    private String description;
     
     @JsonProperty("modifiers")
     private List<String> modifiers;
@@ -31,15 +28,17 @@ public class JavadocConstructor {
     private List<String> exceptions;
     
     public JavadocConstructor() {
+        super();
         this.modifiers = new ArrayList<>();
         this.parameters = new ArrayList<>();
         this.exceptions = new ArrayList<>();
     }
     
     public JavadocConstructor(String name, String signature, String description) {
-        this();
-        this.name = name;
+        super(name, description);
         this.signature = signature;
-        this.description = description;
+        this.modifiers = new ArrayList<>();
+        this.parameters = new ArrayList<>();
+        this.exceptions = new ArrayList<>();
     }
 }

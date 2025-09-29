@@ -2,24 +2,20 @@ package io.emop.javadocjson.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Represents a field in a Java class.
+ * Represents a field in a Java class with detailed parsing information.
  */
 @Data
-public class JavadocField {
-    
-    @JsonProperty("name")
-    private String name;
+@EqualsAndHashCode(callSuper = true)
+public class JavadocField extends BaseJavadocField {
     
     @JsonProperty("type")
     private String type;
-    
-    @JsonProperty("description")
-    private String description;
     
     @JsonProperty("modifiers")
     private List<String> modifiers;
@@ -28,13 +24,13 @@ public class JavadocField {
     private String defaultValue;
     
     public JavadocField() {
+        super();
         this.modifiers = new ArrayList<>();
     }
     
     public JavadocField(String name, String type, String description) {
-        this();
-        this.name = name;
+        super(name, description);
         this.type = type;
-        this.description = description;
+        this.modifiers = new ArrayList<>();
     }
 }

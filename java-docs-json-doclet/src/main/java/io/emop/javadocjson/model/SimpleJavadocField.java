@@ -1,18 +1,15 @@
 package io.emop.javadocjson.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Simplified Javadoc field model for text-level parsing.
  * Contains field name, modifiers and type, description and complete raw text.
  */
 @Data
-public class SimpleJavadocField {
-    
-    /**
-     * Field name
-     */
-    private String name;
+@EqualsAndHashCode(callSuper = true)
+public class SimpleJavadocField extends BaseJavadocField {
     
     /**
      * Modifiers and type (e.g.: "static int", "public final String")
@@ -20,14 +17,10 @@ public class SimpleJavadocField {
     private String modifierAndType;
     
     /**
-     * Field description
-     */
-    private String description;
-    
-    /**
      * Default constructor
      */
     public SimpleJavadocField() {
+        super();
     }
     
     /**
@@ -38,9 +31,8 @@ public class SimpleJavadocField {
      * @param description Field description
      */
     public SimpleJavadocField(String name, String modifierAndType, String description) {
-        this.name = name;
+        super(name, description);
         this.modifierAndType = modifierAndType;
-        this.description = description;
     }
     
     /**
@@ -50,7 +42,6 @@ public class SimpleJavadocField {
      * @param description Field description
      */
     public SimpleJavadocField(String name, String description) {
-        this.name = name;
-        this.description = description;
+        super(name, description);
     }
 }

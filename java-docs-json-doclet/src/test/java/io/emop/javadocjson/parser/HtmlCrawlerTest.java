@@ -2,17 +2,17 @@ package io.emop.javadocjson.parser;
 
 import io.emop.javadocjson.config.JDK9Dialet;
 import io.emop.javadocjson.model.JavadocClass;
-import io.emop.javadocjson.model.JavadocMetadata;
+import io.emop.javadocjson.model.JavadocMethod;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * HtmlCrawler 测试类
@@ -50,9 +50,6 @@ public class HtmlCrawlerTest {
     @Test
     @Disabled("需要网络访问，仅在调试时启用")
     void testCrawlOracleJavaDoc() throws IOException {
-        // 准备测试数据
-        JavadocMetadata metadata = createTestMetadata();
-
         htmlCrawler.setPackageFilters(Set.of("nxopen\\.features"));
         // 执行爬取
         List<JavadocClass> result = htmlCrawler.crawl(baseUrl);
@@ -88,8 +85,6 @@ public class HtmlCrawlerTest {
     @Disabled("需要网络访问，仅在调试时启用")
     void testCrawlWithParsingConfig() throws IOException {
         // 准备测试数据
-        JavadocMetadata metadata = createTestMetadata();
-
         htmlCrawlerWithConfig.setPackageFilters(Set.of("nxopen\\.features"));
         // 执行爬取
         List<JavadocClass> result = htmlCrawlerWithConfig.crawl(baseUrl);
@@ -103,23 +98,13 @@ public class HtmlCrawlerTest {
         result.forEach(cls -> {
             System.out.println("类名: " + cls.getName() + ", 包名: " + cls.getPackageName() + ", 方法数量: " + cls.getMethods().size());
             // 验证方法是否有详细信息（name, signature, description）
-            cls.getMethods().forEach(method -> {
+            cls.getMethods().forEach(m -> {
+                JavadocMethod method = (JavadocMethod) m;
                 if (!method.getName().isEmpty() || !method.getSignature().isEmpty() || !method.getDescription().isEmpty()) {
                     System.out.println("    方法: " + method.getName() + " - " + method.getSignature());
                 }
             });
         });
-    }
-
-    /**
-     * 创建测试用的元数据
-     */
-    private JavadocMetadata createTestMetadata() {
-        JavadocMetadata metadata = new JavadocMetadata();
-        metadata.setVersion("1.0.0");
-        metadata.setGeneratedAt(LocalDateTime.now().toString());
-        metadata.setBaseUrl(baseUrl);
-        return metadata;
     }
 
     /**

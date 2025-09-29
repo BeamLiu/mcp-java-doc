@@ -1,28 +1,20 @@
 package io.emop.javadocjson.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Simplified Javadoc method model for text-level parsing.
  * Contains method name, modifiers and type, description and complete raw text.
  */
 @Data
-public class SimpleJavadocMethod {
-    
-    /**
-     * Method name
-     */
-    private String name;
+@EqualsAndHashCode(callSuper = true)
+public class SimpleJavadocMethod extends BaseJavadocMethod {
     
     /**
      * Modifiers and type (e.g.: "static CheckScope", "public static int")
      */
     private String modifierAndType;
-    
-    /**
-     * Method description
-     */
-    private String description;
     
     /**
      * Complete raw text containing method signature and detailed description
@@ -33,6 +25,7 @@ public class SimpleJavadocMethod {
      * Default constructor
      */
     public SimpleJavadocMethod() {
+        super();
     }
     
     /**
@@ -44,9 +37,8 @@ public class SimpleJavadocMethod {
      * @param detailText Complete raw text
      */
     public SimpleJavadocMethod(String name, String modifierAndType, String description, String detailText) {
-        this.name = name;
+        super(name, description);
         this.modifierAndType = modifierAndType;
-        this.description = description;
         this.detailText = detailText;
     }
     
@@ -58,8 +50,7 @@ public class SimpleJavadocMethod {
      * @param detailText Complete raw text
      */
     public SimpleJavadocMethod(String name, String description, String detailText) {
-        this.name = name;
-        this.description = description;
+        super(name, description);
         this.detailText = detailText;
     }
     
@@ -70,8 +61,7 @@ public class SimpleJavadocMethod {
      * @param description Method description
      */
     public SimpleJavadocMethod(String name, String description) {
-        this.name = name;
-        this.description = description;
+        super(name, description);
         this.detailText = "";
     }
 }
