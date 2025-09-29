@@ -280,13 +280,13 @@ mvn com.emopdata:java-docs-json-doclet:0.1.0:publish \
 ### 配置参数
 
 #### 发布目标参数
-| 参数 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| `outputDirectory` | String | `javadoc-output` | JSON 文件输出目录 |
+| 参数 | 类型 | 默认值                                | 描述 |
+|------|------|------------------------------------|------|
+| `outputDirectory` | String | `javadoc-output`                   | JSON 文件输出目录 |
 | `sourceDirectory` | String | `${project.build.sourceDirectory}` | 要处理的源代码目录 |
-| `includePrivate` | boolean | `false` | 在输出中包含私有成员 |
-| `sourcePaths` | List<String> | (无) | 要包含的额外源代码路径 |
-| `encoding` | String | `UTF-8` | 源文件编码 |
+| `includePrivate` | boolean | `true`                             | 在输出中包含私有成员 |
+| `sourcePaths` | List<String> | (无)                                | 要包含的额外源代码路径 |
+| `encoding` | String | `UTF-8`                            | 源文件编码 |
 
 #### 爬取目标参数
 | 参数 | 类型 | 默认值 | 描述 |

@@ -6,7 +6,14 @@
   "modifiers" : [ "public", "static" ],
   "superClass" : null,
   "interfaces" : [ ],
-  "constructors" : [ ],
+  "constructors" : [ {
+    "name" : "UserConfigBuilder",
+    "description" : "",
+    "signature" : "<init>()",
+    "modifiers" : [ ],
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
   "methods" : [ {
     "name" : "name",
     "description" : "配置名称 / Configuration name / 設定名 / 구성 이름",
@@ -72,5 +79,35 @@
     "parameters" : [ ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "name",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "value",
+    "description" : "",
+    "type" : "java.lang.Object",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "type",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "required$set",
+    "description" : "",
+    "type" : "boolean",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "required$value",
+    "description" : "",
+    "type" : "boolean",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  } ]
 }

@@ -107,8 +107,8 @@ export class JavaDocDataLoader {
       typeof data.name === 'string' &&
       typeof data.type === 'string' &&
       // 支持详细解析字段或简化解析字段
-      (Array.isArray(data.methods) || Array.isArray(data.simpleMethods)) &&
-      (Array.isArray(data.constructors) || Array.isArray(data.simpleConstructors))
+      (Array.isArray(data.methods)) &&
+      (Array.isArray(data.constructors))
     );
   }
 
@@ -169,9 +169,7 @@ export class JavaDocDataLoader {
   private getTotalMethodCount(cls: JavaDocClass): number {
     let count = 0;
     if (cls.methods) count += cls.methods.length;
-    if (cls.simpleMethods) count += cls.simpleMethods.length;
     if (cls.constructors) count += cls.constructors.length;
-    if (cls.simpleConstructors) count += cls.simpleConstructors.length;
     return count;
   }
 }

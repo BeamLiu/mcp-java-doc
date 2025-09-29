@@ -52,7 +52,7 @@ public class PublishMojo extends AbstractMojo {
     /**
      * Include private members in the output.
      */
-    @Parameter(property = "includePrivate", defaultValue = "false")
+    @Parameter(property = "includePrivate", defaultValue = "true")
     private boolean includePrivate;
 
     /**

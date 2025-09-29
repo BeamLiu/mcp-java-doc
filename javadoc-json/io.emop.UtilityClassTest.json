@@ -6,7 +6,14 @@
   "modifiers" : [ "public", "final" ],
   "superClass" : null,
   "interfaces" : [ ],
-  "constructors" : [ ],
+  "constructors" : [ {
+    "name" : "UtilityClassTest",
+    "description" : "",
+    "signature" : "private <init>()",
+    "modifiers" : [ "private" ],
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
   "methods" : [ {
     "name" : "isValidEmail",
     "description" : "检查字符串是否为有效的邮箱地址。\n Checks if a string is a valid email address.\n 文字列が有効なメールアドレスかどうかをチェックします。\n 문자열이 유효한 이메일 주소인지 확인합니다。",
@@ -188,5 +195,35 @@
     } ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "log",
+    "description" : "",
+    "type" : "org.slf4j.Logger",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "EMAIL_PATTERN",
+    "description" : "邮箱验证正则表达式 / Email validation regex / メール検証正規表現 / 이메일 검증 정규식",
+    "type" : "java.util.regex.Pattern",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "PHONE_PATTERN",
+    "description" : "电话号码验证正则表达式 / Phone number validation regex / 電話番号検証正規表現 / 전화번호 검증 정규식",
+    "type" : "java.util.regex.Pattern",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "DEFAULT_DATE_FORMAT",
+    "description" : "默认日期格式 / Default date format / デフォルト日付フォーマット / 기본 날짜 형식",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : "yyyy-MM-dd HH:mm:ss"
+  }, {
+    "name" : "SUPPORTED_DATE_FORMATS",
+    "description" : "支持的日期格式数组 / Supported date formats array / サポートされている日付フォーマット配列 / 지원되는 날짜 형식 배열",
+    "type" : "java.lang.String[]",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : null
+  } ]
 }

@@ -16,12 +16,12 @@ export class JavaDocSearchEngine {
     // 构建类索引
     this.classIndex = new Fuse(this.javadocData.classes, {
       keys: [
-        { name: 'name', weight: 0.4 },
+        { name: 'name', weight: 0.5 },
         { name: 'description', weight: 0.3 },
         { name: 'packageName', weight: 0.2 },
         { name: 'type', weight: 0.1 }
       ],
-      threshold: 0.4,
+      threshold: 0.5,
       includeScore: true,
     });
 
@@ -41,23 +41,6 @@ export class JavaDocSearchEngine {
         });
       }
       
-      // 处理简化解析的方法
-      if (cls.simpleMethods) {
-        cls.simpleMethods.forEach((method) => {
-          methods.push({
-            name: method.name,
-            signature: method.modifierAndType,
-            description: method.description,
-            detailText: method.detailText,
-            className: cls.name,
-            packageName: cls.packageName,
-            classType: cls.type,
-            itemType: 'method',
-            isSimple: true
-          });
-        });
-      }
-      
       // 处理详细解析的构造函数
       if (cls.constructors) {
         cls.constructors.forEach((constructor) => {
@@ -71,23 +54,6 @@ export class JavaDocSearchEngine {
         });
       }
       
-      // 处理简化解析的构造函数
-      if (cls.simpleConstructors) {
-        cls.simpleConstructors.forEach((constructor) => {
-          methods.push({
-            name: constructor.name,
-            signature: constructor.modifierAndType,
-            description: constructor.description,
-            detailText: constructor.detailText,
-            className: cls.name,
-            packageName: cls.packageName,
-            classType: cls.type,
-            itemType: 'constructor',
-            isSimple: true
-          });
-        });
-      }
-
       // 处理详细解析的字段
       if (cls.fields) {
         cls.fields.forEach((field) => {
@@ -100,23 +66,6 @@ export class JavaDocSearchEngine {
           });
         });
       }
-      
-      // 处理简化解析的字段
-      if (cls.simpleFields) {
-        cls.simpleFields.forEach((field) => {
-          methods.push({
-            name: field.name,
-            type: field.modifierAndType,
-            description: field.description,
-            detailText: field.detailText,
-            className: cls.name,
-            packageName: cls.packageName,
-            classType: cls.type,
-            itemType: 'field',
-            isSimple: true
-          });
-        });
-      }
     });
 
     this.methodIndex = new Fuse(methods, {
@@ -125,7 +74,7 @@ export class JavaDocSearchEngine {
         { name: 'signature', weight: 0.3 },
         { name: 'description', weight: 0.2 }
       ],
-      threshold: 0.4,
+      threshold: 0.5,
       includeScore: true,
     });
 
@@ -141,12 +90,12 @@ export class JavaDocSearchEngine {
 
     this.allItemsIndex = new Fuse(allItems, {
       keys: [
-        { name: 'name', weight: 0.4 },
+        { name: 'name', weight: 0.5 },
         { name: 'description', weight: 0.3 },
         { name: 'signature', weight: 0.2 },
         { name: 'searchText', weight: 0.1 }
       ],
-      threshold: 0.4,
+      threshold: 0.5,
       includeScore: true,
     });
   }

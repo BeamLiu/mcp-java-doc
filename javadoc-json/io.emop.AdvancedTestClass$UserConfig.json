@@ -38,6 +38,14 @@
     "exceptions" : [ ]
   } ],
   "methods" : [ {
+    "name" : "$default$required",
+    "description" : "",
+    "signature" : "private static boolean $default$required()",
+    "modifiers" : [ "private", "static" ],
+    "returnType" : "boolean",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
     "name" : "builder",
     "description" : "",
     "signature" : "public static io.emop.AdvancedTestClass.UserConfig.UserConfigBuilder builder()",
@@ -166,5 +174,29 @@
     "parameters" : [ ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "name",
+    "description" : "配置名称 / Configuration name / 設定名 / 구성 이름",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "value",
+    "description" : "配置值 / Configuration value / 設定値 / 구성 값",
+    "type" : "java.lang.Object",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "type",
+    "description" : "配置类型 / Configuration type / 設定タイプ / 구성 타입",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "required",
+    "description" : "是否必需 / Is required / 必須かどうか / 필수 여부",
+    "type" : "boolean",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  } ]
 }

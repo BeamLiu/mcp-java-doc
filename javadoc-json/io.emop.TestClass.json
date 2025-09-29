@@ -114,6 +114,14 @@
     } ],
     "exceptions" : [ ]
   }, {
+    "name" : "$default$createdAt",
+    "description" : "",
+    "signature" : "private static java.time.LocalDateTime $default$createdAt()",
+    "modifiers" : [ "private", "static" ],
+    "returnType" : "java.time.LocalDateTime",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
     "name" : "builder",
     "description" : "",
     "signature" : "public static io.emop.TestClass.TestClassBuilder builder()",
@@ -282,5 +290,47 @@
     "parameters" : [ ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "log",
+    "description" : "",
+    "type" : "org.slf4j.Logger",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "name",
+    "description" : "用户名称字段。\n User name field.\n ユーザー名フィールド。\n 사용자 이름 필드。",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "age",
+    "description" : "用户年龄字段。\n User age field.\n ユーザー年齢フィールド。\n 사용자 나이 필드。",
+    "type" : "int",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "email",
+    "description" : "用户邮箱地址。\n User email address.\n ユーザーのメールアドレス。\n 사용자 이메일 주소。",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "createdAt",
+    "description" : "创建时间戳。\n Creation timestamp.\n 作成タイムスタンプ。\n 생성 타임스탬프。",
+    "type" : "java.time.LocalDateTime",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "tags",
+    "description" : "用户标签列表。\n User tags list.\n ユーザータグリスト。\n 사용자 태그 목록。",
+    "type" : "java.util.List<java.lang.String>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "properties",
+    "description" : "用户属性映射。\n User properties mapping.\n ユーザープロパティマッピング。\n 사용자 속성 매핑。",
+    "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  } ]
 }

@@ -137,6 +137,18 @@
     "exceptions" : [ ]
   } ],
   "methods" : [ {
+    "name" : "determineErrorType",
+    "description" : "根据错误代码确定错误类型。\n Determines error type based on error code.\n エラーコードに基づいてエラータイプを決定します。\n 오류 코드를 기반으로 오류 타입을 결정합니다。",
+    "signature" : "private static io.emop.CustomException.ErrorType determineErrorType(int errorCode)",
+    "modifiers" : [ "private", "static" ],
+    "returnType" : "io.emop.CustomException.ErrorType",
+    "parameters" : [ {
+      "name" : "errorCode",
+      "type" : "int",
+      "description" : "错误代码 / Error code / エラーコード / 오류 코드"
+    } ],
+    "exceptions" : [ ]
+  }, {
     "name" : "getFormattedErrorInfo",
     "description" : "获取格式化的错误信息。\n Gets formatted error information.\n フォーマットされたエラー情報を取得します。\n 형식화된 오류 정보를 가져옵니다。",
     "signature" : "public java.lang.String getFormattedErrorInfo()",
@@ -269,5 +281,29 @@
     "parameters" : [ ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "serialVersionUID",
+    "description" : "序列化版本 UID / Serialization version UID / シリアライゼーションバージョンUID / 직렬화 버전 UID",
+    "type" : "long",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : "1"
+  }, {
+    "name" : "errorCode",
+    "description" : "错误代码 / Error code / エラーコード / 오류 코드",
+    "type" : "int",
+    "modifiers" : [ "private", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "errorType",
+    "description" : "错误类型 / Error type / エラータイプ / 오류 타입",
+    "type" : "io.emop.CustomException.ErrorType",
+    "modifiers" : [ "private", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "details",
+    "description" : "错误详细信息 / Error details / エラー詳細 / 오류 세부사항",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private", "final" ],
+    "defaultValue" : null
+  } ]
 }

@@ -6,7 +6,18 @@
   "modifiers" : [ "public", "static", "final" ],
   "superClass" : "java.lang.Enum<io.emop.CustomException.ErrorType>",
   "interfaces" : [ ],
-  "constructors" : [ ],
+  "constructors" : [ {
+    "name" : "ErrorType",
+    "description" : "",
+    "signature" : "private <init>(java.lang.String description)",
+    "modifiers" : [ "private" ],
+    "parameters" : [ {
+      "name" : "description",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  } ],
   "methods" : [ {
     "name" : "values",
     "description" : "",
@@ -65,6 +76,12 @@
     "description" : "外部服务错误 / External service error / 外部サービスエラー / 외부 서비스 오류",
     "type" : "io.emop.CustomException.ErrorType",
     "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "description",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private", "final" ],
     "defaultValue" : null
   } ]
 }

@@ -6,7 +6,14 @@
   "modifiers" : [ "public", "static" ],
   "superClass" : null,
   "interfaces" : [ ],
-  "constructors" : [ ],
+  "constructors" : [ {
+    "name" : "AdvancedTestClassBuilder",
+    "description" : "",
+    "signature" : "<init>()",
+    "modifiers" : [ ],
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
   "methods" : [ {
     "name" : "userId",
     "description" : "用户 ID / User ID / ユーザーID / 사용자 ID",
@@ -152,5 +159,65 @@
     "parameters" : [ ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "userId",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "username",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "status$set",
+    "description" : "",
+    "type" : "boolean",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "status$value",
+    "description" : "",
+    "type" : "io.emop.AdvancedTestClass.UserStatus",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "configs",
+    "description" : "",
+    "type" : "java.util.ArrayList<io.emop.AdvancedTestClass.UserConfig>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "properties$key",
+    "description" : "",
+    "type" : "java.util.ArrayList<java.lang.String>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "properties$value",
+    "description" : "",
+    "type" : "java.util.ArrayList<java.lang.Object>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "createdAt$set",
+    "description" : "",
+    "type" : "boolean",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "createdAt$value",
+    "description" : "",
+    "type" : "java.time.LocalDateTime",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "updatedAt",
+    "description" : "",
+    "type" : "java.time.LocalDateTime",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  } ]
 }

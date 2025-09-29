@@ -6,7 +6,18 @@
   "modifiers" : [ "public", "static", "final" ],
   "superClass" : "java.lang.Enum<io.emop.AdvancedTestClass.UserStatus>",
   "interfaces" : [ ],
-  "constructors" : [ ],
+  "constructors" : [ {
+    "name" : "UserStatus",
+    "description" : "",
+    "signature" : "private <init>(java.lang.String description)",
+    "modifiers" : [ "private" ],
+    "parameters" : [ {
+      "name" : "description",
+      "type" : "java.lang.String",
+      "description" : ""
+    } ],
+    "exceptions" : [ ]
+  } ],
   "methods" : [ {
     "name" : "values",
     "description" : "",
@@ -59,6 +70,12 @@
     "description" : "已删除状态 / Deleted status / 削除済みステータス / 삭제된 상태",
     "type" : "io.emop.AdvancedTestClass.UserStatus",
     "modifiers" : [ "public", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "description",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private", "final" ],
     "defaultValue" : null
   } ]
 }

@@ -178,6 +178,22 @@
     } ],
     "exceptions" : [ "java.io.IOException" ]
   }, {
+    "name" : "$default$status",
+    "description" : "",
+    "signature" : "private static io.emop.AdvancedTestClass.UserStatus $default$status()",
+    "modifiers" : [ "private", "static" ],
+    "returnType" : "io.emop.AdvancedTestClass.UserStatus",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
+    "name" : "$default$createdAt",
+    "description" : "",
+    "signature" : "private static java.time.LocalDateTime $default$createdAt()",
+    "modifiers" : [ "private", "static" ],
+    "returnType" : "java.time.LocalDateTime",
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  }, {
     "name" : "builder",
     "description" : "",
     "signature" : "public static io.emop.AdvancedTestClass.AdvancedTestClassBuilder builder()",
@@ -366,5 +382,53 @@
     "parameters" : [ ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "log",
+    "description" : "",
+    "type" : "org.slf4j.Logger",
+    "modifiers" : [ "private", "static", "final" ],
+    "defaultValue" : null
+  }, {
+    "name" : "userId",
+    "description" : "用户 ID / User ID / ユーザーID / 사용자 ID",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "username",
+    "description" : "用户名 / Username / ユーザー名 / 사용자명",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "status",
+    "description" : "用户状态 / User status / ユーザーステータス / 사용자 상태",
+    "type" : "io.emop.AdvancedTestClass.UserStatus",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "configs",
+    "description" : "用户配置列表 / User configuration list / ユーザー設定リスト / 사용자 구성 목록",
+    "type" : "java.util.List<io.emop.AdvancedTestClass.UserConfig>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "properties",
+    "description" : "用户属性映射 / User properties map / ユーザープロパティマップ / 사용자 속성 맵",
+    "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "createdAt",
+    "description" : "创建时间 / Creation time / 作成時間 / 생성 시간",
+    "type" : "java.time.LocalDateTime",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "updatedAt",
+    "description" : "最后更新时间 / Last update time / 最終更新時間 / 마지막 업데이트 시간",
+    "type" : "java.time.LocalDateTime",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  } ]
 }

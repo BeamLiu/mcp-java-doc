@@ -6,7 +6,14 @@
   "modifiers" : [ "public", "static" ],
   "superClass" : null,
   "interfaces" : [ ],
-  "constructors" : [ ],
+  "constructors" : [ {
+    "name" : "TestClassBuilder",
+    "description" : "",
+    "signature" : "<init>()",
+    "modifiers" : [ ],
+    "parameters" : [ ],
+    "exceptions" : [ ]
+  } ],
   "methods" : [ {
     "name" : "name",
     "description" : "用户名称字段。\n User name field.\n ユーザー名フィールド。\n 사용자 이름 필드。",
@@ -96,5 +103,47 @@
     "parameters" : [ ],
     "exceptions" : [ ]
   } ],
-  "fields" : [ ]
+  "fields" : [ {
+    "name" : "name",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "age",
+    "description" : "",
+    "type" : "int",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "email",
+    "description" : "",
+    "type" : "java.lang.String",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "createdAt$set",
+    "description" : "",
+    "type" : "boolean",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "createdAt$value",
+    "description" : "",
+    "type" : "java.time.LocalDateTime",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "tags",
+    "description" : "",
+    "type" : "java.util.List<java.lang.String>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  }, {
+    "name" : "properties",
+    "description" : "",
+    "type" : "java.util.Map<java.lang.String,java.lang.Object>",
+    "modifiers" : [ "private" ],
+    "defaultValue" : null
+  } ]
 }
