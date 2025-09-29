@@ -6,12 +6,12 @@
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>io.emop</groupId>
-    <artifactId>sample-project</artifactId>
+    <artifactId>lombok-sample-project</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
     
-    <name>Example Project</name>
-    <description>Example project demonstrating Javadoc JSON plugin usage</description>
+    <name>Lombok Example Project</name>
+    <description>Lombok Example project demonstrating Javadoc JSON plugin usage</description>
     
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -95,7 +95,6 @@
                         <configuration>
                             <outputDirectory>target/javadoc-json</outputDirectory>
                             <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
-                            <includePrivate>true</includePrivate>
                         </configuration>
                     </execution>
                 </executions>
