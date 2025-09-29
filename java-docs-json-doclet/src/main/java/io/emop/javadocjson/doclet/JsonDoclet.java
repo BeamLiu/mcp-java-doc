@@ -143,7 +143,7 @@ public class JsonDoclet implements Doclet {
         
         // Set description
         String docComment = environment.getElementUtils().getDocComment(typeElement);
-        javadocClass.setDescription(docComment != null ? docComment.trim() : "");
+        javadocClass.setDescription(docComment != null ? decodeUnicodeEscapes(docComment.trim()) : "");
         
         // Set modifiers
         javadocClass.setModifiers(getModifiers(typeElement));
@@ -245,7 +245,7 @@ public class JsonDoclet implements Doclet {
         
         // Set description
         String docComment = environment.getElementUtils().getDocComment(field);
-        javadocField.setDescription(docComment != null ? docComment.trim() : "");
+        javadocField.setDescription(docComment != null ? decodeUnicodeEscapes(docComment.trim()) : "");
         
         // Set default value if available
         Object constantValue = field.getConstantValue();
@@ -374,7 +374,7 @@ public class JsonDoclet implements Doclet {
                     ParamTree paramTag = (ParamTree) blockTag;
                     String paramName = paramTag.getName().toString();
                     String description = paramTag.getDescription().toString().trim();
-                    paramDescriptions.put(paramName, description);
+                    paramDescriptions.put(paramName, decodeUnicodeEscapes(description));
                 }
             }
         }
@@ -396,12 +396,48 @@ public class JsonDoclet implements Doclet {
         
         if (docCommentTree != null) {
             // Get only the main body, excluding block tags
-            return docCommentTree.getFullBody().toString().trim();
+            return decodeUnicodeEscapes(docCommentTree.getFullBody().toString().trim());
         }
         
         // Fallback to the old method if DocCommentTree is not available
         String docComment = environment.getElementUtils().getDocComment(element);
-        return docComment != null ? docComment.trim() : "";
+        return docComment != null ? decodeUnicodeEscapes(docComment.trim()) : "";
+    }
+    
+    /**
+     * Decodes Unicode escape sequences in a string.
+     * Converts sequences like \u6587\u4ef6\u8def\u5f84 back to readable characters.
+     * 
+     * @param input The input string that may contain Unicode escape sequences
+     * @return The decoded string with Unicode characters
+     */
+    private String decodeUnicodeEscapes(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < input.length()) {
+            if (i < input.length() - 5 && input.charAt(i) == '\\' && input.charAt(i + 1) == 'u') {
+                // Found a potential Unicode escape sequence
+                try {
+                    String hexCode = input.substring(i + 2, i + 6);
+                    int codePoint = Integer.parseInt(hexCode, 16);
+                    result.append((char) codePoint);
+                    i += 6; // Skip the \\uXXXX sequence
+                } catch (NumberFormatException e) {
+                    // Not a valid Unicode escape, just append the character
+                    result.append(input.charAt(i));
+                    i++;
+                }
+            } else {
+                result.append(input.charAt(i));
+                i++;
+            }
+        }
+        
+        return result.toString();
     }
     
     /**
