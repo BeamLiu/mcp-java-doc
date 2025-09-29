@@ -85,7 +85,8 @@ mvn io.emop:java-docs-json-doclet:1.0.0:crawl
 mvn io.emop:java-docs-json-doclet:1.0.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
-    -DsourceDirectory=src/main/java
+    -DsourceDirectory=src/main/java \
+    -Dencoding=GBK
 ```
 
 ### Configuration Parameters
@@ -97,6 +98,7 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 | `sourceDirectory` | String | `${project.build.sourceDirectory}` | Source directory to process |
 | `includePrivate` | boolean | `false` | Include private members in the output |
 | `sourcePaths` | List<String> | (none) | Additional source paths to include |
+| `encoding` | String | `UTF-8` | Source file encoding |
 
 #### Crawl Goal Parameters
 | Parameter | Type | Default | Description |
@@ -212,7 +214,8 @@ mvn io.emop:java-docs-json-doclet:1.0.0:crawl
 mvn io.emop:java-docs-json-doclet:1.0.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
-    -DsourceDirectory=src/main/java
+    -DsourceDirectory=src/main/java \
+    -Dencoding=GBK
 ```
 
 ### 配置参数
@@ -224,6 +227,7 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 | `sourceDirectory` | String | `${project.build.sourceDirectory}` | 要处理的源代码目录 |
 | `includePrivate` | boolean | `false` | 在输出中包含私有成员 |
 | `sourcePaths` | List<String> | (无) | 要包含的额外源代码路径 |
+| `encoding` | String | `UTF-8` | 源文件编码 |
 
 #### 爬取目标参数
 | 参数 | 类型 | 默认值 | 描述 |
@@ -271,7 +275,3 @@ mvn io.emop:java-docs-json-doclet:1.0.0:publish \
 ### 许可证
 
 本项目采用 MIT 许可证。
-
-### 贡献
-
-欢迎提交 Issue 和 Pull Request！

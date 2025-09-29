@@ -67,6 +67,12 @@ public class PublishMojo extends AbstractMojo {
     @Parameter(property = "classpath")
     private String classpath;
 
+    /**
+     * Source file encoding.
+     */
+    @Parameter(property = "encoding", defaultValue = "UTF-8")
+    private String encoding;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
@@ -222,7 +228,7 @@ public class PublishMojo extends AbstractMojo {
 
         // Add encoding option to handle UTF-8 source files
         options.add("-encoding");
-        options.add("UTF-8");
+        options.add(encoding);
 
         // Add classpath - include both compile and runtime dependencies
         if (classpath != null && !classpath.isEmpty()) {
