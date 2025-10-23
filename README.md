@@ -21,7 +21,7 @@ This project consists of three main components that work together to create a co
 ```
 ┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
 │   Java Source Code  │    │   HTML Javadoc      │    │   Lombok Projects   │
-│                     │    │   (JDK 9+)          │    │                     │
+│                     │    │   (JDK 9)          │    │                     │
 └──────────┬──────────┘    └──────────┬──────────┘    └──────────┬──────────┘
            │                          │                          │
            ▼                          ▼                          ▼
@@ -81,7 +81,7 @@ A Maven plugin that converts Java documentation into structured JSON format.
 **Quick Start:**
 ```xml
 <plugin>
-    <groupId>com.emopdata</groupId>
+    <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -93,6 +93,7 @@ A Maven plugin that converts Java documentation into structured JSON format.
     </executions>
 </plugin>
 ```
+Pay attention, you may encounter compile error if you are using a lombok, please jump to `Lombok Projects` section.
 
 #### 2. MCP Server (`mcp-server/`)
 
@@ -124,12 +125,12 @@ Contains example JSON documentation files generated from various Java projects f
 1. **From Source Code:**
 ```bash
 cd your-java-project
-mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
 ```
 
 2. **From HTML Javadoc:**
 ```bash
-mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl \
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl \
     -DbaseUrl=https://docs.oracle.com/en/java/javase/11/docs/api/
 ```
 
@@ -200,6 +201,26 @@ For projects using Lombok, configure the delombok process:
         </execution>
     </executions>
 </plugin>
+<!-- Java Docs JSON Doclet Plugin -->
+<plugin>
+    <groupId>io.github.beamliu</groupId>
+    <artifactId>java-docs-json-doclet</artifactId>
+    <version>0.1.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>publish</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+                <!-- Point to delombok generated sources -->
+                <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
+                <outputDirectory>target/javadoc-json</outputDirectory>
+                <includePrivate>true</includePrivate>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
 ```
 
 #### Package Filtering
@@ -238,7 +259,7 @@ This project is licensed under the MIT License.
 ```
 ┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
 │     Java 源代码      │    │   HTML Javadoc      │    │   Lombok 项目       │
-│                     │    │   (JDK 9+)          │    │                     │
+│                     │    │   (JDK 9)          │    │                     │
 └──────────┬──────────┘    └──────────┬──────────┘    └──────────┬──────────┘
            │                          │                          │
            ▼                          ▼                          ▼
@@ -298,7 +319,7 @@ This project is licensed under the MIT License.
 **快速开始：**
 ```xml
 <plugin>
-    <groupId>com.emopdata</groupId>
+    <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -310,6 +331,7 @@ This project is licensed under the MIT License.
     </executions>
 </plugin>
 ```
+注意, 如果您正在使用`lombok`, 可能会遇到编译错误，请参考`Lombok 项目`章节。
 
 #### 2. MCP 服务器 (`mcp-server/`)
 
@@ -341,12 +363,12 @@ npm start
 1. **从源代码：**
 ```bash
 cd your-java-project
-mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
 ```
 
 2. **从 HTML Javadoc：**
 ```bash
-mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl \
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl \
     -DbaseUrl=https://docs.oracle.com/en/java/javase/11/docs/api/
 ```
 
@@ -413,6 +435,26 @@ npm start
                         <arg value="target/generated-sources/delombok"/>
                     </java>
                 </target>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+<!-- Java Docs JSON Doclet Plugin -->
+<plugin>
+    <groupId>io.github.beamliu</groupId>
+    <artifactId>java-docs-json-doclet</artifactId>
+    <version>0.1.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>publish</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+                <!-- Point to delombok generated sources -->
+                <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
+                <outputDirectory>target/javadoc-json</outputDirectory>
+                <includePrivate>true</includePrivate>
             </configuration>
         </execution>
     </executions>
