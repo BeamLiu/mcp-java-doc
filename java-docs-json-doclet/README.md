@@ -21,7 +21,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 #### Basic Publish Configuration
 ```xml
 <plugin>
-    <groupId>com.emopdata</groupId>
+    <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -37,7 +37,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 #### Basic Crawl Configuration
 ```xml
 <plugin>
-    <groupId>com.emopdata</groupId>
+    <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -57,13 +57,13 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 
 ```bash
 # Generate documentation from source code
-mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
 
 # Crawl external Javadoc
-mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl
 
 # With custom parameters
-mvn com.emopdata:java-docs-json-doclet:0.1.0:publish \
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -149,30 +149,23 @@ When your project uses Lombok annotations, you need to use the delombok process 
             </configuration>
         </plugin>
         
-        <!-- Maven Antrun Plugin for delombok -->
+        <!-- Lombok Maven Plugin for delombok -->
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>3.1.0</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-maven-plugin</artifactId>
+            <version>1.18.20.0</version>
             <executions>
                 <execution>
                     <id>delombok</id>
                     <phase>generate-sources</phase>
                     <goals>
-                        <goal>run</goal>
+                        <goal>delombok</goal>
                     </goals>
                     <configuration>
-                        <target>
-                            <mkdir dir="target/generated-sources/delombok"/>
-                            <java classname="lombok.launch.Main" fork="true" classpathref="maven.compile.classpath">
-                                <arg value="delombok"/>
-                                <arg value="src/main/java"/>
-                                <arg value="-d"/>
-                                <arg value="target/generated-sources/delombok"/>
-                                <arg value="--encoding"/>
-                                <arg value="UTF-8"/>
-                            </java>
-                        </target>
+                        <sourceDirectory>src/main/java</sourceDirectory>
+                        <outputDirectory>target/generated-sources/delombok</outputDirectory>
+                        <addOutputDirectory>false</addOutputDirectory>
+                        <encoding>UTF-8</encoding>
                     </configuration>
                 </execution>
             </executions>
@@ -180,7 +173,7 @@ When your project uses Lombok annotations, you need to use the delombok process 
         
         <!-- Java Docs JSON Doclet Plugin -->
         <plugin>
-            <groupId>com.emopdata</groupId>
+            <groupId>io.github.beamliu</groupId>
             <artifactId>java-docs-json-doclet</artifactId>
             <version>0.1.0</version>
             <executions>
@@ -202,11 +195,34 @@ When your project uses Lombok annotations, you need to use the delombok process 
 </build>
 ```
 
+**Execution Steps:**
+
+When using Lombok, you must run the build in the correct order:
+
+```bash
+# Option 1: Run the full build (recommended)
+mvn clean package
+
+# Option 2: Run delombok first, then generate docs
+mvn clean compile
+mvn lombok:delombok
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
+```
+
 **Key Points:**
 - The delombok process runs in the `generate-sources` phase
 - Generated sources are placed in `target/generated-sources/delombok`
 - The JSON doclet plugin's `sourceDirectory` parameter points to the delombok output
+- **Important**: You must compile your project first (or run `mvn compile`) before delombok can work, because delombok needs the Lombok library on the classpath
 - This ensures all Lombok-generated methods appear in the documentation
+
+**Troubleshooting:**
+
+If you get "cannot find symbol" errors for Lombok-generated classes (like `*Builder`):
+1. Make sure Lombok is in your dependencies
+2. Run `mvn clean compile` first to ensure Lombok is available
+3. Then run `mvn lombok:delombok` to generate the delomboked sources
+4. Finally run the doclet plugin to generate JSON documentation
 
 ---
 
@@ -228,7 +244,7 @@ When your project uses Lombok annotations, you need to use the delombok process 
 #### 基本发布配置
 ```xml
 <plugin>
-    <groupId>com.emopdata</groupId>
+    <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -244,7 +260,7 @@ When your project uses Lombok annotations, you need to use the delombok process 
 #### 基本爬取配置
 ```xml
 <plugin>
-    <groupId>com.emopdata</groupId>
+    <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
     <version>0.1.0</version>
     <executions>
@@ -264,13 +280,13 @@ When your project uses Lombok annotations, you need to use the delombok process 
 
 ```bash
 # 从源代码生成文档
-mvn com.emopdata:java-docs-json-doclet:0.1.0:publish
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
 
 # 爬取外部 Javadoc
-mvn com.emopdata:java-docs-json-doclet:0.1.0:crawl
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl
 
 # 使用自定义参数
-mvn com.emopdata:java-docs-json-doclet:0.1.0:publish \
+mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -387,7 +403,7 @@ mvn com.emopdata:java-docs-json-doclet:0.1.0:publish \
         
         <!-- Java Docs JSON Doclet 插件 -->
         <plugin>
-            <groupId>com.emopdata</groupId>
+            <groupId>io.github.beamliu</groupId>
             <artifactId>java-docs-json-doclet</artifactId>
             <version>0.1.0</version>
             <executions>

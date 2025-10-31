@@ -19,36 +19,55 @@ export class JavaDocMCPServer {
   private server: Server;
   private searchEngine!: JavaDocSearchEngine;
 
-  constructor() {
+  constructor(javadocJsonPaths?: string | string[]) {
     this.server = new Server({
       name: 'mcp-javadoc-server',
-      version: '0.1.0',
+      version: '0.1.3',
     }, {
       capabilities: {
         tools: {},
       },
     });
 
-    this.initializeData();
+    this.initializeData(javadocJsonPaths);
     this.setupHandlers();
   }
 
-  private initializeData() {
+  private initializeData(javadocJsonPaths?: string | string[]) {
     try {
-      // Get JavaDoc JSON directory from environment variable or use default
-      const javadocJsonPath = process.env.JAVADOC_JSON_PATH || join(__dirname, '..', '..', 'javadoc-json');
+      // Priority: 1. Constructor parameter, 2. Environment variable, 3. Default path
+      let dataPaths: string[];
+
+      if (javadocJsonPaths) {
+        dataPaths = Array.isArray(javadocJsonPaths) ? javadocJsonPaths : [javadocJsonPaths];
+      } else if (process.env.JAVADOC_JSON_PATH) {
+        // Support multiple paths separated by path delimiter (: on Unix, ; on Windows)
+        const delimiter = process.platform === 'win32' ? ';' : ':';
+        dataPaths = process.env.JAVADOC_JSON_PATH.split(delimiter).map(p => p.trim()).filter(p => p);
+      } else {
+        dataPaths = [join(__dirname, '..', '..', 'javadoc-json')];
+      }
 
       console.error('Loading JavaDoc data...');
-      console.error(`JavaDoc JSON path: ${javadocJsonPath}`);
+      console.error(`JavaDoc JSON paths (${dataPaths.length}):`);
+      dataPaths.forEach((path, index) => {
+        console.error(`  ${index + 1}. ${path}`);
+      });
 
-      const dataLoader = new JavaDocDataLoader(javadocJsonPath);
+      const dataLoader = new JavaDocDataLoader(dataPaths);
       const javadocData = dataLoader.loadAllData();
-      
-      console.error(`Loaded ${javadocData.totalCount} classes from JavaDoc JSON repository`);
-      
+
+      if (javadocData.totalCount === 0) {
+        console.error('WARNING: No JavaDoc classes loaded. Please check your paths.');
+        console.error('The server will start but searches will return no results.');
+      } else {
+        console.error(`Loaded ${javadocData.totalCount} classes from ${dataPaths.length} JavaDoc JSON ${dataPaths.length === 1 ? 'directory' : 'directories'}`);
+      }
+
       this.searchEngine = new JavaDocSearchEngine(javadocData);
     } catch (error) {
       console.error('Failed to load JavaDoc data:', error);
+      console.error('Error details:', error instanceof Error ? error.message : String(error));
       throw new Error('Could not initialize JavaDoc data');
     }
   }
@@ -195,10 +214,10 @@ export class JavaDocMCPServer {
       try {
         switch (name) {
           case 'search_all': {
-            const { query, limit = 10, mode = 'fuzzy' } = args as { 
-              query: string; 
-              limit?: number; 
-              mode?: SearchMode 
+            const { query, limit = 10, mode = 'fuzzy' } = args as {
+              query: string;
+              limit?: number;
+              mode?: SearchMode
             };
             const results = this.searchEngine.searchAll(query, limit, mode);
             return {
@@ -217,10 +236,10 @@ export class JavaDocMCPServer {
           }
 
           case 'search_classes': {
-            const { query, limit = 10, mode = 'fuzzy' } = args as { 
-              query: string; 
-              limit?: number; 
-              mode?: SearchMode 
+            const { query, limit = 10, mode = 'fuzzy' } = args as {
+              query: string;
+              limit?: number;
+              mode?: SearchMode
             };
             const results = this.searchEngine.searchClasses(query, limit, mode);
             return {
@@ -239,9 +258,9 @@ export class JavaDocMCPServer {
           }
 
           case 'search_methods': {
-            const { query, className, limit = 10, mode = 'fuzzy' } = args as { 
-              query: string; 
-              className?: string; 
+            const { query, className, limit = 10, mode = 'fuzzy' } = args as {
+              query: string;
+              className?: string;
               limit?: number;
               mode?: SearchMode
             };
@@ -263,12 +282,12 @@ export class JavaDocMCPServer {
           }
 
           case 'search_fields': {
-            const { query, className, limit = 10, mode = 'fuzzy' } = args as { 
-               query: string; 
-               className?: string; 
-               limit?: number;
-               mode?: SearchMode
-             };
+            const { query, className, limit = 10, mode = 'fuzzy' } = args as {
+              query: string;
+              className?: string;
+              limit?: number;
+              mode?: SearchMode
+            };
             const results = this.searchEngine.searchFields(query, className, limit, mode);
             return {
               content: [
@@ -289,7 +308,7 @@ export class JavaDocMCPServer {
           case 'get_class_details': {
             const { className } = args as { className: string };
             const classDetails = this.searchEngine.getClassByName(className);
-            
+
             if (!classDetails) {
               throw new McpError(ErrorCode.InvalidRequest, `Class not found: ${className}`);
             }
@@ -335,21 +354,97 @@ export class JavaDocMCPServer {
   }
 }
 
+// Parse command line arguments
+function parseArgs(): { javadocPaths?: string[]; help?: boolean } {
+  const args = process.argv.slice(2);
+  const result: { javadocPaths?: string[]; help?: boolean } = {};
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--javadoc-path' || arg === '-p') {
+      if (!result.javadocPaths) {
+        result.javadocPaths = [];
+      }
+      result.javadocPaths.push(args[++i]);
+    } else if (arg === '--help' || arg === '-h') {
+      result.help = true;
+    }
+  }
+
+  return result;
+}
+
+function printHelp() {
+  console.info(`
+JavaDoc MCP Server
+
+Usage: node dist/index.js [options]
+
+Options:
+  -p, --javadoc-path <path>   Path to JavaDoc JSON directory (can be specified multiple times)
+  -h, --help                  Show this help message
+
+Configuration Priority:
+  1. Command line arguments (--javadoc-path, can specify multiple)
+  2. Environment variable (JAVADOC_JSON_PATH, use : or ; to separate multiple paths)
+  3. Default path (../../javadoc-json)
+
+Examples:
+  # Single path
+  node dist/index.js --javadoc-path /path/to/javadoc-json
+  
+  # Multiple paths
+  node dist/index.js --javadoc-path /path/to/json1 --javadoc-path /path/to/json2
+  
+  # Environment variable (Unix/Linux/macOS)
+  JAVADOC_JSON_PATH=/path/to/json1:/path/to/json2 node dist/index.js
+  
+  # Environment variable (Windows)
+  set JAVADOC_JSON_PATH=C:\\path\\to\\json1;C:\\path\\to\\json2
+  node dist/index.js
+`);
+}
+
 // If this file is run directly, start the server
-const isMainModule = import.meta.url === `file://${process.argv[1]}` || 
-                     import.meta.url.endsWith(process.argv[1]) ||
-                     process.argv[1].endsWith(__filename);
+// Check if this module is the main entry point
+// This works for: node dist/index.js, npx package, or via bin script
+const isMainModule = process.argv[1] && (
+  import.meta.url === `file://${process.argv[1]}` ||
+  import.meta.url.endsWith(process.argv[1]) ||
+  process.argv[1].endsWith(__filename) ||
+  process.argv[1].includes('mcp-javadoc-server') // Handles npx and bin script execution
+);
 
 if (isMainModule) {
+  // Handle uncaught exceptions
+  process.on('uncaughtException', (error) => {
+    console.error('Uncaught exception:', error);
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled rejection at:', promise, 'reason:', reason);
+    process.exit(1);
+  });
+
   try {
-    console.error('Starting JavaDoc MCP Server...');
-    const server = new JavaDocMCPServer();
+    const args = parseArgs();
+
+    if (args.help) {
+      printHelp();
+      process.exit(0);
+    }
+
+    console.info('Starting JavaDoc MCP Server...');
+    const server = new JavaDocMCPServer(args.javadocPaths);
     server.run().catch((error) => {
       console.error('Server run error:', error);
+      console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
       process.exit(1);
     });
   } catch (error) {
     console.error('Server initialization error:', error);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
     process.exit(1);
   }
 }

@@ -3,17 +3,24 @@ import { join } from 'path';
 import { JavaDocClass, JavaDocData } from './types.js';
 
 export class JavaDocDataLoader {
-  private javadocJsonPath: string;
+  private javadocJsonPaths: string[];
 
-  constructor(javadocJsonPath: string) {
-    this.javadocJsonPath = javadocJsonPath;
+  constructor(javadocJsonPaths: string | string[]) {
+    this.javadocJsonPaths = Array.isArray(javadocJsonPaths) ? javadocJsonPaths : [javadocJsonPaths];
   }
 
   /**
-   * Load all JavaDoc data from the specified JSON repository directory
+   * Load all JavaDoc data from the specified JSON repository directories
    */
   loadAllData(): JavaDocData {
-    const allClasses = this.loadFromDirectory(this.javadocJsonPath);
+    const allClasses: JavaDocClass[] = [];
+    
+    // Load from all specified paths
+    for (const path of this.javadocJsonPaths) {
+      const classes = this.loadFromDirectory(path);
+      allClasses.push(...classes);
+    }
+    
     const uniqueClasses = this.deduplicateClasses(allClasses);
 
     return {
@@ -34,7 +41,7 @@ export class JavaDocDataLoader {
     const classes: JavaDocClass[] = [];
     const files = readdirSync(dirPath).filter(file => file.endsWith('.json'));
 
-    console.log(`Loading ${files.length} JSON files from: ${dirPath}`);
+    console.error(`Loading ${files.length} JSON files from: ${dirPath}`);
 
     for (const file of files) {
       try {
@@ -46,7 +53,7 @@ export class JavaDocDataLoader {
         if (this.isPackageStructuredData(jsonData)) {
           const extractedClasses = this.extractClassesFromPackageStructure(jsonData);
           classes.push(...extractedClasses);
-          console.log(`Extracted ${extractedClasses.length} classes from package-structured file: ${file}`);
+          console.error(`Extracted ${extractedClasses.length} classes from package-structured file: ${file}`);
         } else if (this.isValidClassData(jsonData)) {
           // Handle single class JSON files
           classes.push(jsonData as JavaDocClass);
