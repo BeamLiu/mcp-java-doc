@@ -22,7 +22,7 @@ export class JavaDocMCPServer {
   constructor(javadocJsonPaths?: string | string[]) {
     this.server = new Server({
       name: 'mcp-javadoc-server',
-      version: '0.1.3',
+      version: '0.1.6',
     }, {
       capabilities: {
         tools: {},
@@ -375,7 +375,7 @@ function parseArgs(): { javadocPaths?: string[]; help?: boolean } {
 }
 
 function printHelp() {
-  console.info(`
+  console.error(`
 JavaDoc MCP Server
 
 Usage: node dist/index.js [options]
@@ -435,7 +435,7 @@ if (isMainModule) {
       process.exit(0);
     }
 
-    console.info('Starting JavaDoc MCP Server...');
+    console.error('Starting JavaDoc MCP Server...');
     const server = new JavaDocMCPServer(args.javadocPaths);
     server.run().catch((error) => {
       console.error('Server run error:', error);

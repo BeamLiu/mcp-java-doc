@@ -7,7 +7,7 @@
     
     <groupId>io.github.beamliu</groupId>
     <artifactId>simple-sample-project</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <packaging>jar</packaging>
     
     <name>Simple Example Project</name>
@@ -33,16 +33,8 @@
             <plugin>
                 <groupId>io.github.beamliu</groupId>
                 <artifactId>java-docs-json-doclet</artifactId>
-                <version>0.1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>publish</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <version>0.1.1</version>
             </plugin>
         </plugins>
     </build>
-    
 </project>

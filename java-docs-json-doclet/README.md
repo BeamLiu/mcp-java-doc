@@ -10,7 +10,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 
 ### Features
 
-- **Publish Goal**: Generate JSON documentation from your project's source code
+- **Generate Javadoc Json Goal**: Generate JSON documentation from your project's source code
 - **Crawl Goal**: Extract documentation from external Javadoc websites
 - **Package Filtering**: Use regular expressions to filter specific packages
 - **Proxy Support**: Configure proxy settings for crawling external documentation
@@ -18,52 +18,58 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 
 ### Quick Start
 
-#### Basic Publish Configuration
+#### Basic Configuration
 ```xml
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
 </plugin>
 ```
+
+ATTENTION: add central plugin repository *ONLY* when you cannot retrieve the artifacts when using some minior sites:
+```xml
+<pluginRepositories>
+    <pluginRepository>
+        <id>central-plugins</id>
+        <url>https://repo.maven.apache.org/maven2</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>false</enabled></snapshots>
+    </pluginRepository>
+</pluginRepositories>
+```
+
+ATTENTION: if you encountered compile error due to `Lombok` plugin, please follow up [Working with Lombok](#working-with-lombok)
 
 #### Basic Crawl Configuration
 ```xml
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>crawl</goal>
-            </goals>
-            <configuration>
-                <baseUrl>https://docs.oracle.com/en/java/javase/11/docs/api/</baseUrl>
-            </configuration>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
+    <configuration>
+        <baseUrl>https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/</baseUrl>
+        <!-- optional to filter packages -->
+        <packageFilters>
+            <packageFilter>nxopen\.issue</packageFilter>
+        </packageFilters>
+    </configuration>
 </plugin>
 ```
+
+ATTENTION: Only tested with above sample javadoc site, please build from source to update `io.emop.javadocjson.config.JDK9Dialet` to meet your real javadoc site, will support the offical LTS java version doc later.
 
 ### Command Line Usage
 
 ```bash
 # Generate documentation from source code
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
+mvn javadoc-json:javadoc-json
 
 # Crawl external Javadoc
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl
+mvn javadoc-json:crawl
 
 # With custom parameters
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
+mvn javadoc-json:javadoc-json \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -75,7 +81,7 @@ mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
 #### Publish Goal Parameters
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `outputDirectory` | String | `javadoc-output` | Output directory for JSON files |
+| `outputDirectory` | String | `javadoc-output` | Output directory for JSON files, default to `target/javadoc-json` |
 | `sourceDirectory` | String | `${project.build.sourceDirectory}` | Source directory to process |
 | `includePrivate` | boolean | `false` | Include private members in the output |
 | `sourcePaths` | List<String> | (none) | Additional source paths to include |
@@ -95,11 +101,13 @@ mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
 
 #### Package Filtering with Regular Expressions
 ```xml
-<packageFilters>
-    <packageFilter>java\.lang.*</packageFilter>
-    <packageFilter>java\.util.*</packageFilter>
-    <packageFilter>.*\.concurrent</packageFilter>
-</packageFilters>
+<configuration>
+    <packageFilters>
+        <packageFilter>java\.lang.*</packageFilter>
+        <packageFilter>java\.util.*</packageFilter>
+        <packageFilter>.*\.concurrent</packageFilter>
+    </packageFilters>
+</configuration>
 ```
 
 #### Proxy Configuration
@@ -119,36 +127,8 @@ When your project uses Lombok annotations, you need to use the delombok process 
 **Complete Lombok Configuration Example:**
 
 ```xml
-<dependencies>
-    <!-- Lombok dependency -->
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.18.30</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-
 <build>
     <plugins>
-        <!-- Maven Compiler Plugin with Lombok support -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.11.0</version>
-            <configuration>
-                <source>11</source>
-                <target>11</target>
-                <annotationProcessorPaths>
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>1.18.30</version>
-                    </path>
-                </annotationProcessorPaths>
-            </configuration>
-        </plugin>
-        
         <!-- Lombok Maven Plugin for delombok -->
         <plugin>
             <groupId>org.projectlombok</groupId>
@@ -175,21 +155,11 @@ When your project uses Lombok annotations, you need to use the delombok process 
         <plugin>
             <groupId>io.github.beamliu</groupId>
             <artifactId>java-docs-json-doclet</artifactId>
-            <version>0.1.0</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>publish</goal>
-                    </goals>
-                    <phase>package</phase>
-                    <configuration>
-                        <!-- Point to delombok generated sources -->
-                        <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
-                        <outputDirectory>target/javadoc-json</outputDirectory>
-                        <includePrivate>true</includePrivate>
-                    </configuration>
-                </execution>
-            </executions>
+            <version>0.1.1</version>
+            <configuration>
+                <!-- Point to delombok generated sources -->
+                <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
+            </configuration>
         </plugin>
     </plugins>
 </build>
@@ -200,13 +170,11 @@ When your project uses Lombok annotations, you need to use the delombok process 
 When using Lombok, you must run the build in the correct order:
 
 ```bash
-# Option 1: Run the full build (recommended)
-mvn clean package
-
-# Option 2: Run delombok first, then generate docs
+# Run delombok first, then generate docs
 mvn clean compile
-mvn lombok:delombok
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
+# target/generated-sources/delombok will conatin the delomboked java source code
+mvn package
+mvn javadoc-json:javadoc-json
 ```
 
 **Key Points:**
@@ -232,61 +200,66 @@ If you get "cannot find symbol" errors for Lombok-generated classes (like `*Buil
 
 ### 功能特性
 
-- **发布目标**: 从项目源代码生成 JSON 文档
+- **生成 Javadoc Json 目标**: 从项目源代码生成 JSON 文档
 - **爬取目标**: 从外部 Javadoc 网站提取文档
-- **MCP 兼容**: 生成 MCP（模型上下文协议）兼容格式的文档
 - **包过滤**: 使用正则表达式过滤特定包
 - **代理支持**: 为爬取外部文档配置代理设置
 - **多种输出格式**: 支持单个类文件和合并 JSON 格式
 
 ### 快速开始
 
-#### 基本发布配置
+#### 基本配置
 ```xml
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
 </plugin>
 ```
+
+注意：仅当您在某些小型站点无法检索到构件时，才添加中央插件仓库：
+```xml
+<pluginRepositories>
+    <pluginRepository>
+        <id>central-plugins</id>
+        <url>https://repo.maven.apache.org/maven2</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>false</enabled></snapshots>
+    </pluginRepository>
+</pluginRepositories>
+```
+
+注意：如果您因 `Lombok` 插件遇到编译错误，请参考[使用 Lombok](#使用-lombok)
 
 #### 基本爬取配置
 ```xml
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>crawl</goal>
-            </goals>
-            <configuration>
-                <baseUrl>https://docs.oracle.com/en/java/javase/11/docs/api/</baseUrl>
-            </configuration>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
+    <configuration>
+        <baseUrl>https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/</baseUrl>
+        <!-- 可选的包过滤器 -->
+        <packageFilters>
+            <packageFilter>nxopen\.issue</packageFilter>
+        </packageFilters>
+    </configuration>
 </plugin>
 ```
+
+注意：仅在上述示例 javadoc 站点上测试过，请从源代码构建并更新 `io.emop.javadocjson.config.JDK9Dialet` 以适配您的实际 javadoc 站点，稍后将支持官方 LTS Java 版本文档。
 
 ### 命令行使用
 
 ```bash
 # 从源代码生成文档
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
+mvn javadoc-json:javadoc-json
 
 # 爬取外部 Javadoc
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl
+mvn javadoc-json:crawl
 
 # 使用自定义参数
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
+mvn javadoc-json:javadoc-json \
     -DoutputDirectory=target/my-docs \
     -DincludePrivate=true \
     -DsourceDirectory=src/main/java \
@@ -296,17 +269,17 @@ mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
 ### 配置参数
 
 #### 发布目标参数
-| 参数 | 类型 | 默认值                                | 描述 |
-|------|------|------------------------------------|------|
-| `outputDirectory` | String | `javadoc-output`                   | JSON 文件输出目录 |
+| 参数 | 类型 | 默认值 | 描述 |
+|-----------|------|---------|-------------|
+| `outputDirectory` | String | `javadoc-output` | JSON 文件输出目录，默认为 `target/javadoc-json` |
 | `sourceDirectory` | String | `${project.build.sourceDirectory}` | 要处理的源代码目录 |
-| `includePrivate` | boolean | `true`                             | 在输出中包含私有成员 |
-| `sourcePaths` | List<String> | (无)                                | 要包含的额外源代码路径 |
-| `encoding` | String | `UTF-8`                            | 源文件编码 |
+| `includePrivate` | boolean | `false` | 在输出中包含私有成员 |
+| `sourcePaths` | List<String> | (无) | 要包含的额外源代码路径 |
+| `encoding` | String | `UTF-8` | 源文件编码 |
 
 #### 爬取目标参数
 | 参数 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
+|-----------|------|---------|-------------|
 | `baseUrl` | String | (必需) | Javadoc 网站的基础 URL |
 | `outputDirectory` | File | `${project.build.directory}/javadocs` | JSON 文件输出目录 |
 | `packageFilters` | Set<String> | (无) | 用于过滤包的正则表达式模式 |
@@ -318,11 +291,13 @@ mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
 
 #### 使用正则表达式进行包过滤
 ```xml
-<packageFilters>
-    <packageFilter>java\.lang.*</packageFilter>
-    <packageFilter>java\.util.*</packageFilter>
-    <packageFilter>.*\.concurrent</packageFilter>
-</packageFilters>
+<configuration>
+    <packageFilters>
+        <packageFilter>java\.lang.*</packageFilter>
+        <packageFilter>java\.util.*</packageFilter>
+        <packageFilter>.*\.concurrent</packageFilter>
+    </packageFilters>
+</configuration>
 ```
 
 #### 代理配置
@@ -335,67 +310,32 @@ mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
 </configuration>
 ```
 
-#### 处理 Lombok
+#### 使用 Lombok
 
 当您的项目使用 Lombok 注解时，需要使用 delombok 过程来生成常规的 Java 代码，然后再生成文档。如果不进行这一步，Lombok 自动生成的方法（getter、setter、构造函数等）不会出现在 Javadoc 中。
 
 **完整的 Lombok 配置示例：**
 
 ```xml
-<dependencies>
-    <!-- Lombok 依赖 -->
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.18.30</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-
 <build>
     <plugins>
-        <!-- 支持 Lombok 的 Maven 编译器插件 -->
+        <!-- 用于 delombok 的 Lombok Maven 插件 -->
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.11.0</version>
-            <configuration>
-                <source>11</source>
-                <target>11</target>
-                <annotationProcessorPaths>
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>1.18.30</version>
-                    </path>
-                </annotationProcessorPaths>
-            </configuration>
-        </plugin>
-        
-        <!-- 用于 delombok 的 Maven Antrun 插件 -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>3.1.0</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-maven-plugin</artifactId>
+            <version>1.18.20.0</version>
             <executions>
                 <execution>
                     <id>delombok</id>
                     <phase>generate-sources</phase>
                     <goals>
-                        <goal>run</goal>
+                        <goal>delombok</goal>
                     </goals>
                     <configuration>
-                        <target>
-                            <mkdir dir="target/generated-sources/delombok"/>
-                            <java classname="lombok.launch.Main" fork="true" classpathref="maven.compile.classpath">
-                                <arg value="delombok"/>
-                                <arg value="src/main/java"/>
-                                <arg value="-d"/>
-                                <arg value="target/generated-sources/delombok"/>
-                                <arg value="--encoding"/>
-                                <arg value="UTF-8"/>
-                            </java>
-                        </target>
+                        <sourceDirectory>src/main/java</sourceDirectory>
+                        <outputDirectory>target/generated-sources/delombok</outputDirectory>
+                        <addOutputDirectory>false</addOutputDirectory>
+                        <encoding>UTF-8</encoding>
                     </configuration>
                 </execution>
             </executions>
@@ -405,36 +345,39 @@ mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish \
         <plugin>
             <groupId>io.github.beamliu</groupId>
             <artifactId>java-docs-json-doclet</artifactId>
-            <version>0.1.0</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>publish</goal>
-                    </goals>
-                    <phase>package</phase>
-                    <configuration>
-                        <!-- 指向 delombok 生成的源代码 -->
-                        <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
-                        <outputDirectory>target/javadoc-json</outputDirectory>
-                        <includePrivate>true</includePrivate>
-                    </configuration>
-                </execution>
-            </executions>
+            <version>0.1.1</version>
+            <configuration>
+                <!-- 指向 delombok 生成的源代码 -->
+                <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
+            </configuration>
         </plugin>
     </plugins>
 </build>
+```
+
+**执行步骤：**
+
+使用 Lombok 时，必须按正确的顺序运行构建：
+
+```bash
+# 运行 delombok，然后生成文档
+mvn clean compile
+# 运行完应该在target/generated-sources/delombok中看到delombok处理完成后的java源代码
+mvn package
+mvn javadoc-json:javadoc-json
 ```
 
 **关键要点：**
 - delombok 过程在 `generate-sources` 阶段运行
 - 生成的源代码放置在 `target/generated-sources/delombok` 目录中
 - JSON doclet 插件的 `sourceDirectory` 参数指向 delombok 的输出目录
+- **重要**：您必须先编译项目（或运行 `mvn compile`），然后 delombok 才能工作，因为 delombok 需要 Lombok 库在类路径上
 - 这确保所有 Lombok 生成的方法都会出现在文档中
 
-### 示例项目
+**故障排除：**
 
-查看 `examples` 目录中的示例项目，了解如何配置和使用此插件。
-
-### 许可证
-
-本项目采用 MIT 许可证。
+如果您遇到 Lombok 生成的类（如 `*Builder`）的"找不到符号"错误：
+1. 确保 Lombok 在您的依赖项中
+2. 首先运行 `mvn clean compile` 以确保 Lombok 可用
+3. 然后运行 `mvn lombok:delombok` 生成 delombok 后的源代码
+4. 最后运行 doclet 插件生成 JSON 文档

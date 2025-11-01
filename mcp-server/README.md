@@ -10,7 +10,7 @@ A Model Context Protocol (MCP) server for searching Java documentation. This ser
 
 ### Prerequisites
 
-Before using this MCP server, you need to generate JavaDoc JSON files using the [java-docs-json-doclet](../java-docs-json-doclet) Maven plugin.
+Before using this MCP server, you need to generate JavaDoc JSON files using the [java-docs-json-doclet](https://github.com/BeamLiu/mcp-java-doc/tree/main/java-docs-json-doclet) Maven plugin.
 
 **Quick setup with Maven:**
 
@@ -18,23 +18,13 @@ Before using this MCP server, you need to generate JavaDoc JSON files using the 
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-            <configuration>
-                <outputDirectory>target/javadoc-json</outputDirectory>
-            </configuration>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
 </plugin>
 ```
 
-Then run: `mvn clean package`
+Then run: `mvn javadoc-json:javadoc-json`, you will get the javadoc in json formate in `target/javadoc-json` folder.
 
-See the [java-docs-json-doclet README](../java-docs-json-doclet/README.md) for detailed configuration options, including Lombok support.
+See the [java-docs-json-doclet README](https://github.com/BeamLiu/mcp-java-doc/tree/main/java-docs-json-doclet) for detailed configuration options, including Lombok support.
 
 ### Features
 
@@ -48,10 +38,6 @@ See the [java-docs-json-doclet README](../java-docs-json-doclet/README.md) for d
 ```bash
 # Using npx (recommended, no installation needed)
 npx @io.emop/mcp-javadoc-server --javadoc-path /path/to/javadoc-json
-
-# Or install globally
-npm install -g @io.emop/mcp-javadoc-server
-mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 ```
 
 ### MCP Client Configuration
@@ -94,13 +80,6 @@ Add to your MCP client configuration (e.g., Claude Desktop, Cline):
 }
 ```
 
-**Claude Desktop config locations:**
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Linux: `~/.config/Claude/claude_desktop_config.json`
-
-After editing, restart your MCP client.
-
 ### Usage Examples
 
 Once configured, your AI assistant can search your Java documentation:
@@ -119,9 +98,6 @@ You can test the server locally using the MCP Inspector:
 ```bash
 # Test published version (note the -- separator before server arguments)
 npx @modelcontextprotocol/inspector npx -y @io.emop/mcp-javadoc-server -- --javadoc-path /path/to/javadoc-json
-
-# Or test local development version
-npx @modelcontextprotocol/inspector node dist/index.js -- --javadoc-path /path/to/javadoc-json
 ```
 
 The inspector will open a web interface (usually http://localhost:6274) where you can:
@@ -147,7 +123,7 @@ The inspector will open a web interface (usually http://localhost:6274) where yo
 
 ### 前置要求
 
-使用此 MCP 服务器之前，需要使用 [java-docs-json-doclet](../java-docs-json-doclet) Maven 插件生成 JavaDoc JSON 文件。
+使用此 MCP 服务器之前，需要使用 [java-docs-json-doclet](https://github.com/BeamLiu/mcp-java-doc/tree/main/java-docs-json-doclet) Maven 插件生成 JavaDoc JSON 文件。
 
 **Maven 快速配置：**
 
@@ -155,23 +131,13 @@ The inspector will open a web interface (usually http://localhost:6274) where yo
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-            <configuration>
-                <outputDirectory>target/javadoc-json</outputDirectory>
-            </configuration>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
 </plugin>
 ```
 
 然后运行：`mvn clean package`
 
-详细配置选项（包括 Lombok 支持）请参阅 [java-docs-json-doclet README](../java-docs-json-doclet/README.md)。
+详细配置选项（包括 Lombok 支持）请参阅 [java-docs-json-doclet README](https://github.com/BeamLiu/mcp-java-doc/tree/main/java-docs-json-doclet)。
 
 ### 功能特性
 
@@ -185,10 +151,6 @@ The inspector will open a web interface (usually http://localhost:6274) where yo
 ```bash
 # 使用 npx（推荐，无需安装）
 npx @io.emop/mcp-javadoc-server --javadoc-path /path/to/javadoc-json
-
-# 或全局安装
-npm install -g @io.emop/mcp-javadoc-server
-mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 ```
 
 ### MCP 客户端配置
@@ -231,11 +193,6 @@ mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 }
 ```
 
-**Claude Desktop 配置文件位置：**
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Linux: `~/.config/Claude/claude_desktop_config.json`
-
 编辑后重启 MCP 客户端。
 
 ### 可用工具
@@ -243,42 +200,17 @@ mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 #### 1. search_all
 搜索所有类型的项目（类、方法、构造函数、字段）
 
-参数：
-- `query` (string): 搜索查询
-- `limit` (number, 可选): 最大结果数量，默认 10
-- `mode` (string, 可选): 搜索模式 - 'fuzzy'（默认）、'keyword' 或 'regex'
-
 #### 2. search_classes
 专门搜索类和接口
-
-参数：
-- `query` (string): 类名或描述
-- `limit` (number, 可选): 最大结果数量，默认 10
-- `mode` (string, 可选): 搜索模式 - 'fuzzy'（默认）、'keyword' 或 'regex'
 
 #### 3. search_methods
 专门搜索方法和构造函数
 
-参数：
-- `query` (string): 方法名或签名
-- `className` (string, 可选): 按类名过滤
-- `limit` (number, 可选): 最大结果数量，默认 10
-- `mode` (string, 可选): 搜索模式 - 'fuzzy'（默认）、'keyword' 或 'regex'
-
 #### 4. search_fields
 专门搜索字段和属性
 
-参数：
-- `query` (string): 字段名或类型
-- `className` (string, 可选): 按类名过滤
-- `limit` (number, 可选): 最大结果数量，默认 10
-- `mode` (string, 可选): 搜索模式 - 'fuzzy'（默认）、'keyword' 或 'regex'
-
 #### 5. get_class_details
 获取特定类的详细信息
-
-参数：
-- `className` (string): 完整类名
 
 #### 6. get_stats
 获取加载的 JavaDoc 数据统计信息
@@ -307,9 +239,6 @@ mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 ```bash
 # 测试已发布版本（注意服务器参数前的 -- 分隔符）
 npx @modelcontextprotocol/inspector npx -y @io.emop/mcp-javadoc-server -- --javadoc-path /path/to/javadoc-json
-
-# 或测试本地开发版本
-npx @modelcontextprotocol/inspector node dist/index.js -- --javadoc-path /path/to/javadoc-json
 ```
 
 Inspector 会打开一个 Web 界面（通常是 http://localhost:6274），你可以：

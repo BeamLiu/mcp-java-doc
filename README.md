@@ -65,13 +65,13 @@ A Maven plugin that converts Java documentation into structured JSON format.
 
 | Goal | Supported Versions | Notes                                  |
 |------|-------------------|----------------------------------------|
-| **Publish** | Java 8+ | Supports all Java 8 and above versions |
-| **Crawl** | Java 9 | To be supported for other versions     |
+| **javadoc-json** | Java 8+ | Supports all Java 8 and above versions |
+| **Crawl** | Java 9 | To be supported for other versions in the future, currently only support https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/nxopen/issue/package-summary.html , you could update `io.emop.javadocjson.doclet.JsonDoclet` to build your own html to json parser     |
 
 *Future Java versions will be supported in upcoming releases*
 
 **Features:**
-- **Publish Goal**: Generate JSON from Java source code
+- **Generate Javadoc Json Goal**: Generate JSON from Java source code
 - **Crawl Goal**: Extract documentation from HTML Javadoc websites (JDK 9+ supported)
 - **Lombok Support**: Handle Lombok annotations with delombok process
 - **MCP Compatible**: Generate documentation in MCP-compatible format
@@ -83,17 +83,12 @@ A Maven plugin that converts Java documentation into structured JSON format.
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
 </plugin>
 ```
-Pay attention, you may encounter compile error if you are using a lombok, please jump to `Lombok Projects` section.
+Pay attention, you may encounter compile error if you are using a lombok, please jump to [Lombok Projects](#lombok-projects) section.
+
+More detail goes to [README](./java-docs-json-doclet/README.md)
 
 #### 2. MCP Server (`mcp-server/`)
 
@@ -108,10 +103,7 @@ A Node.js-based MCP server that provides intelligent search capabilities for Jav
 
 **Quick Start:**
 ```bash
-cd mcp-server
-npm install
-npm run build
-npm start
+npx @io.emop/mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 ```
 
 #### 3. Sample Data (`javadoc-json/`)
@@ -123,41 +115,38 @@ Contains example JSON documentation files generated from various Java projects f
 #### Step 1: Generate JSON Documentation
 
 1. **From Source Code:**
-```bash
-cd your-java-project
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
+
+add maven dependency
+```xml
+<plugin>
+    <groupId>io.github.beamliu</groupId>
+    <artifactId>java-docs-json-doclet</artifactId>
+    <version>0.1.1</version>
+</plugin>
 ```
+and then
+```bash
+mvn javadoc-json:javadoc-json
+```
+Sample maven config could be found at [./java-docs-json-doclet/examples/](./java-docs-json-doclet/examples/)
 
 2. **From HTML Javadoc:**
-```bash
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl \
-    -DbaseUrl=https://docs.oracle.com/en/java/javase/11/docs/api/
-```
+
+please refer to [README](./java-docs-json-doclet/README.md)
+
 
 #### Step 2: Start MCP Server
 
 ```bash
-cd mcp-server
-export JAVADOC_JSON_PATH=/path/to/your/json/docs
-npm start
+# Using npx (recommended, no installation needed)
+npx @io.emop/mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 ```
 
-#### Step 3: Configure Claude Desktop
-
-Add to your Claude Desktop configuration:
-```json
-{
-  "mcpServers": {
-    "javadoc-search": {
-      "command": "node",
-      "args": ["/path/to/mcp-java-doc/mcp-server/build/index.js"],
-      "env": {
-        "JAVADOC_JSON_PATH": "/path/to/your/json/docs"
-      }
-    }
-  }
-}
+使用`mcp inspector`测试
+```bash
+npx @modelcontextprotocol/inspector npx -y @io.emop/mcp-javadoc-server -- --javadoc-path /path/to/javadoc-json
 ```
+please refer to [README](./mcp-server/README.md)
 
 ### 📖 Usage Examples
 
@@ -175,66 +164,7 @@ Once configured, you can use these commands in Claude Desktop:
 
 For projects using Lombok, configure the delombok process:
 
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-antrun-plugin</artifactId>
-    <version>3.1.0</version>
-    <executions>
-        <execution>
-            <id>delombok</id>
-            <phase>generate-sources</phase>
-            <goals>
-                <goal>run</goal>
-            </goals>
-            <configuration>
-                <target>
-                    <mkdir dir="target/generated-sources/delombok"/>
-                    <java classname="lombok.launch.Main" fork="true" classpathref="maven.compile.classpath">
-                        <arg value="delombok"/>
-                        <arg value="src/main/java"/>
-                        <arg value="-d"/>
-                        <arg value="target/generated-sources/delombok"/>
-                    </java>
-                </target>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-<!-- Java Docs JSON Doclet Plugin -->
-<plugin>
-    <groupId>io.github.beamliu</groupId>
-    <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-                <!-- Point to delombok generated sources -->
-                <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
-                <outputDirectory>target/javadoc-json</outputDirectory>
-                <includePrivate>true</includePrivate>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-```
-
-#### Package Filtering
-
-Filter specific packages using regex patterns:
-
-```xml
-<configuration>
-    <packageFilters>
-        <packageFilter>java\.lang.*</packageFilter>
-        <packageFilter>java\.util.*</packageFilter>
-    </packageFilters>
-</configuration>
-```
+please refer to [README](./java-docs-json-doclet/README.md#working-with-lombok)
 
 ### 📄 License
 
@@ -303,13 +233,13 @@ This project is licensed under the MIT License.
 
 | 目标 | 支持版本 | 说明                 |
 |------|--------|--------------------|
-| **发布 (Publish)** | Java 8+ | 支持所有 Java 8 及以上版本 |
-| **爬取 (Crawl)** | Java 9 | 其他版本陆续支持中          |
+| **javadoc-json** | Java 8+ | 支持所有 Java 8 及以上版本 |
+| **爬取 (Crawl)** | Java 9 | 未来将支持其他版本，目前仅支持 https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/nxopen/issue/package-summary.html ，您可以更新 `io.emop.javadocjson.doclet.JsonDoclet` 来构建自己的 HTML 到 JSON 解析器     |
 
 *后续 Java 版本将在未来发布中支持*
 
 **功能特性：**
-- **发布目标**：从 Java 源代码生成 JSON
+- **生成 Javadoc Json 目标**：从 Java 源代码生成 JSON
 - **爬取目标**：从 HTML Javadoc 网站提取文档（支持 JDK 9+）
 - **Lombok 支持**：通过 delombok 过程处理 Lombok 注解
 - **MCP 兼容**：生成 MCP 兼容格式的文档
@@ -321,17 +251,12 @@ This project is licensed under the MIT License.
 <plugin>
     <groupId>io.github.beamliu</groupId>
     <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-        </execution>
-    </executions>
+    <version>0.1.1</version>
 </plugin>
 ```
-注意, 如果您正在使用`lombok`, 可能会遇到编译错误，请参考`Lombok 项目`章节。
+注意，如果您正在使用 Lombok，可能会遇到编译错误，请跳转到 [Lombok 项目](#lombok-项目) 章节。
+
+更多详情请参考 [README](./java-docs-json-doclet/README.md)
 
 #### 2. MCP 服务器 (`mcp-server/`)
 
@@ -346,10 +271,7 @@ This project is licensed under the MIT License.
 
 **快速开始：**
 ```bash
-cd mcp-server
-npm install
-npm run build
-npm start
+npx @io.emop/mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 ```
 
 #### 3. 样例数据 (`javadoc-json/`)
@@ -361,41 +283,37 @@ npm start
 #### 步骤 1：生成 JSON 文档
 
 1. **从源代码：**
-```bash
-cd your-java-project
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:publish
+
+添加 Maven 依赖
+```xml
+<plugin>
+    <groupId>io.github.beamliu</groupId>
+    <artifactId>java-docs-json-doclet</artifactId>
+    <version>0.1.1</version>
+</plugin>
 ```
+然后执行
+```bash
+mvn javadoc-json:javadoc-json
+```
+Maven 配置示例可以在 [./java-docs-json-doclet/examples/](./java-docs-json-doclet/examples/) 找到
 
 2. **从 HTML Javadoc：**
-```bash
-mvn io.github.beamliu:java-docs-json-doclet:0.1.0:crawl \
-    -DbaseUrl=https://docs.oracle.com/en/java/javase/11/docs/api/
-```
+
+请参考 [README](./java-docs-json-doclet/README.md)
 
 #### 步骤 2：启动 MCP 服务器
 
 ```bash
-cd mcp-server
-export JAVADOC_JSON_PATH=/path/to/your/json/docs
-npm start
+# 使用 npx（推荐，无需安装）
+npx @io.emop/mcp-javadoc-server --javadoc-path /path/to/javadoc-json
 ```
 
-#### 步骤 3：配置 Claude Desktop
-
-在 Claude Desktop 配置中添加：
-```json
-{
-  "mcpServers": {
-    "javadoc-search": {
-      "command": "node",
-      "args": ["/path/to/mcp-java-doc/mcp-server/build/index.js"],
-      "env": {
-        "JAVADOC_JSON_PATH": "/path/to/your/json/docs"
-      }
-    }
-  }
-}
+使用 `mcp inspector` 测试
+```bash
+npx @modelcontextprotocol/inspector npx -y @io.emop/mcp-javadoc-server -- --javadoc-path /path/to/javadoc-json
 ```
+请参考 [README](./mcp-server/README.md)
 
 ### 📖 使用示例
 
@@ -413,66 +331,7 @@ npm start
 
 对于使用 Lombok 的项目，配置 delombok 过程：
 
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-antrun-plugin</artifactId>
-    <version>3.1.0</version>
-    <executions>
-        <execution>
-            <id>delombok</id>
-            <phase>generate-sources</phase>
-            <goals>
-                <goal>run</goal>
-            </goals>
-            <configuration>
-                <target>
-                    <mkdir dir="target/generated-sources/delombok"/>
-                    <java classname="lombok.launch.Main" fork="true" classpathref="maven.compile.classpath">
-                        <arg value="delombok"/>
-                        <arg value="src/main/java"/>
-                        <arg value="-d"/>
-                        <arg value="target/generated-sources/delombok"/>
-                    </java>
-                </target>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-<!-- Java Docs JSON Doclet Plugin -->
-<plugin>
-    <groupId>io.github.beamliu</groupId>
-    <artifactId>java-docs-json-doclet</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>publish</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-                <!-- Point to delombok generated sources -->
-                <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
-                <outputDirectory>target/javadoc-json</outputDirectory>
-                <includePrivate>true</includePrivate>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-```
-
-#### 包过滤
-
-使用正则表达式模式过滤特定包：
-
-```xml
-<configuration>
-    <packageFilters>
-        <packageFilter>java\.lang.*</packageFilter>
-        <packageFilter>java\.util.*</packageFilter>
-    </packageFilters>
-</configuration>
-```
+请参考 [README](./java-docs-json-doclet/README.md#使用-lombok)
 
 ### 📄 许可证
 

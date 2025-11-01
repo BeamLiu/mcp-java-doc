@@ -28,7 +28,7 @@ import java.util.stream.Stream;
  * Maven goal to generate JSON documentation using JDK Doclet API.
  * This replaces the manual parsing approach with the official Doclet implementation.
  */
-@Mojo(name = "publish", defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name = "javadoc-json", requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class PublishMojo extends AbstractMojo {
 
     /**
@@ -40,7 +40,7 @@ public class PublishMojo extends AbstractMojo {
     /**
      * Output directory for JSON files.
      */
-    @Parameter(property = "outputDirectory", defaultValue = "javadoc-output")
+    @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}/javadoc-json")
     private String outputDirectory;
 
     /**

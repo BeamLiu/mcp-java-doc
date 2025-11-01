@@ -39,7 +39,7 @@ public class CrawlMojo extends AbstractMojo {
     /**
      * Output directory for individual class JSON files.
      */
-    @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}/javadocs")
+    @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}/javadoc-json")
     private File outputDirectory;
 
     /**

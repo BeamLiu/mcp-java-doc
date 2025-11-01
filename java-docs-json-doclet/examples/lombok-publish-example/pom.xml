@@ -79,19 +79,17 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            
             <!-- Java Docs JSON Doclet Plugin -->
             <plugin>
                 <groupId>io.github.beamliu</groupId>
                 <artifactId>java-docs-json-doclet</artifactId>
-                <version>0.1.0</version>
+                <version>0.1.1</version>
                 <executions>
                     <execution>
                         <id>generate-json-docs</id>
                         <goals>
-                            <goal>publish</goal>
+                            <goal>javadoc-json</goal>
                         </goals>
-                        <phase>package</phase>
                         <configuration>
                             <outputDirectory>target/javadoc-json</outputDirectory>
                             <sourceDirectory>target/generated-sources/delombok</sourceDirectory>
@@ -130,5 +128,4 @@
             </plugin>
         </plugins>
     </build>
-    
 </project>
