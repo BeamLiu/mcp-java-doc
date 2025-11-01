@@ -66,7 +66,7 @@ A Maven plugin that converts Java documentation into structured JSON format.
 | Goal | Supported Versions | Notes                                  |
 |------|-------------------|----------------------------------------|
 | **javadoc-json** | Java 8+ | Supports all Java 8 and above versions |
-| **Crawl** | Java 9 | To be supported for other versions in the future, currently only support https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/nxopen/issue/package-summary.html , you could update `io.emop.javadocjson.doclet.JsonDoclet` to build your own html to json parser     |
+| **Crawl** | Java 9 | To be supported for other versions in the future, currently only support https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/ , you could update `io.emop.javadocjson.doclet.JsonDoclet` to build your own html to json parser     |
 
 *Future Java versions will be supported in upcoming releases*
 
@@ -234,7 +234,7 @@ This project is licensed under the MIT License.
 | 目标 | 支持版本 | 说明                 |
 |------|--------|--------------------|
 | **javadoc-json** | Java 8+ | 支持所有 Java 8 及以上版本 |
-| **爬取 (Crawl)** | Java 9 | 未来将支持其他版本，目前仅支持 https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/nxopen/issue/package-summary.html ，您可以更新 `io.emop.javadocjson.doclet.JsonDoclet` 来构建自己的 HTML 到 JSON 解析器     |
+| **爬取 (Crawl)** | Java 9 | 未来将支持其他版本，目前仅支持 https://docs.sw.siemens.com/documentation/external/PL20231101866122454/en-US/custom_api/open_java_ref/ ，您可以更新 `io.emop.javadocjson.doclet.JsonDoclet` 来构建自己的 HTML 到 JSON 解析器     |
 
 *后续 Java 版本将在未来发布中支持*
 

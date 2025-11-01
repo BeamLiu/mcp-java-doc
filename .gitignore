@@ -37,3 +37,6 @@ package-lock.json
 /tmp
 
 /mcp-server/dist
+
+temp/*
+java-docs-json-doclet/*
