@@ -27,7 +27,7 @@ A Maven plugin that generates JSON documentation from Java source code and crawl
 </plugin>
 ```
 
-ATTENTION: add central plugin repository *ONLY* when you cannot retrieve the artifacts when using some minior sites:
+ATTENTION: add central plugin repository *ONLY* when you cannot retrieve the artifacts when using some mirror sites:
 ```xml
 <pluginRepositories>
     <pluginRepository>
@@ -41,7 +41,7 @@ ATTENTION: add central plugin repository *ONLY* when you cannot retrieve the art
 
 ATTENTION: if you encountered compile error due to `Lombok` plugin, please follow up [Working with Lombok](#working-with-lombok)
 
-#### Basic Crawl Configuration
+#### Basic Crawl Configuration(Only necessary when crawling javadoc html to json， generating from java source will be more stable)
 ```xml
 <plugin>
     <groupId>io.github.beamliu</groupId>
@@ -99,7 +99,7 @@ mvn javadoc-json:javadoc-json \
 
 ### Advanced Features
 
-#### Package Filtering with Regular Expressions
+#### Package Filtering with Regular Expressions(Crawl)*
 ```xml
 <configuration>
     <packageFilters>
@@ -110,7 +110,7 @@ mvn javadoc-json:javadoc-json \
 </configuration>
 ```
 
-#### Proxy Configuration
+#### Proxy Configuration(Crawl)
 ```xml
 <configuration>
     <proxyHost>proxy.company.com</proxyHost>
@@ -120,7 +120,7 @@ mvn javadoc-json:javadoc-json \
 </configuration>
 ```
 
-#### Working with Lombok
+#### Working with Lombok(Publish from java source)
 
 When your project uses Lombok annotations, you need to use the delombok process to generate regular Java code before generating documentation. Lombok's auto-generated methods (getters, setters, constructors, etc.) won't appear in Javadoc without this step.
 
@@ -217,7 +217,7 @@ If you get "cannot find symbol" errors for Lombok-generated classes (like `*Buil
 </plugin>
 ```
 
-注意：仅当您在某些小型站点无法检索到构件时，才添加中央插件仓库：
+注意：仅当您在某些镜像站点无法检索到构件时，才添加中央插件仓库：
 ```xml
 <pluginRepositories>
     <pluginRepository>
@@ -289,7 +289,7 @@ mvn javadoc-json:javadoc-json \
 
 ### 高级功能
 
-#### 使用正则表达式进行包过滤
+#### 使用正则表达式进行包过滤(爬取方式)
 ```xml
 <configuration>
     <packageFilters>
@@ -300,7 +300,7 @@ mvn javadoc-json:javadoc-json \
 </configuration>
 ```
 
-#### 代理配置
+#### 代理配置(爬取方式)
 ```xml
 <configuration>
     <proxyHost>proxy.company.com</proxyHost>
@@ -310,7 +310,7 @@ mvn javadoc-json:javadoc-json \
 </configuration>
 ```
 
-#### 使用 Lombok
+#### 使用 Lombok(从源代码发布方式)
 
 当您的项目使用 Lombok 注解时，需要使用 delombok 过程来生成常规的 Java 代码，然后再生成文档。如果不进行这一步，Lombok 自动生成的方法（getter、setter、构造函数等）不会出现在 Javadoc 中。
 
